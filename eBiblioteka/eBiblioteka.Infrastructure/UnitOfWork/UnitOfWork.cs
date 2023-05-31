@@ -10,19 +10,27 @@ namespace eBiblioteka.Infrastructure
 
         public readonly ICountriesRepository CountriesRepository;
         public readonly ICitiesRepository CitiesRepository;
-       
+        public readonly IPhotosRepository PhotosRepository;
+        public readonly IBooksRepository BooksRepository;
+        public readonly IQuotesRepository QuotesRepository;
+
 
         public UnitOfWork(
             DatabaseContext databaseContext,
             ICountriesRepository countriesRepository,
             ICitiesRepository citiesRepository
-           )
+,
+            IPhotosRepository photosRepository,
+            IBooksRepository booksRepository,
+            IQuotesRepository quotesRepository)
         {
             _databaseContext = databaseContext;
 
             CountriesRepository = countriesRepository;
             CitiesRepository = citiesRepository;
-            
+            PhotosRepository = photosRepository;
+            BooksRepository = booksRepository;
+            QuotesRepository = quotesRepository;
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)

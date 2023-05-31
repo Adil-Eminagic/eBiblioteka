@@ -9,6 +9,9 @@ namespace eBiblioteka.Infrastructure
         {
             services.AddScoped<ICitiesRepository, CitiesRepository>();
             services.AddScoped<ICountriesRepository, CountriesRepository>();
+            services.AddScoped<IPhotosRepository,PhotosRepository>();
+            services.AddScoped<IBooksRepository, BooksRepository>();
+            services.AddScoped<IQuotesRepository, QuotesRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
