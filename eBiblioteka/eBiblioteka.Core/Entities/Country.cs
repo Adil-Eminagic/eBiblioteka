@@ -9,5 +9,10 @@ namespace eBiblioteka.Core
 
         public ICollection<City> Cities { get; set; }= null!;
 
+        public ICollection<User> Users { get; set; }
+
+        public ICollection<Author> Authors { get; set; }
+
+
     }
 }

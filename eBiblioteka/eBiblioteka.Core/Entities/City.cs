@@ -9,5 +9,7 @@ namespace eBiblioteka.Core
 
         public int CountryId { get; set; }
         public Country Country { get; set; } = null!;
+
+       
     }
 }

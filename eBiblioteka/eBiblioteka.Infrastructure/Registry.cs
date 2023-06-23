@@ -12,6 +12,11 @@ namespace eBiblioteka.Infrastructure
             services.AddScoped<IPhotosRepository,PhotosRepository>();
             services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddScoped<IQuotesRepository, QuotesRepository>();
+            services.AddScoped<IGenresRepository, GenresRepository>();
+            services.AddScoped<IAuthorsRepository, AuthorsRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUserBooksRepository, UserBooksRepository>();
+            services.AddScoped<IBookGenresRepository, BookGenreGenresRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

@@ -6,5 +6,7 @@
       
 
         public ICollection<Book> Books { get; set; } = null!;
+        public ICollection<User> Users { get; set; } = null!;
+
     }
 }

@@ -22,6 +22,106 @@ namespace eBiblioteka.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("eBiblioteka.Core.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Biography")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("MortalDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Authors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BirthDate = new DateTime(1910, 4, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CountryId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            FirstName = "Meša",
+                            Gender = 0,
+                            IsDeleted = false,
+                            LastName = "Selimović",
+                            MortalDate = new DateTime(1982, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BirthDate = new DateTime(1892, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CountryId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            FirstName = "Ivo",
+                            Gender = 0,
+                            IsDeleted = false,
+                            LastName = "Andrić",
+                            MortalDate = new DateTime(1975, 3, 13, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BirthDate = new DateTime(1564, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CountryId = 7,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            FirstName = "Wiliam",
+                            Gender = 0,
+                            IsDeleted = false,
+                            LastName = "Shakspeare",
+                            MortalDate = new DateTime(1616, 4, 23, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BirthDate = new DateTime(1805, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CountryId = 8,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            FirstName = "Hans Christian",
+                            Gender = 0,
+                            IsDeleted = false,
+                            LastName = "Andersen",
+                            MortalDate = new DateTime(1875, 8, 4, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
             modelBuilder.Entity("eBiblioteka.Core.Book", b =>
                 {
                     b.Property<int>("Id")
@@ -30,7 +130,10 @@ namespace eBiblioteka.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CoverPhotoId")
+                    b.Property<int>("AuthorID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CoverPhotoId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -47,8 +150,8 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Property<int>("OpeningCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PublishingDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("PublishingYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("ShortDescription")
                         .HasColumnType("nvarchar(max)");
@@ -59,6 +162,8 @@ namespace eBiblioteka.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorID");
+
                     b.HasIndex("CoverPhotoId");
 
                     b.ToTable("Books");
@@ -67,22 +172,190 @@ namespace eBiblioteka.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            AuthorID = 1,
                             CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
-                            PublishingDate = new DateTime(1980, 5, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishingYear = 1970,
                             Title = "Tvrdjava"
                         },
                         new
                         {
                             Id = 2,
+                            AuthorID = 2,
                             CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
-                            PublishingDate = new DateTime(1980, 5, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishingYear = 1945,
                             Title = "Na Drini cuprija"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AuthorID = 3,
+                            CoverPhotoId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            OpeningCount = 0,
+                            PublishingYear = 1597,
+                            Title = "Romeo i Julija"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AuthorID = 3,
+                            CoverPhotoId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            OpeningCount = 0,
+                            PublishingYear = 1602,
+                            Title = "Hamlet"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AuthorID = 4,
+                            CoverPhotoId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            OpeningCount = 0,
+                            PublishingYear = 1843,
+                            Title = "Ružno pače"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AuthorID = 4,
+                            CoverPhotoId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            OpeningCount = 0,
+                            PublishingYear = 1845,
+                            Title = "Snjeguljica"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AuthorID = 4,
+                            CoverPhotoId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            OpeningCount = 0,
+                            PublishingYear = 1835,
+                            Title = "Princeza na zrnu graška"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AuthorID = 4,
+                            CoverPhotoId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            OpeningCount = 0,
+                            PublishingYear = 1837,
+                            Title = "Mala sirena"
+                        });
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.BookGenre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("GenreId");
+
+                    b.ToTable("BookGenres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BookId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            GenreId = 1,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BookId = 2,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            GenreId = 1,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BookId = 3,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            GenreId = 2,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BookId = 4,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            GenreId = 2,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BookId = 5,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            GenreId = 3,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BookId = 6,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            GenreId = 3,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BookId = 7,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            GenreId = 3,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BookId = 8,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            GenreId = 3,
+                            IsDeleted = false
                         });
                 });
 
@@ -200,7 +473,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             IsDeleted = false,
-                            Name = "Bosnia and Herzegovina"
+                            Name = "Bosnia i Herzegovina"
                         },
                         new
                         {
@@ -209,7 +482,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             IsDeleted = false,
-                            Name = "Croatia"
+                            Name = "Hrvatska"
                         },
                         new
                         {
@@ -218,7 +491,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             IsDeleted = false,
-                            Name = "Serbia"
+                            Name = "Srbija"
                         },
                         new
                         {
@@ -227,7 +500,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             IsDeleted = false,
-                            Name = "Montenegro"
+                            Name = "Crna Gora"
                         },
                         new
                         {
@@ -236,7 +509,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             IsDeleted = false,
-                            Name = "Slovenia"
+                            Name = "Slovenija"
                         },
                         new
                         {
@@ -245,7 +518,83 @@ namespace eBiblioteka.Infrastructure.Migrations
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             IsDeleted = false,
-                            Name = "Austria"
+                            Name = "Austrija"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Abbreviation = "UK",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Ujedninjeno Kraljevstvo"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Abbreviation = "DAN",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Danska"
+                        });
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Genre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Abbreviation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Abbreviation = "ROM",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            Name = "Roman"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Abbreviation = "DRM",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            Name = "Drama"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Abbreviation = "BJK",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            Name = "Bajka"
                         });
                 });
 
@@ -288,7 +637,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 2,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
-                            Data = "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",
+                            Data = "iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLeqsbTn6eqpr7PJzc/j5ebf4eLZ3N2wtrnBxsjN0NLGysy6v8HT1tissra8wMNxTKO9AAAFDklEQVR4nO2d3XqDIAxAlfivoO//tEOZWzvbVTEpic252W3PF0gAIcsyRVEURVEURVEURVEURVEURVEURVEURVEURVEURflgAFL/AirAqzXO9R7XNBVcy9TbuMHmxjN6lr92cNVVLKEurVfK/zCORVvW8iUBnC02dj+Wpu0z0Y6QlaN5phcwZqjkOkK5HZyPAjkIjSO4fIdfcOwFKkJlX4zPu7Ha1tIcwR3wWxyFhRG6g4Je0YpSPDJCV8a2Sv2zd1O1x/2WMDZCwljH+clRrHfWCLGK8REMiql//2si5+DKWKcWeAGcFMzzNrXC/0TUwQ2s6+LhlcwjTMlYsUIQzPOCb7YBiyHopyLXIEKPEkI/TgeuiidK/R9FniUDOjRDpvm0RhqjMyyXNjDhCfIMYl1gGjIMIuYsnGEYRMRZOMMunaLVwpWRW008v6fYKDIzxCwVAeNSO90BJW6emelYBRF/kHpYGVaoxTDAaxOFsfP9y8hpJ4xd7gOcij7JNGQ1EYFgkPJa1jQEiYZXRaRINKxSDUW9n+FT82lSKadkiru9/4XPqSLWOekGPoY05TAvLm9orm+YWuwHoBHkZKijNBJGmeb61eL6Ff/6q7bLr7yvv3vKGhpDRjvgjGaPz+gUg6YgcvpyAR2FIZ9U6nEEyZRTovmEU32KichpGn7C17XrfyH9gK/c0CMP05HZIM2uf9sEveizKveBy9/6Qt7o89ne33D525cfcIMW6ab+TMEukQbQbu+xu7X3A9bChmWaCeAkG17bpntwXgWxHaMzGPmUaR5dQZiKqRVeUZ3047fi3nAu28h4CHxCsZAgmEH8Y27jJAhm8c+5RQzRQNVGhVFSfxOYIjp/pP7RxzjevYXVGf4eLt+BJ1vCuLuLkrgABgCGXZ2wik5uty+oBvNirI6mkzhAf4Gsb58Hcm67Jzd+KwD10BYPLL3e0MjvKrgAULnOfveF/O4N2Xb9BZom3gJes3F9X5Zze8/6Yt09b4CrqsEjUv8oFBaR2rl+6CZr2xVrp24o/WitBKuGrrpl1+bFkmK2qXTON4VpbdfLa7o7y/WdLxG7lm2Lqh2clOwTegbvc/vj2U78CwhA87Bn8G5Nk3eOb0Nsr9flz3sG78UUtue4kpv1xvjg3TMay62BMlTlP+vrOMnJsRmt/ze0jsfkPPYdAH57hK+34PeOyc8XIXu5xT2HsUkdZz+adwg8HGFfQ3K5jtDvbUiO4Di9/ywHGrL88pDizZ++oTp+an+SMX/ndymUCwmHMdO7yuOx83pUx/eEMU0AvxWndwgidAqOZ8ypCwdEfvvEo6D9HwpA8wzvmOJEqAg9ySu8g4x0Hb9hSB/BANEKJ+LbPBU0lzbAJs4xt1AoshKkUGQmiH8/jJ0gdhTTLmSegHlPE0oOdXALnqDjKYh3px//fSgSWG8UqfrrIICzYYSJXRr9BSPbpNzw7gBjKjKOYI7ReIGqQRIap5+5MdjyvuDkExvGeXSlONWZAP3/AZBwJohU7QJRGU+cTVH18ELmRPNBmibW6MT/k1b0XhdkRBvyT6SB6EYv/GvhSmRNpGngRULsAlxMCGNXp7w3FfdEbTEEDdLI9TdIKRUzUesa3I461ER8cpNT7gMRhpKmYVS9ELOgCUQsa4SsulciKiLbY+AnHD8cpuhISsnxpamI84sbDq9qYJgf8wiiOBrC7Ml7M7ZECCqKoiiKoiiKoiiKoijv5AvJxlZRyNWWLwAAAABJRU5ErkJggg==",
                             IsDeleted = false
                         });
                 });
@@ -344,15 +693,176 @@ namespace eBiblioteka.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("eBiblioteka.Core.Book", b =>
+            modelBuilder.Entity("eBiblioteka.Core.User", b =>
                 {
-                    b.HasOne("eBiblioteka.Core.Photo", "CoverPhoto")
-                        .WithMany("Books")
-                        .HasForeignKey("CoverPhotoId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Biography")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSignInAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProfilePhotoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("ProfilePhotoId");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CountryId = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            Email = "site.admin@ridewithme.com",
+                            FirstName = "Site",
+                            Gender = 0,
+                            IsDeleted = false,
+                            LastName = "Admin",
+                            PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=",
+                            PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
+                            PhoneNumber = "38761123456",
+                            Role = 0
+                        });
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.UserBook", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBooks");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Author", b =>
+                {
+                    b.HasOne("eBiblioteka.Core.Country", "Country")
+                        .WithMany("Authors")
+                        .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Book", b =>
+                {
+                    b.HasOne("eBiblioteka.Core.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eBiblioteka.Core.Photo", "CoverPhoto")
+                        .WithMany("Books")
+                        .HasForeignKey("CoverPhotoId");
+
+                    b.Navigation("Author");
+
                     b.Navigation("CoverPhoto");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.BookGenre", b =>
+                {
+                    b.HasOne("eBiblioteka.Core.Book", "Book")
+                        .WithMany("Genres")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eBiblioteka.Core.Genre", "Genre")
+                        .WithMany("Books")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Genre");
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.City", b =>
@@ -377,19 +887,78 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Navigation("Book");
                 });
 
+            modelBuilder.Entity("eBiblioteka.Core.User", b =>
+                {
+                    b.HasOne("eBiblioteka.Core.Country", "Country")
+                        .WithMany("Users")
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("eBiblioteka.Core.Photo", "ProfilePhoto")
+                        .WithMany("Users")
+                        .HasForeignKey("ProfilePhotoId");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("ProfilePhoto");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.UserBook", b =>
+                {
+                    b.HasOne("eBiblioteka.Core.Book", "Book")
+                        .WithMany("Readers")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eBiblioteka.Core.User", "User")
+                        .WithMany("OpenedBooks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Author", b =>
+                {
+                    b.Navigation("Books");
+                });
+
             modelBuilder.Entity("eBiblioteka.Core.Book", b =>
                 {
+                    b.Navigation("Genres");
+
                     b.Navigation("Quotes");
+
+                    b.Navigation("Readers");
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.Country", b =>
                 {
+                    b.Navigation("Authors");
+
                     b.Navigation("Cities");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Genre", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.Photo", b =>
                 {
                     b.Navigation("Books");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.User", b =>
+                {
+                    b.Navigation("OpenedBooks");
                 });
 #pragma warning restore 612, 618
         }

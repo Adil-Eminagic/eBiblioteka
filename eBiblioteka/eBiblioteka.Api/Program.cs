@@ -11,13 +11,17 @@ var webAppBuilder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 var connectionStringConfig = webAppBuilder.BindConfig<ConnectionStringConfig>("ConnectionStrings");
+var jwtTokenConfig = webAppBuilder.BindConfig<JwtTokenConfig>("JwtToken");
+
 
 webAppBuilder.Services.AddMapper();
 webAppBuilder.Services.AddValidators();
 webAppBuilder.Services.AddApplication();
 webAppBuilder.Services.AddInfrastructure();
 webAppBuilder.Services.AddDatabase(connectionStringConfig);
+webAppBuilder.Services.AddAuthenticationAndAuthorization(jwtTokenConfig);
 webAppBuilder.Services.AddResponseCaching();
+webAppBuilder.Services.AddOther();
 webAppBuilder.Services.AddControllers()
                       .AddJsonOptions(options =>
                       {

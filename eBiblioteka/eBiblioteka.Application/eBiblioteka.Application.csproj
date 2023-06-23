@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\eBiblioteka.Application.Interfaces\eBiblioteka.Application.Interfaces.csproj" />
+    <ProjectReference Include="..\eBiblioteka.Common.Services\eBiblioteka.Common.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBiblioteka.Infrastructure.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBiblioteka.Infrastructure", "eBiblioteka.Infrastructure\eBiblioteka.Infrastructure.csproj", "{0C7AC504-AB2A-4446-ABDA-F1935D7347D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eBiblioteka.Application.Interfaces", "eBiblioteka.Application.Interfaces\eBiblioteka.Application.Interfaces.csproj", "{62B00FDB-CA77-4463-9D25-7E6558812325}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBiblioteka.Application.Interfaces", "eBiblioteka.Application.Interfaces\eBiblioteka.Application.Interfaces.csproj", "{62B00FDB-CA77-4463-9D25-7E6558812325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eBiblioteka.Application", "eBiblioteka.Application\eBiblioteka.Application.csproj", "{1B5BF8A6-14E5-4C10-855E-BAAFA7D22405}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBiblioteka.Application", "eBiblioteka.Application\eBiblioteka.Application.csproj", "{1B5BF8A6-14E5-4C10-855E-BAAFA7D22405}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eBiblioteka.Common.Services", "eBiblioteka.Common.Services\eBiblioteka.Common.Services.csproj", "{8D2C2E65-B651-4731-9BFB-C1A5304AF13D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{1B5BF8A6-14E5-4C10-855E-BAAFA7D22405}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B5BF8A6-14E5-4C10-855E-BAAFA7D22405}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B5BF8A6-14E5-4C10-855E-BAAFA7D22405}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2C2E65-B651-4731-9BFB-C1A5304AF13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2C2E65-B651-4731-9BFB-C1A5304AF13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2C2E65-B651-4731-9BFB-C1A5304AF13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2C2E65-B651-4731-9BFB-C1A5304AF13D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

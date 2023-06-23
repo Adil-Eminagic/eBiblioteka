@@ -8,48 +8,7 @@ namespace eBiblioteka.Infrastructure
     {
         private readonly DateTime _dateTime = new(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local);
 
-
-        private void SeedData(ModelBuilder modelBuilder)
-        {
-            SeedCountries(modelBuilder);
-            SeedCities(modelBuilder);
-            SeedBooks(modelBuilder);
-            SeedPhotos(modelBuilder);
-            SeedQuotes(modelBuilder);
-
-        }
-
-        private void SeedQuotes(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Quote>().HasData(
-                new()
-                {
-                    Id = 1,
-                    CreatedAt = _dateTime,
-                    ModifiedAt = null,
-                    Content="Citat iz tvrdjave",
-                    BookId = 1,
-                },
-                new()
-                {
-                    Id = 2,
-                    CreatedAt = _dateTime,
-                    ModifiedAt = null,
-                    BookId = 2,
-                    Content="Citat na drini cuprija"
-                }
-                );
-        }
-
-        private void SeedPhotos(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Photo>().HasData(
-                 new()
-                 {
-                     Id = 1,
-                     CreatedAt = _dateTime,
-                     ModifiedAt = null,
-                     Data= "iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLeqsbTn6eqpr7PJzc/j5ebf4eLZ3N2wtrnBxsjN0NLGysy6v8HT1tiss" +
+        string image = "iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLeqsbTn6eqpr7PJzc/j5ebf4eLZ3N2wtrnBxsjN0NLGysy6v8HT1tiss" +
             "ra8wMNxTKO9AAAFDklEQVR4nO2d3XqDIAxAlfivoO//tEOZ" +
             "WzvbVTEpic252W3PF0gAIcsyRVEURVEURVEURVEURVEURVEURVEURVEURVEURflgAFL/AirAqzXO9R7XNBVcy9TbuMHmxjN6lr92cNVVLKEurVfK/zCORVvW8iUBnC0" +
             "2dj+Wpu0z0Y6QlaN5phcwZqjkOkK5HZyPAjkIjSO4fIdfcOwFKkJlX4zPu7Ha1tIcwR3wWxyFhRG6g4Je0YpSPDJCV8a2Sv2zd1O1x/2WMDZCwljH+clRrHfWCLGK8REMiql//2si5+DKWKcWeAGcFMzzNrXC/0TUwQ2s6+Lhl" +
@@ -63,38 +22,37 @@ namespace eBiblioteka.Infrastructure
             "vEo6D9HwpA8wzvmOJEqAg9ySu8g4x0Hb9hSB/BANEKJ+LbPBU0lzbAJs4xt1AoshKkUGQmiH8/jJ0gdhTTLmSegHlPE0oOdXALnqDjKYh3px//fSgSWG8UqfrrIICzYYSJXRr9BSPbpNzw7gBjKjKOYI7ReIGqQRIap5" +
             "+5MdjyvuDkExvGeXSlONWZAP3/AZBwJohU7QJRGU+cTVH18ELmRPNBmibW6MT/k1b0XhdkRBvyT6SB6EYv/GvhSmRNpGngRULsAlxMCGNXp7w3FfdEbTEEDdLI9TdIKRUzUesa3I461ER8cpNT7gMRhpKmYVS9ELOgCU" +
             "Qsa4SsulciKiLbY+AnHD8cpuhISsnxpamI84sbDq9qYJgf8wiiOBrC7Ml7M7ZECCqKoiiKo" +
-            "iiKoiiKoijv5AvJxlZRyNWWLwAAAABJRU5ErkJggg=="
+            "iiKoiiKoijv5AvJxlZRyNWWLwAAAABJRU5ErkJggg==";
 
-        },
+
+        private void SeedData(ModelBuilder modelBuilder)
+        {
+            SeedCountries(modelBuilder);
+            SeedCities(modelBuilder);
+            SeedBooks(modelBuilder);
+            SeedPhotos(modelBuilder);
+            SeedQuotes(modelBuilder);
+            SeedAuthors(modelBuilder);
+            SeedGenres(modelBuilder);
+            SeedBookGenres(modelBuilder);
+            SeedUsers(modelBuilder);
+
+        }
+
+        private void SeedPhotos(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Photo>().HasData(
                  new()
                  {
-                     Data= "iVBORw0KGgoAAAANSUhEUgAAAGwAAACFCAMAAACJ8+21AAAAUVBMVEXu7u7////w8PCfn5/MzMz4+PiioqLz8/Oc" +
-                     "nJy+vr7IyMja2tr7+/uurq7g4OC1tbVmZmbU1NTm5uaDg4Nubm6oqKh2dnZ8fHyNjY2WlpZhYWFFUy57AAAG80lEQVRoge" +
-                     "2aiZarKBCGAcViERAEl7z/g06hWezFLbenz5y5cvqYaAifVfxUlaQJZeSXGlDyayyk/R6K/KZdF+yCXbALdsEu2F8JY+xP7u" +
-                     "7cdxmltIa3eee+WFMLyKP8vdLlFIxR7qTSJPNqft7AU98AauXUyvCWgadgNS2lIl5lHhpYn53BMzBGayc9EsCWE8+fNPAMDGi" +
-                     "QcpowBITJQFVaOG7gGRinXjr6bDXTs0P97NB9xZyB0RqlQT80CJNDpbd8snd7uDPTS8E4S780ouVdMflsa8ATMKDeOf4Vli2ydw" +
-                     "MDrX8GVlPl5Lesqc2K+SEYetE5v5gt8oXncUr5j8AwfDhH7rrnVAXFPsOktHRrzR2H4fhmEj7o0lsdiMw+rRcslqf0RwSSg7BRe" +
-                     "W7KsrTe2NoZyYhfwPTOlB2DYcpklhJjMMFYhTC0wUg8JUot5Kkwlm1N2QEYA1y5blS0NI4ppb0vS0jGSMIRrFj5wGH6IdtbDzt" +
-                     "LHklaVqMQI6NoDGSzsBEIjPl8osCEOwz1gyv8XRiD4J0QosAmKDPJ25lVak78/E6BUw8v4rtNL27BGHHFTEKWpDqlcCegQMpHI" +
-                     "4+owqXbFv4mDNydlGGWuuQeXlw0bY2ZFYlU2PbiphurJ6sYaZ2SCl9YeMllSA4fbkf425aZl2GGWvSiXmC8z7L0hHIOnGIGdWj" +
-                     "hTsregqmnG4WnKhmyYL1WVxYN+pc4syP8bYHYF4zQhPHiNWWTAq3GNpsJOHeu3pmy7XWWHrCKkqryegHLSZQ8zxVwafaEvw0D+" +
-                     "RC+or4QzN6b1tZOK/lFK2uDi3uvytpc1Hp8Ct9Ui1Lnw3zNfgzJ7Al/BxYeXuS1qMxc5i9azZ/yDGXaFf7OnLF5WQtHdVFVonKe" +
-                     "5fwVsjD0JP3HnHGMZbte3IZBOcFGTSXCsOGCU4HjelOfYglLie1vNm9bFuZJY3RmTU1UUnNmyyXO+rQv/N0UM4nfUILQFy4bWJI" +
-                     "anzAeQObSvvB3YVn8KPx7LFnwKlFIy+FuIK+qcGDLfgdm0aQx0PRINR94RWXwOQbrRW+rdMCLe2UBE1NgJMqIFR7mAlLL4oDwd2" +
-                     "FTTqtyuADvqm95VZFcKvS+8Pct82LKMCo/FfEgU/E9UGwXjAdhs/ix4ElS5wVN/LcOTUe8uFvKwTPyi3E0Za64uZYv3n2xb9f4h" +
-                     "2GvDDoZWEzJhQaVxoWB4ojw92GLDPoEOk/uBo7iUaIcEP6BihiKzw0RzvN6NtBkA7HQO+LFAzAnPhqGSiF5u4zN2wTMuxypjz0z" +
-                     "7Hbwr0oEk1oZCLx25thUn0I4Ej4Owe4ZVBSYzgJ82e+YDTy27bJvPmShi6Ts0qRPgxx8yjvQDZ9jym9MeqMdWh5/tn96DvZj7YJ" +
-                     "dsAt2wS7YBcsNOGdYZECuNPDk3pFzPM0Xp4/zOcydp674EefrvySsf1B2bWA+SgDVN81g555xYLrrFGOq6zTm1Ni5TM5dOsNt7L" +
-                     "uut2uDbsBiNNzfHFdNq1yMIZdv5IawGFvO2xgRJvE91jyy6SXWyFw3rTEmvANru5BhbdTAZWPgCRuing4M2i41nrEuhuxWphsBG" +
-                     "9XKBqxxfaVvjnR47zjM+IQ1ZkjVYBoN4VbpWHF7G4BJqYhturYd1obchCkZZfOAxfHpxsapGJVDmGlKaPswwdCvwWY3urdgEgeK" +
-                     "dze6hRsbw2PkaBnrY9d1sYTsRjp2CBP1e2psJC8bhJVN50wTCVvAvM8wfRuUdHGo5a1zss+W9fi09oYafauAVYNk4IfYibvEWsF" +
-                     "sK7E2BtlaN2jUgxgCL4euw652yO08bP5ln8F0eEkM2KNkZY93+Th1gY9dz8D+hfY3wqYZmSfueSDPa48O8wssO6w/hqzCQA5jYKb" +
-                     "V2EMMhFdDhRzVSi5bPw0bhkEBQTEOg8AwOWJ3wnSWY3sWxvuIq7q8JWD6NnLSxGhzxHU8NYpNd9PEtiYcw2OKN8b6DiWPaaJPVXES" +
-                     "hvFJtANA7IBX0ePIKRpYwljbisYyhBE63ALr+zDBBF3dp1iDQbpZES1gUCd9j/cfWd+SBQzvprI3Awjr+5j4E4ahuF3ZqFiFxRYDls" +
-                     "EMVXl8sbcCIX4Bw9so0XUZZkzfvSxrU5VWnufXHsnLmG+4B973IwZiM52KeoaVHMMEftp30deY9ajD6UUYRg8fR1rXa6OuGCYa59yA" +
-                     "k4U5esizL53rOzLBojBJ4qgO43OBMON6NLrvkkleR0wyaSVXr13tWg7cxwQWOXi/CU9NLBVmAYMWdaKKGi+hH4c+x2BgQ74sdT7GlV" +
-                     "C8ZjDn0xHmWmoqsrCEAvzLdRXPP5rNxRWZz8j9dbO++o+Eqwt2wS7YBbtgF+yCXbD/DewXcbD7/0s/yKL/AANtY9FhG0NOAAAAAElFT" +
-                     "kSuQmCC",
+                     Id = 1,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     Data = image
+
+                 },
+                 new()
+                 {
+                     Data = image,
                      Id = 2,
                      CreatedAt = _dateTime,
                      ModifiedAt = null,
@@ -103,33 +61,6 @@ namespace eBiblioteka.Infrastructure
             );
         }
 
-        private void SeedBooks(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Book>().HasData(
-                new()
-                {
-                    Id = 1,
-                    CreatedAt = _dateTime,
-                    ModifiedAt = null,
-                    Title = "Tvrdjava",
-                    PublishingDate = new DateTime(1980, 5, 27),
-                    OpeningCount = 0,
-                    CoverPhotoId = 1,
-                },
-                new()
-                {
-                    Id = 2,
-                    CreatedAt = _dateTime,
-                    ModifiedAt = null,
-                    Title = "Na Drini cuprija",
-                    PublishingDate = new DateTime(1980, 5, 27),
-                    OpeningCount = 0,
-                    CoverPhotoId = 1,
-
-
-                }
-                );
-        }
 
         private void SeedCountries(ModelBuilder modelBuilder)
         {
@@ -137,7 +68,7 @@ namespace eBiblioteka.Infrastructure
                 new()
                 {
                     Id = 1,
-                    Name = "Bosnia and Herzegovina",
+                    Name = "Bosnia i Herzegovina",
                     Abbreviation = "BIH",
                     IsActive = true,
                     CreatedAt = _dateTime,
@@ -146,7 +77,7 @@ namespace eBiblioteka.Infrastructure
                 new()
                 {
                     Id = 2,
-                    Name = "Croatia",
+                    Name = "Hrvatska",
                     Abbreviation = "HR",
                     IsActive = true,
                     CreatedAt = _dateTime,
@@ -155,7 +86,7 @@ namespace eBiblioteka.Infrastructure
                 new()
                 {
                     Id = 3,
-                    Name = "Serbia",
+                    Name = "Srbija",
                     Abbreviation = "SRB",
                     IsActive = true,
                     CreatedAt = _dateTime,
@@ -164,7 +95,7 @@ namespace eBiblioteka.Infrastructure
                 new()
                 {
                     Id = 4,
-                    Name = "Montenegro",
+                    Name = "Crna Gora",
                     Abbreviation = "CG",
                     IsActive = true,
                     CreatedAt = _dateTime,
@@ -173,7 +104,7 @@ namespace eBiblioteka.Infrastructure
                 new()
                 {
                     Id = 5,
-                    Name = "Slovenia",
+                    Name = "Slovenija",
                     Abbreviation = "SLO",
                     IsActive = true,
                     CreatedAt = _dateTime,
@@ -182,12 +113,30 @@ namespace eBiblioteka.Infrastructure
                 new()
                 {
                     Id = 6,
-                    Name = "Austria",
+                    Name = "Austrija",
                     Abbreviation = "AT",
                     IsActive = true,
                     CreatedAt = _dateTime,
                     ModifiedAt = null
-                });
+                },
+                 new()
+                 {
+                     Id = 7,
+                     Name = "Ujedninjeno Kraljevstvo",
+                     Abbreviation = "UK",
+                     IsActive = true,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null
+                 },
+                 new()
+                 {
+                     Id = 8,
+                     Name = "Danska",
+                     Abbreviation = "DAN",
+                     IsActive = true,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null
+                 });
         }
 
         private void SeedCities(ModelBuilder modelBuilder)
@@ -224,6 +173,314 @@ namespace eBiblioteka.Infrastructure
                     ModifiedAt = null
                 });
         }
+
+        private void SeedUsers(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasData(
+                 new User()
+                 {
+                     Id = 1,
+                     FirstName = "Site",
+                     LastName = "Admin",
+                     Email = "site.admin@ridewithme.com",
+                     Role = Role.Administrator,
+                     Gender = Gender.Male,
+                     PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=", //Plain text: test
+                     PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
+                     PhoneNumber = "38761123456",
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     CountryId=1
+
+                 }
+                 
+                 );
+        }
+
+        private void SeedAuthors(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Author>().HasData(
+                new()
+                {
+                    Id = 1,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    FirstName = "Meša",
+                    LastName = "Selimović",
+                    Gender = Gender.Male,
+                    BirthDate = new DateTime(1910, 4, 26),
+                    MortalDate = new DateTime(1982, 7, 11),
+                    CountryId = 1,
+
+                },
+                 new()
+                 {
+                     Id = 2,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     FirstName = "Ivo",
+                     LastName = "Andrić",
+                     Gender = Gender.Male,
+                     BirthDate = new DateTime(1892, 10, 10),
+                     MortalDate = new DateTime(1975, 3, 13),
+                     CountryId = 1,
+                 },
+                new()
+                {
+                    Id = 3,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    FirstName = "Wiliam",
+                    LastName = "Shakspeare",
+                    Gender = Gender.Male,
+                    BirthDate = new DateTime(1564, 4, 1),
+                    MortalDate = new DateTime(1616, 4, 23),
+                    CountryId = 7,
+                },
+                new()
+                {
+                    Id = 4,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    FirstName = "Hans Christian",
+                    LastName = "Andersen",
+                    Gender = Gender.Male,
+                    BirthDate = new DateTime(1805, 4, 2),
+                    MortalDate = new DateTime(1875, 8, 4),
+                    CountryId = 8,
+                }
+
+
+                );
+        }
+
+        private void SeedGenres(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Genre>().HasData(
+                  new()
+                  {
+                      Id = 1,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Name = "Roman",
+                      Abbreviation = "ROM"
+
+                  },
+                  new()
+                  {
+                      Id = 2,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Name = "Drama",
+                      Abbreviation = "DRM"
+                  },
+                  new()
+                  {
+                      Id = 3,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Name = "Bajka",
+                      Abbreviation = "BJK"
+                  }
+                  );
+
+        }
+
+
+        private void SeedBookGenres(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<BookGenre>().HasData(
+                 new()
+                 {
+                     Id = 1,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                    BookId = 1,
+                    GenreId = 1
+
+                 },
+                 new()
+                 {
+                     Id = 2,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     BookId = 2,
+                     GenreId = 1
+                 },
+                 new()
+                 {
+                     Id = 3,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     BookId = 3,
+                     GenreId = 2
+                 },
+                 new()
+                 {
+                     Id = 4,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     BookId = 4,
+                     GenreId = 2
+                 },
+                 new()
+                 {
+                     Id = 5,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     BookId = 5,
+                     GenreId = 3
+                 },
+                 new()
+                 {
+                     Id = 6,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     BookId = 6,
+                     GenreId = 3
+                 },
+                 new()
+                 {
+                     Id = 7,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     BookId = 7,
+                     GenreId = 3
+                 },
+                  new()
+                  {
+                      Id = 8,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      BookId = 8,
+                      GenreId = 3
+                  }
+                 );
+        }
+
+
+
+        private void SeedBooks(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>().HasData(
+                new()
+                {
+                    Id = 1,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    Title = "Tvrdjava",
+                    PublishingYear = 1970,
+                    OpeningCount = 0,
+                    CoverPhotoId = 1,
+                    AuthorID = 1,
+                },
+                new()
+                {
+                    Id = 2,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    Title = "Na Drini cuprija",
+                    PublishingYear=1945,
+                    OpeningCount = 0,
+                    CoverPhotoId = 1,
+                    AuthorID = 2,
+                },
+                 new()
+                 {
+                     Id = 3,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     Title = "Romeo i Julija",
+                     PublishingYear=1597,
+                     OpeningCount = 0,
+                     CoverPhotoId = 1,
+                     AuthorID = 3,
+                 },
+                 new()
+                 {
+                     Id = 4,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     Title = "Hamlet",
+                     PublishingYear=1602,
+                     OpeningCount = 0,
+                     CoverPhotoId = 1,
+                     AuthorID = 3,
+                 },
+                 new()
+                 {
+                     Id = 5,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                     Title = "Ružno pače",
+                     PublishingYear = 1843,
+                     OpeningCount = 0,
+                     CoverPhotoId = 1,
+                     AuthorID = 4,
+                 },
+                  new()
+                  {
+                      Id = 6,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Title = "Snjeguljica",
+                      PublishingYear = 1845,
+                      OpeningCount = 0,
+                      CoverPhotoId = 1,
+                      AuthorID = 4,
+                  },
+                   new()
+                   {
+                       Id = 7,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Princeza na zrnu graška",
+                       PublishingYear = 1835,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 4,
+                   },
+                   new()
+                   {
+                       Id = 8,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Mala sirena",
+                       PublishingYear = 1837,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 4,
+                   }
+                );
+        }
+
+        private void SeedQuotes(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Quote>().HasData(
+                new()
+                {
+                    Id = 1,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    Content = "Citat iz tvrdjave",
+                    BookId = 1,
+                },
+                new()
+                {
+                    Id = 2,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    BookId = 2,
+                    Content = "Citat na drini cuprija"
+                }
+
+                );
+        }
+
+
+        
+
+       
 
     }
 }
