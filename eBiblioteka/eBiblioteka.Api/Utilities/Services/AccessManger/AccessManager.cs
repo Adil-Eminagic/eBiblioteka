@@ -62,7 +62,7 @@ namespace eBiblioteka.Api
                     new Claim(ClaimNames.FirstName, user.FirstName),
                     new Claim(ClaimNames.LastName, user.LastName),
                     new Claim(ClaimNames.Email, user.Email),
-                    new Claim(ClaimNames.Role, user.Role.ToString())
+                    new Claim(ClaimNames.Role, user.Role.Value)
 
                 }),
                 SigningCredentials = new SigningCredentials(

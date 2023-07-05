@@ -5,5 +5,6 @@ namespace eBiblioteka.Application.Interfaces
 {
     public interface IBooksService : IBaseService<int, BookDto, BookUpsertDto, BooksSearchObject>
     {
+        Task<IEnumerable<BookDto>> GetByAuthorIdAsync(int authorId, CancellationToken cancellationToken);
     }
 }

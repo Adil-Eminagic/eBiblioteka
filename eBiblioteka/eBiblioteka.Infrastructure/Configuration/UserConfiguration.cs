@@ -27,9 +27,7 @@ namespace eBiblioteka.Infrastructure
             builder.Property(e => e.PasswordSalt)
                    .IsRequired();
 
-            builder.Property(e => e.Role)
-                   .IsRequired();
-
+           
             builder.Property(e => e.LastSignInAt)
                    .IsRequired(false);
 
@@ -42,11 +40,19 @@ namespace eBiblioteka.Infrastructure
             builder.HasOne(e => e.Country)
                  .WithMany(e => e.Users)
                  .HasForeignKey(e => e.CountryId)
-                 .IsRequired(false);
+                 .IsRequired();
 
-            builder.Property(e => e.Gender)
-                   .IsRequired();
+            builder.HasOne(e => e.Role)
+                 .WithMany(e => e.Users)
+                 .HasForeignKey(e => e.RoleId)
+                 .IsRequired();
 
+            builder.HasOne(e => e.Gender)
+                .WithMany(e => e.Users)
+                .HasForeignKey(e => e.GenderId)
+                .IsRequired();
+
+           
             builder.Property(e => e.Biography)
                    .IsRequired(false);
 

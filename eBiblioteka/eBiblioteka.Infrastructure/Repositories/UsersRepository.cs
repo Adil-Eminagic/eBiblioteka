@@ -12,12 +12,14 @@ namespace eBiblioteka.Infrastructure
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
-            return await DbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+            return await DbSet.Include(c=>c.Role).AsNoTracking().FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
         }
+
+       
 
         public override async Task<PagedList<User>> GetPagedAsync(UsersSearchObject searchObject, CancellationToken cancellationToken = default)
         {
-            return await DbSet.Where(c => searchObject.FullName == null || c.FirstName.ToLower().Contains(searchObject.FullName.ToLower())
+            return await DbSet.Include(c=>c.Role).Include(c=>c.Gender).Where(c => searchObject.FullName == null || c.FirstName.ToLower().Contains(searchObject.FullName.ToLower())
             || c.LastName.ToLower().Contains(searchObject.FullName.ToLower())).ToPagedListAsync(searchObject, cancellationToken);
         }
     }

@@ -12,10 +12,6 @@ namespace eBiblioteka.Infrastructure
             builder.Property(e => e.Name)
                    .IsRequired();
 
-            builder.Property(e => e.Abbreviation)
-                 .IsRequired();
-
-           
         }
     }
 }

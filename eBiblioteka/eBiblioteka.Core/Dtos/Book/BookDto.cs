@@ -11,7 +11,7 @@
         public PhotoDto? CoverPhoto { get; set; } = null!;
 
         public int AuthorID { get; set; }
-        public Author Author { get; set; } = null!;
+        public AuthorDto Author { get; set; } = null!;
 
     }
 }

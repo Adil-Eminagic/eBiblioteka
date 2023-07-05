@@ -17,5 +17,6 @@ namespace eBiblioteka.Core
         public ICollection<BookGenre> Genres { get; set; } = null!;
         public ICollection<Quote> Quotes { get; set; } = null!;
         public ICollection<UserBook> Readers { get; set; } = null!;
+        public ICollection<Rating> UserRate { get; set; }=null!;
     }
 }

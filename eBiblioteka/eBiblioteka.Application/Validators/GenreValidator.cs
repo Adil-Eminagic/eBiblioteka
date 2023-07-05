@@ -9,7 +9,6 @@ namespace eBiblioteka.Application
         public GenreValidator()
         {
             RuleFor(c => c.Name).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty);
-            RuleFor(c => c.Abbreviation).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty);
           
         }
     }

@@ -7,6 +7,6 @@ namespace eBiblioteka.Core
         public Book Book { get; set; } = null!;
 
         public int GenreID { get; set; }
-        public Genre Genre { get; set; } = null!;
+        public Role Genre { get; set; } = null!;
     }
 }

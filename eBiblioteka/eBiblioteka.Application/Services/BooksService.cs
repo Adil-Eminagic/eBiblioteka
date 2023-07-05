@@ -14,5 +14,10 @@ namespace eBiblioteka.Application
 
         }
 
+        public async Task<IEnumerable<BookDto>> GetByAuthorIdAsync(int authorId, CancellationToken cancellationToken)
+        {
+            var books= await CurrentRepository.GetByAuthorIdAsync(authorId, cancellationToken);
+            return Mapper.Map<IEnumerable<BookDto>>(books);
+        }
     }
 }

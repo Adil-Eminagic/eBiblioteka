@@ -11,9 +11,14 @@ namespace eBiblioteka.Infrastructure
         {
         }
 
+        public async Task<IEnumerable<Book>> GetByAuthorIdAsync(int authorId, CancellationToken cancellationToken)
+        {
+            return await DbSet.AsNoTracking().Where(c=>c.AuthorID==authorId).ToListAsync(cancellationToken);
+        }
+
         public override async Task<PagedList<Book>> GetPagedAsync(BooksSearchObject searchObject, CancellationToken cancellationToken = default)
         {
-            return await DbSet.Include(c=>c.CoverPhoto).Where(c => searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
+            return await DbSet.Include(c=>c.CoverPhoto).Include(c=>c.Author).Where(c => searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
                .ToPagedListAsync(searchObject, cancellationToken);
         }
 

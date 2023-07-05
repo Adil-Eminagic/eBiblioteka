@@ -18,6 +18,9 @@ namespace eBiblioteka.Infrastructure
         public readonly IUserBooksRepository UserBooksRepository;
         public readonly IUsersRepository UsersRepository;
         public readonly IBookGenresRepository BookGenresRepository;
+        public readonly IRatingsRepository RatingsRepository;
+        public readonly IGendersRepository GendersRepository;
+        public readonly IRolesRepository RolesRepository;
 
 
         public UnitOfWork(
@@ -31,7 +34,10 @@ namespace eBiblioteka.Infrastructure
             IAuthorsRepository authorsRepository,
             IUserBooksRepository userBooksRepository,
             IUsersRepository usersRepository,
-            IBookGenresRepository bookGenresRepository)
+            IBookGenresRepository bookGenresRepository,
+            IRatingsRepository ratingsRepository,
+            IGendersRepository gendersRepository,
+            IRolesRepository rolesRepository)
         {
             _databaseContext = databaseContext;
 
@@ -45,6 +51,9 @@ namespace eBiblioteka.Infrastructure
             UserBooksRepository = userBooksRepository;
             UsersRepository = usersRepository;
             BookGenresRepository = bookGenresRepository;
+            RatingsRepository = ratingsRepository;
+            GendersRepository = gendersRepository;
+            RolesRepository = rolesRepository;
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)

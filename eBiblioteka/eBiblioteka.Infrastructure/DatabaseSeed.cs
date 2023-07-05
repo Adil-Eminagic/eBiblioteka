@@ -36,7 +36,67 @@ namespace eBiblioteka.Infrastructure
             SeedGenres(modelBuilder);
             SeedBookGenres(modelBuilder);
             SeedUsers(modelBuilder);
+            SeedGenders(modelBuilder);
+            SeedRoles(modelBuilder);
 
+        }
+
+        private void SeedRoles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Role>().HasData(
+                  new()
+                  {
+                      Id = 1,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Value = "Superadmin"
+
+                  },
+                  new()
+                  {
+                      Id = 2,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Value="Admin"
+                  },
+                  new()
+                  {
+                      Id = 3,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Value = "User"
+                  }
+
+             );
+        }
+
+        private void SeedGenders(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Gender>().HasData(
+                  new()
+                  {
+                      Id = 1,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Value="Male"
+
+                  },
+                  new()
+                  {
+                      Id = 2,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Value="Female"
+                  },
+                  new()
+                  {
+                      Id = 3,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Value = "Other"
+                  }
+
+             );
         }
 
         private void SeedPhotos(ModelBuilder modelBuilder)
@@ -136,7 +196,26 @@ namespace eBiblioteka.Infrastructure
                      IsActive = true,
                      CreatedAt = _dateTime,
                      ModifiedAt = null
-                 });
+                 },
+                  new()
+                  {
+                      Id = 9,
+                      Name = "Francuska",
+                      Abbreviation = "FRA",
+                      IsActive = true,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null
+                  },
+                  new()
+                  {
+                      Id = 10,
+                      Name = "Norveška",
+                      Abbreviation = "NOR",
+                      IsActive = true,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null
+                  }
+                 );
         }
 
         private void SeedCities(ModelBuilder modelBuilder)
@@ -183,17 +262,17 @@ namespace eBiblioteka.Infrastructure
                      FirstName = "Site",
                      LastName = "Admin",
                      Email = "site.admin@ridewithme.com",
-                     Role = Role.Administrator,
-                     Gender = Gender.Male,
+                     RoleId=1,
+                     GenderId = 1,
                      PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=", //Plain text: test
                      PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                      PhoneNumber = "38761123456",
                      CreatedAt = _dateTime,
                      ModifiedAt = null,
-                     CountryId=1
+                     CountryId = 1
 
                  }
-                 
+
                  );
         }
 
@@ -205,9 +284,8 @@ namespace eBiblioteka.Infrastructure
                     Id = 1,
                     CreatedAt = _dateTime,
                     ModifiedAt = null,
-                    FirstName = "Meša",
-                    LastName = "Selimović",
-                    Gender = Gender.Male,
+                    FullName = "Meša Selimović",
+                    GenderId=1,
                     BirthDate = new DateTime(1910, 4, 26),
                     MortalDate = new DateTime(1982, 7, 11),
                     CountryId = 1,
@@ -218,9 +296,8 @@ namespace eBiblioteka.Infrastructure
                      Id = 2,
                      CreatedAt = _dateTime,
                      ModifiedAt = null,
-                     FirstName = "Ivo",
-                     LastName = "Andrić",
-                     Gender = Gender.Male,
+                     FullName = "Ivo Andrić",
+                     GenderId = 1,
                      BirthDate = new DateTime(1892, 10, 10),
                      MortalDate = new DateTime(1975, 3, 13),
                      CountryId = 1,
@@ -230,9 +307,8 @@ namespace eBiblioteka.Infrastructure
                     Id = 3,
                     CreatedAt = _dateTime,
                     ModifiedAt = null,
-                    FirstName = "Wiliam",
-                    LastName = "Shakspeare",
-                    Gender = Gender.Male,
+                    FullName = "Wiliam Shakspeare",
+                    GenderId = 1,
                     BirthDate = new DateTime(1564, 4, 1),
                     MortalDate = new DateTime(1616, 4, 23),
                     CountryId = 7,
@@ -242,13 +318,35 @@ namespace eBiblioteka.Infrastructure
                     Id = 4,
                     CreatedAt = _dateTime,
                     ModifiedAt = null,
-                    FirstName = "Hans Christian",
-                    LastName = "Andersen",
-                    Gender = Gender.Male,
+                    FullName = "Hans Christian Andersen",
+                    GenderId = 1,
                     BirthDate = new DateTime(1805, 4, 2),
                     MortalDate = new DateTime(1875, 8, 4),
                     CountryId = 8,
+                },
+                new()
+                {
+                    Id = 5,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    FullName = "Voltaire",
+                    GenderId= 1,
+                    BirthDate = new DateTime(1805, 4, 2),
+                    MortalDate = new DateTime(1875, 8, 4),
+                    CountryId = 9,
+                },
+                new()
+                {
+                    Id = 6,
+                    CreatedAt = _dateTime,
+                    ModifiedAt = null,
+                    FullName = "Henrik Ibsen",
+                    BirthDate = new DateTime(1828, 3, 20),
+                    MortalDate = new DateTime(1906, 5, 23),
+                    GenderId=1,
+                    CountryId = 10
                 }
+
 
 
                 );
@@ -263,7 +361,6 @@ namespace eBiblioteka.Infrastructure
                       CreatedAt = _dateTime,
                       ModifiedAt = null,
                       Name = "Roman",
-                      Abbreviation = "ROM"
 
                   },
                   new()
@@ -272,7 +369,6 @@ namespace eBiblioteka.Infrastructure
                       CreatedAt = _dateTime,
                       ModifiedAt = null,
                       Name = "Drama",
-                      Abbreviation = "DRM"
                   },
                   new()
                   {
@@ -280,7 +376,20 @@ namespace eBiblioteka.Infrastructure
                       CreatedAt = _dateTime,
                       ModifiedAt = null,
                       Name = "Bajka",
-                      Abbreviation = "BJK"
+                  },
+                  new()
+                  {
+                      Id = 4,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Name = "Tragedija",
+                  },
+                  new()
+                  {
+                      Id = 5,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                      Name = "Komedija",
                   }
                   );
 
@@ -295,8 +404,8 @@ namespace eBiblioteka.Infrastructure
                      Id = 1,
                      CreatedAt = _dateTime,
                      ModifiedAt = null,
-                    BookId = 1,
-                    GenreId = 1
+                     BookId = 1,
+                     GenreId = 1
 
                  },
                  new()
@@ -380,7 +489,7 @@ namespace eBiblioteka.Infrastructure
                     CreatedAt = _dateTime,
                     ModifiedAt = null,
                     Title = "Na Drini cuprija",
-                    PublishingYear=1945,
+                    PublishingYear = 1945,
                     OpeningCount = 0,
                     CoverPhotoId = 1,
                     AuthorID = 2,
@@ -391,7 +500,7 @@ namespace eBiblioteka.Infrastructure
                      CreatedAt = _dateTime,
                      ModifiedAt = null,
                      Title = "Romeo i Julija",
-                     PublishingYear=1597,
+                     PublishingYear = 1597,
                      OpeningCount = 0,
                      CoverPhotoId = 1,
                      AuthorID = 3,
@@ -402,7 +511,7 @@ namespace eBiblioteka.Infrastructure
                      CreatedAt = _dateTime,
                      ModifiedAt = null,
                      Title = "Hamlet",
-                     PublishingYear=1602,
+                     PublishingYear = 1602,
                      OpeningCount = 0,
                      CoverPhotoId = 1,
                      AuthorID = 3,
@@ -450,7 +559,217 @@ namespace eBiblioteka.Infrastructure
                        OpeningCount = 0,
                        CoverPhotoId = 1,
                        AuthorID = 4,
-                   }
+                   },
+                   new()
+                   {
+                       Id = 9,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Derviš i smrt",
+                       PublishingYear = 1966,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 1,
+                   },
+                   new()
+                   {
+                       Id = 10,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Tišine",
+                       PublishingYear = 1961,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 1,
+                   },
+                   new()
+                   {
+                       Id = 11,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Krug",
+                       PublishingYear = 1983,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 1,
+                   },
+                   new()
+                   {
+                       Id = 12,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Prokleta Avlija",
+                       PublishingYear = 1954,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 2,
+                   },
+                   new()
+                   {
+                       Id = 13,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Travnička hronika",
+                       PublishingYear = 1945,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 2,
+                   },
+                   new()
+                   {
+                       Id = 14,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Gospođica",
+                       PublishingYear = 1925,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 2,
+                   },
+                   new()
+                   {
+                       Id = 15,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Omerpaša Latas",
+                       PublishingYear = 1968,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 2,
+                   },
+                   new()
+                   {
+                       Id = 16,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Kralj Lir",
+                       PublishingYear = 1606,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 3,
+                   },
+                   new()
+                   {
+                       Id = 17,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Julije Cezar",
+                       PublishingYear = 1599,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 3,
+                   },
+                   new()
+                   {
+                       Id = 18,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Bura",
+                       PublishingYear = 1611,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 3,
+                   },
+                   new()
+                   {
+                       Id = 19,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Edip",
+                       PublishingYear = 1718,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 5,
+                   },
+                   new()
+                   {
+                       Id = 20,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Brut",
+                       PublishingYear = 1730,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 5,
+                   },
+                   new()
+                   {
+                       Id = 21,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Nanin",
+                       PublishingYear = 1749,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 5,
+                   },
+                   new()
+                   {
+                       Id = 22,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Mahomet",
+                       PublishingYear = 1741,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 5,
+                   },
+                   new()
+                   {
+                       Id = 23,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Gospođica",
+                       PublishingYear = 1837,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 2,
+                   },
+                   new ()
+                   {
+                       Id = 24,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                       Title = "Nora (lutkina kuća)",
+                       PublishingYear = 1879,
+                       OpeningCount = 0,
+                       CoverPhotoId = 1,
+                       AuthorID = 5,
+                   },
+                    new()
+                    {
+                        Id = 25,
+                        CreatedAt = _dateTime,
+                        ModifiedAt = null,
+                        Title = "Hedda Gabler",
+                        PublishingYear = 1890,
+                        OpeningCount = 0,
+                        CoverPhotoId = 1,
+                        AuthorID = 5,
+                    },
+                     new()
+                     {
+                         Id = 26,
+                         CreatedAt = _dateTime,
+                         ModifiedAt = null,
+                         Title = "Duhovi",
+                         PublishingYear = 1881,
+                         OpeningCount = 0,
+                         CoverPhotoId = 1,
+                         AuthorID = 5,
+                     },
+                     new()
+                     {
+                         Id = 27,
+                         CreatedAt = _dateTime,
+                         ModifiedAt = null,
+                         Title = " Neprijatelj naroda",
+                         PublishingYear = 1882,
+                         OpeningCount = 0,
+                         CoverPhotoId = 1,
+                         AuthorID = 5,
+                     }
+                   
                 );
         }
 
@@ -478,9 +797,9 @@ namespace eBiblioteka.Infrastructure
         }
 
 
-        
 
-       
+
+
 
     }
 }

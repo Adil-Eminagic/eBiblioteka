@@ -17,6 +17,9 @@ namespace eBiblioteka.Infrastructure
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IUserBooksRepository, UserBooksRepository>();
             services.AddScoped<IBookGenresRepository, BookGenreGenresRepository>();
+            services.AddScoped<IRatingsRepository, RatingsRepository>();
+            services.AddScoped<IGendersRepository, GendersRepository>();
+            services.AddScoped<IRolesRepository, RolesRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

@@ -12,7 +12,7 @@ namespace eBiblioteka.Application
             RuleFor(u => u.LastName).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty);
             RuleFor(u => u.Email).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty)
                                  .EmailAddress().WithErrorCode(ErrorCodes.InvalidValue);
-            RuleFor(u => u.Role).IsInEnum().WithErrorCode(ErrorCodes.NotNull);
+            RuleFor(u => u.RoleId).NotNull().WithErrorCode(ErrorCodes.NotNull);
 
             RuleFor(u => u.Password)
                 .NotEmpty()
@@ -26,7 +26,7 @@ namespace eBiblioteka.Application
 
             RuleFor(u => u.PhoneNumber).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty);
 
-            RuleFor(u => u.Gender).IsInEnum().WithErrorCode(ErrorCodes.NotNull);
+            RuleFor(u => u.GenderId).NotNull().WithErrorCode(ErrorCodes.NotNull);
             RuleFor(u => u.BirthDate).NotNull().WithErrorCode(ErrorCodes.NotNull);
             
         }

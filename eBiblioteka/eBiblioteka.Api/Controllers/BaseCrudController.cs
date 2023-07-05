@@ -3,6 +3,7 @@
 using eBiblioteka.Core;
 using eBiblioteka.Application.Interfaces;
 using eBiblioteka.Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eBiblioteka.Api.Controllers
 {
@@ -14,11 +15,13 @@ namespace eBiblioteka.Api.Controllers
     {
         protected readonly TService Service;
 
+        
         protected BaseCrudController(TService service, ILogger<BaseController> logger) : base(logger)
         {
             Service = service;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id, CancellationToken cancellationToken = default)
         {
@@ -34,6 +37,7 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("GetPaged")]
         public virtual async Task<IActionResult> GetPaged([FromQuery] TSearchObject searchObject, CancellationToken cancellationToken = default)
         {
@@ -49,6 +53,7 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public virtual async Task<IActionResult> Post([FromBody] TUpsertDto upsertDto, CancellationToken cancellationToken = default)
         {
@@ -69,6 +74,7 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut]
         public virtual async Task<IActionResult> Put([FromBody] TUpsertDto upsertDto, CancellationToken cancellationToken = default)
         {
@@ -89,6 +95,7 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public virtual async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default)
         {

@@ -1,4 +1,5 @@
 ﻿using eBiblioteka.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace eBiblioteka.Infrastructure
@@ -18,7 +19,7 @@ namespace eBiblioteka.Infrastructure
             builder.HasOne(e => e.User)
                    .WithMany(e => e.OpenedBooks)
                    .HasForeignKey(e => e.UserId)
-                   .IsRequired();
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
