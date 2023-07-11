@@ -78,7 +78,7 @@ namespace eBiblioteka.Infrastructure
                       Id = 1,
                       CreatedAt = _dateTime,
                       ModifiedAt = null,
-                      Value="Male"
+                      Value="Muški"
 
                   },
                   new()
@@ -86,14 +86,14 @@ namespace eBiblioteka.Infrastructure
                       Id = 2,
                       CreatedAt = _dateTime,
                       ModifiedAt = null,
-                      Value="Female"
+                      Value="Ženski"
                   },
                   new()
                   {
                       Id = 3,
                       CreatedAt = _dateTime,
                       ModifiedAt = null,
-                      Value = "Other"
+                      Value = "Drugo"
                   }
 
              );
