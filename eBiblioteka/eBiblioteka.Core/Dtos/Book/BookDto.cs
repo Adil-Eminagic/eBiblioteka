@@ -3,7 +3,7 @@
     public class BookDto : BaseDto
     {
         public string Title { get; set; } = null!;
-        public string ShortDescription { get; set; } = null!;
+        public string? ShortDescription { get; set; } = null!;
         public int? PublishingYear { get; set; }
         public int OpeningCount { get; set; }
 

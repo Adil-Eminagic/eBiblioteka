@@ -10,6 +10,10 @@ namespace eBiblioteka.Infrastructure
         public RolesRepository(DatabaseContext databaseContext) : base(databaseContext)
         {
         }
-       
+
+        public async override Task<PagedList<Role>> GetPagedAsync(BaseSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.Where(s=>s.Id>1).ToPagedListAsync(searchObject, cancellationToken);
+        }
     }
 }

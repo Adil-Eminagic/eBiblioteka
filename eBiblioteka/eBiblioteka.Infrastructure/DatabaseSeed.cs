@@ -261,7 +261,7 @@ namespace eBiblioteka.Infrastructure
                      Id = 1,
                      FirstName = "Site",
                      LastName = "Admin",
-                     Email = "site.admin@ridewithme.com",
+                     Email = "site.admin@gmail.com",
                      RoleId=1,
                      GenderId = 1,
                      PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=", //Plain text: test
@@ -289,6 +289,7 @@ namespace eBiblioteka.Infrastructure
                     BirthDate = new DateTime(1910, 4, 26),
                     MortalDate = new DateTime(1982, 7, 11),
                     CountryId = 1,
+                    
 
                 },
                  new()
@@ -300,7 +301,7 @@ namespace eBiblioteka.Infrastructure
                      GenderId = 1,
                      BirthDate = new DateTime(1892, 10, 10),
                      MortalDate = new DateTime(1975, 3, 13),
-                     CountryId = 1,
+                     CountryId = 1
                  },
                 new()
                 {
@@ -480,7 +481,7 @@ namespace eBiblioteka.Infrastructure
                     Title = "Tvrdjava",
                     PublishingYear = 1970,
                     OpeningCount = 0,
-                    CoverPhotoId = 1,
+                    //CoverPhotoId = 1,
                     AuthorID = 1,
                 },
                 new()
@@ -491,7 +492,7 @@ namespace eBiblioteka.Infrastructure
                     Title = "Na Drini cuprija",
                     PublishingYear = 1945,
                     OpeningCount = 0,
-                    CoverPhotoId = 1,
+                    //CoverPhotoId = 1,
                     AuthorID = 2,
                 },
                  new()
@@ -502,7 +503,7 @@ namespace eBiblioteka.Infrastructure
                      Title = "Romeo i Julija",
                      PublishingYear = 1597,
                      OpeningCount = 0,
-                     CoverPhotoId = 1,
+                     //CoverPhotoId = 1,
                      AuthorID = 3,
                  },
                  new()
@@ -513,7 +514,7 @@ namespace eBiblioteka.Infrastructure
                      Title = "Hamlet",
                      PublishingYear = 1602,
                      OpeningCount = 0,
-                     CoverPhotoId = 1,
+                     //CoverPhotoId = 1,
                      AuthorID = 3,
                  },
                  new()
@@ -524,7 +525,7 @@ namespace eBiblioteka.Infrastructure
                      Title = "Ružno pače",
                      PublishingYear = 1843,
                      OpeningCount = 0,
-                     CoverPhotoId = 1,
+                     //CoverPhotoId = 1,
                      AuthorID = 4,
                  },
                   new()
@@ -535,7 +536,7 @@ namespace eBiblioteka.Infrastructure
                       Title = "Snjeguljica",
                       PublishingYear = 1845,
                       OpeningCount = 0,
-                      CoverPhotoId = 1,
+                      //CoverPhotoId = 1,
                       AuthorID = 4,
                   },
                    new()
@@ -546,7 +547,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Princeza na zrnu graška",
                        PublishingYear = 1835,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 4,
                    },
                    new()
@@ -557,7 +558,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Mala sirena",
                        PublishingYear = 1837,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 4,
                    },
                    new()
@@ -568,7 +569,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Derviš i smrt",
                        PublishingYear = 1966,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 1,
                    },
                    new()
@@ -579,7 +580,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Tišine",
                        PublishingYear = 1961,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 1,
                    },
                    new()
@@ -590,7 +591,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Krug",
                        PublishingYear = 1983,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 1,
                    },
                    new()
@@ -601,7 +602,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Prokleta Avlija",
                        PublishingYear = 1954,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 2,
                    },
                    new()
@@ -612,7 +613,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Travnička hronika",
                        PublishingYear = 1945,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 2,
                    },
                    new()
@@ -623,7 +624,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Gospođica",
                        PublishingYear = 1925,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 2,
                    },
                    new()
@@ -634,7 +635,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Omerpaša Latas",
                        PublishingYear = 1968,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 2,
                    },
                    new()
@@ -645,7 +646,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Kralj Lir",
                        PublishingYear = 1606,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 3,
                    },
                    new()
@@ -656,7 +657,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Julije Cezar",
                        PublishingYear = 1599,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 3,
                    },
                    new()
@@ -667,7 +668,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Bura",
                        PublishingYear = 1611,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 3,
                    },
                    new()
@@ -678,7 +679,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Edip",
                        PublishingYear = 1718,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 5,
                    },
                    new()
@@ -689,7 +690,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Brut",
                        PublishingYear = 1730,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 5,
                    },
                    new()
@@ -700,7 +701,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Nanin",
                        PublishingYear = 1749,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 5,
                    },
                    new()
@@ -711,7 +712,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Mahomet",
                        PublishingYear = 1741,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 5,
                    },
                    new()
@@ -722,7 +723,7 @@ namespace eBiblioteka.Infrastructure
                        Title = "Gospođica",
                        PublishingYear = 1837,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
+                       //CoverPhotoId = 1,
                        AuthorID = 2,
                    },
                    new ()
@@ -733,8 +734,8 @@ namespace eBiblioteka.Infrastructure
                        Title = "Nora (lutkina kuća)",
                        PublishingYear = 1879,
                        OpeningCount = 0,
-                       CoverPhotoId = 1,
-                       AuthorID = 5,
+                       //CoverPhotoId = 1,
+                       AuthorID = 6,
                    },
                     new()
                     {
@@ -744,8 +745,8 @@ namespace eBiblioteka.Infrastructure
                         Title = "Hedda Gabler",
                         PublishingYear = 1890,
                         OpeningCount = 0,
-                        CoverPhotoId = 1,
-                        AuthorID = 5,
+                        //CoverPhotoId = 1,
+                        AuthorID = 6,
                     },
                      new()
                      {
@@ -755,8 +756,8 @@ namespace eBiblioteka.Infrastructure
                          Title = "Duhovi",
                          PublishingYear = 1881,
                          OpeningCount = 0,
-                         CoverPhotoId = 1,
-                         AuthorID = 5,
+                         //CoverPhotoId = 1,
+                         AuthorID = 6,
                      },
                      new()
                      {
@@ -766,7 +767,7 @@ namespace eBiblioteka.Infrastructure
                          Title = " Neprijatelj naroda",
                          PublishingYear = 1882,
                          OpeningCount = 0,
-                         CoverPhotoId = 1,
+                         //CoverPhotoId = 1,
                          AuthorID = 5,
                      }
                    

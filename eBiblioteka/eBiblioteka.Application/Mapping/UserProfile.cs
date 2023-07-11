@@ -13,7 +13,8 @@ namespace eBiblioteka.Application
             CreateMap<UserDto, UserUpsertDto>();
 
             CreateMap<UserUpsertDto, User>()
-               .ForMember(u => u.RoleId, o => o.Condition(s => s.RoleId >0 ));
+                .ForMember(u=>u.ProfilePhoto , o=>o.Ignore());
+             
         }
     }
 }

@@ -24,6 +24,10 @@ Author _$AuthorFromJson(Map<String, dynamic> json) => Author(
           ? null
           : Country.fromJson(json['country'] as Map<String, dynamic>),
       json['countryId'] as int?,
+      json['photoId'] as int?,
+      json['photo'] == null
+          ? null
+          : Photo.fromJson(json['photo'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AuthorToJson(Author instance) => <String, dynamic>{
@@ -36,4 +40,6 @@ Map<String, dynamic> _$AuthorToJson(Author instance) => <String, dynamic>{
       'gender': instance.gender,
       'countryId': instance.countryId,
       'country': instance.country,
+      'photoId': instance.photoId,
+      'photo': instance.photo,
     };

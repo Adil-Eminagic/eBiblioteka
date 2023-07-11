@@ -7,7 +7,7 @@ using eBiblioteka.Infrastructure.Interfaces;
 
 namespace eBiblioteka.Application
 {
-    public class BookGenresService : BaseService<BookGenre, BookGenreDto, BookGenreUpsertDto, BaseSearchObject, IBookGenresRepository>, IBookGenresService
+    public class BookGenresService : BaseService<BookGenre, BookGenreDto, BookGenreUpsertDto, BookGenresSearchObject, IBookGenresRepository>, IBookGenresService
     {
         public BookGenresService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<BookGenreUpsertDto> validator) : base(mapper, unitOfWork, validator)
         {

@@ -1,7 +1,4 @@
 ﻿
-
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace eBiblioteka.Core
 {
     public class Author :BaseEntity
@@ -10,6 +7,9 @@ namespace eBiblioteka.Core
         public string? Biography { get; set; }
         public DateTime BirthDate { get; set; }
         public DateTime? MortalDate { get; set; }
+
+        public int? PhotoId { get; set; }
+        public Photo? Photo { get; set; }
 
         public int CountryId { get; set; }
         public Country Country { get; set; } = null!;

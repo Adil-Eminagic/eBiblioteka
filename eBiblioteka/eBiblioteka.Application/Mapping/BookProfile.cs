@@ -8,7 +8,8 @@ namespace eBiblioteka.Application
         {
             CreateMap<BookDto, Book>().ReverseMap();
 
-            CreateMap<BookUpsertDto, Book>();
+            CreateMap<BookUpsertDto, Book>()
+                .ForMember(c=>c.CoverPhoto, o=>o.Ignore());
         }
     }
 }

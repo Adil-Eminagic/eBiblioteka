@@ -28,6 +28,11 @@ namespace eBiblioteka.Infrastructure
                   .WithMany(e => e.Authors)
                   .HasForeignKey(e => e.GenderId)
                   .IsRequired();
+
+            builder.HasOne(e => e.Photo)
+                    .WithMany(e => e.Authors)
+                    .HasForeignKey(e => e.PhotoId)
+                    .IsRequired(false);
         }
     }
 }

@@ -16,8 +16,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 class AuthorDetailPage extends StatefulWidget {
-  AuthorDetailPage({super.key, this.author});
-  Author? author;
+ const  AuthorDetailPage({super.key, this.author});
+ final Author? author;
   @override
   State<AuthorDetailPage> createState() => _AuthorDetailPageState();
 }
@@ -31,11 +31,11 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
 
   SearchResult<Country>? countryResult;
   SearchResult<Gender>? genderResult;
+  String? photo;
   bool isLoading = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'id': widget.author?.id.toString(),
@@ -50,14 +50,16 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
     _genderProvider = context.read<GenderProvider>();
     _countryProvider = context.read<CountryProvider>();
     _authorProvider = context.read<AuthorProvider>();
+
+    if (widget.author != null && widget.author?.photoId != null) {
+      photo = widget.author?.photo?.data ?? '';
+    }
     initForm();
   }
 
   Future<void> initForm() async {
     countryResult = await _countryProvider.getPaged();
-    print(countryResult?.isFirstPage);
     genderResult = await _genderProvider.getPaged();
-    print(genderResult?.items[1].value);
     setState(() {
       isLoading = false;
     });
@@ -69,68 +71,95 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
         title: widget.author != null
             ? "Autor Id: ${(widget.author?.id.toString() ?? '')}"
             : "Novi autor",
-        child: Column(
-          children: [
-            isLoading ? Container() : _buildForm(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(65, 20, 65, 100),
+            child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        _formKey.currentState
-                            ?.saveAndValidate(); //moramo spasiti vrijednosti forme kako bi se pohranile u currentstate
-                        // print(_formKey.currentState?.value);
+                isLoading ? Container() : _buildForm(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            _formKey.currentState?.save();
 
-                        try {
-                          if (widget.author != null) {
-                            Map<String, dynamic> request =
-                                Map.of(_formKey.currentState!.value);
+                            try {
+                              if (_formKey.currentState!.validate()) {
+                                if (widget.author != null) {
+                                  Map<String, dynamic> request =
+                                      Map.of(_formKey.currentState!.value);
 
-                            request['id'] = widget.author?.id;
-                            request['birthDate'] = DateEncode(
-                                _formKey.currentState?.value['birthDate']);
-                            request['mortalDate'] = DateEncode(
-                                _formKey.currentState?.value['mortalDate']);
+                                  request['id'] = widget.author?.id;
+                                  request['birthDate'] = DateEncode(_formKey
+                                      .currentState?.value['birthDate']);
+                                  request['mortalDate'] = DateEncode(_formKey
+                                      .currentState?.value['mortalDate']);
+                                  if (_base64Image != null) {
+                                    request['image'] = _base64Image;
+                                  }
 
-                            var res = await _authorProvider.update(request);
-                          } else {
-                            Map<String, dynamic> request =
-                                Map.of(_formKey.currentState!.value);
+                                  var res =
+                                      await _authorProvider.update(request);
 
-                            request['birthDate'] = DateEncode(
-                                _formKey.currentState?.value['birthDate']);
-                            request['mortalDate'] = DateEncode(
-                                _formKey.currentState?.value['mortalDate']);
-                            await _authorProvider.insert(request);
-                          }
-                        } on Exception catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: const Text('Error'),
-                                    content: Text(
-                                      e.toString(),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Ok'))
-                                    ],
-                                  ));
-                        }
-                      },
-                      child: const Text(
-                        "Sacuvaj",
-                        style: TextStyle(fontSize: 15),
-                      )),
-                ),
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Uspješno mofikovanje autora')));
+
+                                  Navigator.pop(context, 'reload');
+                                } else {
+                                  Map<String, dynamic> request =
+                                      Map.of(_formKey.currentState!.value);
+
+                                  request['birthDate'] = DateEncode(_formKey
+                                      .currentState?.value['birthDate']);
+                                  request['mortalDate'] = DateEncode(_formKey
+                                      .currentState?.value['mortalDate']);
+                                  if (_base64Image != null) {
+                                    request['photo'] = _base64Image;
+                                  }
+                                  await _authorProvider.insert(request);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Uspješno dodavanje korisnika')));
+
+                                  Navigator.pop(context, 'reload');
+                                }
+                              }
+                            } on Exception catch (e) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text(
+                                          e.toString(),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Ok'))
+                                        ],
+                                      ));
+                            }
+                          },
+                          child: const Text(
+                            "Sačuvaj",
+                            style: TextStyle(fontSize: 15),
+                          )),
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
+            ),
+          ),
         ));
   }
 
@@ -143,6 +172,38 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
           Row(
             children: [
               Expanded(
+                flex: 2,
+                child: Center(
+                    child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 50),
+                  child: Column(
+                    children: [
+                      (photo == null)
+                          ? Container()
+                          : Container(
+                              constraints: const BoxConstraints(
+                                  maxHeight: 350, maxWidth: 350),
+                              child: imageFromBase64String(photo!)),
+                      photo == null
+                          ? Container()
+                          : const SizedBox(
+                              height: 20,
+                            ),
+                      ElevatedButton(
+                          onPressed: getimage,
+                          child: photo == null
+                              ? const Text('Odaberi sliku')
+                              : const Text('Promijeni sliku')),
+                    ],
+                  ),
+                )),
+              )
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
                   child: FormBuilderTextField(
                 name: 'fullName',
                 decoration: const InputDecoration(label: Text("Naziv")),
@@ -153,16 +214,27 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
               Expanded(
                 child: FormBuilderTextField(
                   name: 'biography',
+                  maxLines: 3,
                   decoration: const InputDecoration(label: Text("Biografija")),
                 ),
               ),
             ],
+          ),
+         const SizedBox(
+            height: 30,
           ),
           Row(
             children: [
               Expanded(
                   child: FormBuilderDateTimePicker(
                 name: 'birthDate',
+                validator: ((value) {
+                   if (value == null) {
+                    return "Obavezno polje";
+                  } else {
+                    return null;
+                  }
+                }),
                 decoration: const InputDecoration(label: Text("Datum rođenja")),
               )),
               const SizedBox(
@@ -176,10 +248,20 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
               ),
             ],
           ),
+          const SizedBox(
+            height: 30,
+          ),
           Row(children: [
             Expanded(
                 child: FormBuilderDropdown<String>(
               name: 'genderId',
+              validator: (value) {
+                 if (value == null) {
+                    return "Obavezno polje";
+                  } else {
+                    return null;
+                  }
+              },
               decoration: InputDecoration(
                 labelText: 'Spol',
                 suffix: IconButton(
@@ -207,6 +289,13 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
             Expanded(
                 child: FormBuilderDropdown<String>(
               name: 'countryId',
+              validator: (value) {
+                 if (value == null) {
+                    return "Obavezno polje";
+                  } else {
+                    return null;
+                  }
+              },
               decoration: InputDecoration(
                 labelText: 'Država',
                 suffix: IconButton(
@@ -229,29 +318,9 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                   [],
             )),
           ]),
-          Row(
-            children: [
-              Expanded(
-                child: FormBuilderField(
-                  //ovo je za custom form componentu
-                  name: 'imageId', //moze se koristiti i validator
-                  builder: ((field) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                          label: const Text('Odaberite sliku'),
-                          errorText: field.errorText),
-                      child: ListTile(
-                        leading: Icon(Icons.photo),
-                        title: Text('Select image'),
-                        trailing: Icon(Icons.file_upload),
-                        onTap: getimage,
-                      ),
-                    );
-                  }),
-                ),
-              )
-            ],
-          )
+          const SizedBox(
+            height: 50,
+          ),
         ],
       ),
     );
@@ -267,6 +336,10 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
       _image = File(
           result.files.single.path!); //jer smo sa if provjerili pa je sigurn !
       _base64Image = base64Encode(_image!.readAsBytesSync()); //opet !
+
+      setState(() {
+        photo = _base64Image;
+      });
     }
   }
 }

@@ -1,6 +1,15 @@
+import 'dart:ffi';
+
+import 'package:admin_ebiblioteka/pages/book_list.dart';
+import 'package:admin_ebiblioteka/pages/genre_list.dart';
+import 'package:admin_ebiblioteka/detail_pages/profile_setting.dart';
+import 'package:admin_ebiblioteka/pages/users_list.dart';
+import 'package:admin_ebiblioteka/providers/user_provider.dart';
 import 'package:admin_ebiblioteka/utils/util.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/user.dart';
 import '../pages/authors_list.dart';
 import '../pages/login_page.dart';
 
@@ -15,48 +24,116 @@ class MasterScreenWidget extends StatefulWidget {
 }
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
+  User? user;
+  late UserProvider _userProvider = UserProvider();
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _userProvider = context.read<UserProvider>();
+    if (user == null) {
+      initUser();
+    } else {
+      if (user!.id != Autentification.tokenDecoded!['Id']) {
+        initState();
+      }
+    }
+  }
+
+  Future<void> initUser() async {
+    int number= int.parse(Autentification.tokenDecoded!['Id']);
+    user = await _userProvider.getById( number);
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: IconButton(
-        onPressed: () {
-          if (!ModalRoute.of(context)!.isFirst) Navigator.pop(context);
-        },
-        icon: Icon(Icons.arrow_back),
-        color: Colors.brown,
-      ),
+      // floatingActionButton: IconButton(
+      //   onPressed: () {
+      //     if (!ModalRoute.of(context)!.isFirst) Navigator.pop(context);
+      //   },
+      //   icon: Icon(Icons.arrow_back),
+      //   color: Colors.brown,
+      // ),
       appBar: AppBar(
         title: Text(
           widget.title ?? "",
         ),
         centerTitle: true,
         actions: [
-          ElevatedButton.icon(
-            onPressed: () {
-              Autentification.token = '';
+          // ElevatedButton.icon(
+          //   onPressed: () {
+          //     if (!ModalRoute.of(context)!.isFirst) Navigator.pop(context); // provjerava da li je prva ruta da se izbjegne prazana rpoute stack
+          //   },
+          //   icon: const Icon(Icons.arrow_back),
+          //   label: const Text("Nazad"),
+          // ),
+          // ElevatedButton.icon(
+          //   onPressed: () {
+          //     Autentification.token = '';
 
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => LoginPage()),
-                  (route) => false);
-            },
-            icon: Icon(Icons.logout),
-            label: const Text("Odjava"),
-          )
+          //     Navigator.pushAndRemoveUntil(
+          //         context,
+          //         MaterialPageRoute(builder: (_) => LoginPage()),
+          //         (route) => false);// briše čitav stack ruta
+          //   },
+          //   icon: const Icon(Icons.logout),
+          //   label: const Text("Odjava"),
+          // ),
+          TextButton.icon(
+              onPressed: (() {
+                if (!ModalRoute.of(context)!.isFirst) {
+                  Navigator.pop(context,
+                      'reload2'); // provjerava da li je prva ruta da se izbjegne prazana rpoute stack
+                }
+              }),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              label: const Text(
+                'Nazad',
+                style: TextStyle(color: Colors.white),
+              )),
+          TextButton.icon(
+              onPressed: (() {
+                Autentification.token = '';
+
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoginPage()),
+                    (route) => false); // briše čitav stack ruta
+              }),
+              icon: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+              label: const Text(
+                'Odjava',
+                style: TextStyle(color: Colors.white),
+              )),
         ],
-        //leading:  IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back)),
-        // actions: [
-        //   IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back))
-        // ],
       ),
       drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerItem(context, "Autori", AuthorsPage()),
-            DrawerItem(context, "Logout", LoginPage()),
-           
-          ],
-        ),
+        child: isLoading
+            ? Container()
+            : ListView(
+                children: [
+                  DrawerItem(context, "Autori", const AuthorsPage()),
+                  DrawerItem(context, "Korisnici", const UsersPage(roleUser: "User",)),
+                  DrawerItem(context, "Administratori", const UsersPage(roleUser: "Admin",)),
+                  DrawerItem(context, 'Žarovi', const GenresPage()),
+                  DrawerItem(
+                      context, 'Postavke profila',  ProfileSettingsPage( user: user!,)),
+                  DrawerItem(context, 'Knjige', const BooksPage()),
+                ],
+              ),
       ),
       body: widget.child!,
     );

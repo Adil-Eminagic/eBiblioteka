@@ -6,9 +6,9 @@ namespace eBiblioteka.Application
     {
         public GenreProfile()
         {
-            CreateMap<GenreDto, Role>().ReverseMap();
+            CreateMap<GenreDto, Genre>().ReverseMap();
 
-            CreateMap<GenreUpsertDto, Role>();
+            CreateMap<GenreUpsertDto, Genre>();
         }
     }
 }

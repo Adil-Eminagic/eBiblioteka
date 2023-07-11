@@ -8,6 +8,8 @@ namespace eBiblioteka.Core
         public DateTime BirthDate { get; set; }
         public DateTime? MortalDate { get; set; }
 
+        public string? image { get; set; }
+
         public int CountryId { get; set; }
 
         public int GenderId { get; set; }

@@ -13,7 +13,7 @@
         public int RoleId { get; set; }
         public int CountryId { get; set; }
 
-        public PhotoUpsertDto? ProfilePhoto { get; set; }
+        public string? ProfilePhoto { get; set; }
 
       
 

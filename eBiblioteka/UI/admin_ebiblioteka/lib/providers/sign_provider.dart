@@ -13,6 +13,7 @@ class SignProvider extends ChangeNotifier {
   }
 
   Future<dynamic> signIn(String em, String ps) async {
+    _endpoint = "api/Access/SignIn";
     var url = "$_baseUrl$_endpoint";
 
     var uri = Uri.parse(url);
@@ -33,8 +34,27 @@ class SignProvider extends ChangeNotifier {
     } else {
       throw new Exception("Unknown error");
     }
+  }
 
-   
+  Future<dynamic> signUp(dynamic object) async {
+    _endpoint = "api/Access/SignUp";
+    var url = "$_baseUrl$_endpoint";
+
+    var uri = Uri.parse(url);
+
+    var jsonRequest = jsonEncode(object);
+
+    Response response = await post(uri,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonRequest);
+
+    if (isValidResponse(response)) {
+      
+    } else {
+      throw new Exception("Unknown error");
+    }
   }
 }
 
@@ -42,10 +62,11 @@ bool isValidResponse(Response response) {
   if (response.statusCode < 299) {
     return true;
   } else if (response.statusCode == 401) {
-    throw new Exception("Unauthorized");
+    throw Exception("Unauthorized");
   } else {
     print(response.body);
-    throw new Exception("Something bad happened please try again");
+    throw Exception(
+        "Something bad happened please try again, Status code: ${response.statusCode}");
   }
 }
 

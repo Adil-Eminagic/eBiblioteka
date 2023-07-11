@@ -60,11 +60,16 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Property<DateTime?>("MortalDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("PhotoId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
 
                     b.HasIndex("GenderId");
+
+                    b.HasIndex("PhotoId");
 
                     b.ToTable("Authors");
 
@@ -188,7 +193,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 1,
                             AuthorID = 1,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -199,7 +203,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 2,
                             AuthorID = 2,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -210,7 +213,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 3,
                             AuthorID = 3,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -221,7 +223,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 4,
                             AuthorID = 3,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -232,7 +233,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 5,
                             AuthorID = 4,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -243,7 +243,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 6,
                             AuthorID = 4,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -254,7 +253,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 7,
                             AuthorID = 4,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -265,7 +263,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 8,
                             AuthorID = 4,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -276,7 +273,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 9,
                             AuthorID = 1,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -287,7 +283,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 10,
                             AuthorID = 1,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -298,7 +293,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 11,
                             AuthorID = 1,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -309,7 +303,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 12,
                             AuthorID = 2,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -320,7 +313,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 13,
                             AuthorID = 2,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -331,7 +323,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 14,
                             AuthorID = 2,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -342,7 +333,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 15,
                             AuthorID = 2,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -353,7 +343,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 16,
                             AuthorID = 3,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -364,7 +353,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 17,
                             AuthorID = 3,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -375,7 +363,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 18,
                             AuthorID = 3,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -386,7 +373,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 19,
                             AuthorID = 5,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -397,7 +383,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 20,
                             AuthorID = 5,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -408,7 +393,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 21,
                             AuthorID = 5,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -419,7 +403,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 22,
                             AuthorID = 5,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -430,7 +413,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 23,
                             AuthorID = 2,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -441,7 +423,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 24,
                             AuthorID = 5,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -452,7 +433,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 25,
                             AuthorID = 5,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -463,7 +443,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 26,
                             AuthorID = 5,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -474,7 +453,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         {
                             Id = 27,
                             AuthorID = 5,
-                            CoverPhotoId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -1170,7 +1148,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CountryId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
-                            Email = "site.admin@ridewithme.com",
+                            Email = "site.admin@gmail.com",
                             FirstName = "Site",
                             GenderId = 1,
                             IsDeleted = false,
@@ -1230,9 +1208,15 @@ namespace eBiblioteka.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("eBiblioteka.Core.Photo", "Photo")
+                        .WithMany("Authors")
+                        .HasForeignKey("PhotoId");
+
                     b.Navigation("Country");
 
                     b.Navigation("Gender");
+
+                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.Book", b =>
@@ -1403,6 +1387,8 @@ namespace eBiblioteka.Infrastructure.Migrations
 
             modelBuilder.Entity("eBiblioteka.Core.Photo", b =>
                 {
+                    b.Navigation("Authors");
+
                     b.Navigation("Books");
 
                     b.Navigation("Users");

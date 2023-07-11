@@ -1,0 +1,27 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'bookgenre.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+BookGenre _$BookGenreFromJson(Map<String, dynamic> json) => BookGenre(
+      json['id'] as int?,
+      json['genre'] == null
+          ? null
+          : Genre.fromJson(json['genre'] as Map<String, dynamic>),
+      json['genreId'] as int?,
+      json['book'] == null
+          ? null
+          : Book.fromJson(json['book'] as Map<String, dynamic>),
+      json['bookId'] as int?,
+    );
+
+Map<String, dynamic> _$BookGenreToJson(BookGenre instance) => <String, dynamic>{
+      'id': instance.id,
+      'genreId': instance.genreId,
+      'genre': instance.genre,
+      'bookId': instance.bookId,
+      'book': instance.book,
+    };

@@ -8,6 +8,9 @@ namespace eBiblioteka.Core
         public DateTime BirthDate { get; set; }
         public DateTime? MortalDate { get; set; }
 
+        public int? PhotoId { get; set; }
+        public PhotoDto? Photo { get; set; }
+
         public int CountryId { get; set; }
         public CountryDto Country { get; set; }=null!;
 

@@ -27,7 +27,7 @@ namespace eBiblioteka.Api.Controllers
         }
 
         [HttpPost("SignUp")]
-        public async Task<IActionResult> SignUp([FromForm] AccessSignUpModel model, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> SignUp(AccessSignUpModel model, CancellationToken cancellationToken = default)
         {
             try
             {

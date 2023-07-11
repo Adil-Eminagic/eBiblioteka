@@ -14,7 +14,7 @@ namespace eBiblioteka.Infrastructure
 
         public override async Task<PagedList<Author>> GetPagedAsync(AuthorsSearchObject searchObject, CancellationToken cancellationToken = default)
         {
-            return await DbSet.Include(c=>c.Gender).Where(c => searchObject.FullName == null || c.FullName.ToLower().Contains(searchObject.FullName.ToLower())
+            return await DbSet.Include(c=>c.Photo).Include(c=>c.Gender).Where(c => searchObject.FullName == null || c.FullName.ToLower().Contains(searchObject.FullName.ToLower())
             ).ToPagedListAsync(searchObject, cancellationToken);
         }
 

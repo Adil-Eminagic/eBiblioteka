@@ -24,9 +24,9 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
 
     var uri = Uri.parse(url);
-    var headers=createHeaders();
+    var headers = createHeaders();
 
-    Response response = await get(uri, headers:headers );
+    Response response = await get(uri, headers: headers);
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
@@ -86,6 +86,36 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
+  Future remove(int id) async {
+    // [ ] znaci opcionalno
+    var url = "$_baseUrl$_endpoint/$id";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    Response response = await delete(uri, headers: headers);
+    if (isValidResponse(response)) {
+      print('Uspjesno brisanje');
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
+   Future getById(int id) async {
+    var url = "$_baseUrl$_endpoint/$id";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    Response response = await get(uri, headers: headers);
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      return fromJson(data);
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
+
   T fromJson(data) {
     throw Exception("not implemented");
   }
@@ -98,7 +128,7 @@ bool isValidResponse(Response response) {
     throw Exception("Unauthorized");
   } else {
     print(response.body);
-    throw Exception("Something bad happened please try again");
+    throw Exception("Something bad happened please try again, staus code ${response.statusCode}");
   }
 }
 

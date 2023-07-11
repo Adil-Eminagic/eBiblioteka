@@ -20,6 +20,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
   late SignProvider _signProvider;
 
   @override
@@ -75,6 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                       onPressed: () async {
+                        _emailController.text = "site.admin@gmail.com";
+                        _passwordController.text = "test";
                         var email = _emailController.text;
                         var password = _passwordController.text;
 
@@ -83,20 +86,18 @@ class _LoginPageState extends State<LoginPage> {
                               await _signProvider.signIn(email, password);
                           var token = data['token'];
                           Autentification.token = token;
-                          var tokenObj = JwtDecoder.decode(token);
-                          // alertBox(
-                          //     context, "Staus prijave", "Prijava uspješna.");
+                          Autentification.tokenDecoded =
+                              JwtDecoder.decode(token);
+                          print(Autentification.tokenDecoded);
+                          // if (Autentification.tokenDecoded?['Role'] == 'User') {
+                          //   alertBox(context, 'Greška',
+                          //       'Korisnicima zabranjen pristup desktop aplikaciji');
+                          // } else {
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) {
                             return const AuthorsPage();
                           }));
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const AuthorsPage(),
-                          //   ),
-                          // );
-
-                          print(tokenObj);
+                          //}
                         } catch (e) {
                           showDialog(
                               context: context,
@@ -114,9 +115,11 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       },
                       child: const Text('Log in')),
-                      SizedBox(height: 15,),
+                  SizedBox(
+                    height: 15,
+                  ),
                   Row(
-                    mainAxisAlignment:MainAxisAlignment.center ,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
                         'Nemate nalog',
@@ -127,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>  SignupPage()));
+                              builder: (context) => SignupPage()));
                         },
                         child: Text('Registrujte se'),
                       ),
@@ -142,5 +145,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
