@@ -37,7 +37,7 @@ namespace eBiblioteka.Application
             services.AddScoped<IValidator<BookGenreUpsertDto>, BookGenreValidator>();
             services.AddScoped<IValidator<GenderUpsertDto>, GenderValidator>();
             services.AddScoped<IValidator<RoleUpsertDto>, RoleValidator>();
-
+            services.AddScoped<IValidator<UserChangePasswordDto>, UserPasswordValidator>();
 
 
         }

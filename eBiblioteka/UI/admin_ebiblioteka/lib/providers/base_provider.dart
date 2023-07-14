@@ -6,17 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
-  static String? _baseUrl;
-  String _endpoint = "api/";
+  static String? baseUrl;
+  String endpoint = "api/";
+  int number = 5;
 
-  BaseProvider(String endpoint) {
-    _endpoint += endpoint;
-    _baseUrl = const String.fromEnvironment("baseUrl",
+  BaseProvider(String point) {
+    endpoint += point;
+    baseUrl = const String.fromEnvironment("baseUrl",
         defaultValue: "https://localhost:7034/");
   }
 
   Future<SearchResult<T>> getPaged({dynamic filter}) async {
-    var url = "$_baseUrl$_endpoint/GetPaged";
+    var url = "$baseUrl$endpoint/GetPaged";
 
     if (filter != null) {
       var querryString = getQueryString(filter);
@@ -52,7 +53,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   Future<T> insert(dynamic object) async {
-    var url = "$_baseUrl$_endpoint";
+    var url = "$baseUrl$endpoint";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -70,7 +71,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   Future<T> update(dynamic object) async {
     // [ ] znaci opcionalno
-    var url = "$_baseUrl$_endpoint";
+    var url = "$baseUrl$endpoint";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -88,7 +89,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
   Future remove(int id) async {
     // [ ] znaci opcionalno
-    var url = "$_baseUrl$_endpoint/$id";
+    var url = "$baseUrl$endpoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -100,8 +101,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
-   Future getById(int id) async {
-    var url = "$_baseUrl$_endpoint/$id";
+  Future getById(int id) async {
+    var url = "$baseUrl$endpoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -115,7 +116,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
-
   T fromJson(data) {
     throw Exception("not implemented");
   }
@@ -128,7 +128,8 @@ bool isValidResponse(Response response) {
     throw Exception("Unauthorized");
   } else {
     print(response.body);
-    throw Exception("Something bad happened please try again, staus code ${response.statusCode}");
+    throw Exception(
+        "Something bad happened please try again, staus code ${response.statusCode}");
   }
 }
 

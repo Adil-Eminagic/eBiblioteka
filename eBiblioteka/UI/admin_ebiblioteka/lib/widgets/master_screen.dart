@@ -43,8 +43,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   }
 
   Future<void> initUser() async {
-    int number= int.parse(Autentification.tokenDecoded!['Id']);
-    user = await _userProvider.getById( number);
+    int number = int.parse(Autentification.tokenDecoded!['Id']);
+    user = await _userProvider.getById(number);
 
     setState(() {
       isLoading = false;
@@ -54,38 +54,12 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: IconButton(
-      //   onPressed: () {
-      //     if (!ModalRoute.of(context)!.isFirst) Navigator.pop(context);
-      //   },
-      //   icon: Icon(Icons.arrow_back),
-      //   color: Colors.brown,
-      // ),
       appBar: AppBar(
         title: Text(
           widget.title ?? "",
         ),
         centerTitle: true,
         actions: [
-          // ElevatedButton.icon(
-          //   onPressed: () {
-          //     if (!ModalRoute.of(context)!.isFirst) Navigator.pop(context); // provjerava da li je prva ruta da se izbjegne prazana rpoute stack
-          //   },
-          //   icon: const Icon(Icons.arrow_back),
-          //   label: const Text("Nazad"),
-          // ),
-          // ElevatedButton.icon(
-          //   onPressed: () {
-          //     Autentification.token = '';
-
-          //     Navigator.pushAndRemoveUntil(
-          //         context,
-          //         MaterialPageRoute(builder: (_) => LoginPage()),
-          //         (route) => false);// briše čitav stack ruta
-          //   },
-          //   icon: const Icon(Icons.logout),
-          //   label: const Text("Odjava"),
-          // ),
           TextButton.icon(
               onPressed: (() {
                 if (!ModalRoute.of(context)!.isFirst) {
@@ -109,7 +83,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     context,
                     MaterialPageRoute(builder: (_) => const LoginPage()),
                     (route) => false); // briše čitav stack ruta
-              }),
+              }
+              ),
               icon: const Icon(
                 Icons.logout,
                 color: Colors.white,
@@ -126,11 +101,25 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             : ListView(
                 children: [
                   DrawerItem(context, "Autori", const AuthorsPage()),
-                  DrawerItem(context, "Korisnici", const UsersPage(roleUser: "User",)),
-                  DrawerItem(context, "Administratori", const UsersPage(roleUser: "Admin",)),
+                  DrawerItem(
+                      context,
+                      "Korisnici",
+                      const UsersPage(
+                        roleUser: "User",
+                      )),
+                  DrawerItem(
+                      context,
+                      "Administratori",
+                      const UsersPage(
+                        roleUser: "Admin",
+                      )),
                   DrawerItem(context, 'Žarovi', const GenresPage()),
                   DrawerItem(
-                      context, 'Postavke profila',  ProfileSettingsPage( user: user!,)),
+                      context,
+                      'Postavke profila',
+                      ProfileSettingsPage(
+                        user: user!,
+                      )), //( user: Autentification.loggedUser!,)
                   DrawerItem(context, 'Knjige', const BooksPage()),
                 ],
               ),
@@ -141,9 +130,13 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
 
   ListTile DrawerItem(BuildContext context, String title, Widget route) {
     return ListTile(
-      title: Text(title),
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => route)),
-    );
+        title: Text(title),
+        onTap: () async {
+          var ref = await Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => route));
+          if (ref == "getUser") {
+            initUser();
+          }
+        });
   }
 }

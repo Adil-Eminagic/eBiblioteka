@@ -1,5 +1,6 @@
 ﻿using eBiblioteka.Core;
 using eBiblioteka.Infrastructure.Interfaces;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
 namespace eBiblioteka.Infrastructure
@@ -10,15 +11,26 @@ namespace eBiblioteka.Infrastructure
         {
         }
 
+        public async Task<User?> ChangeEmailAsync(int userId, JsonPatchDocument jsonPatch, CancellationToken cancellationToken=default)
+        {
+            var user = await DbSet.FindAsync(userId);
+            if (user != null)
+            {
+                jsonPatch.ApplyTo(user);
+                return user;
+            }
+            return null;
+        }
+
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
             return await DbSet.Include(c=>c.Role).AsNoTracking().FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
         }
 
-        public async override Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return await DbSet.Include(c=>c.ProfilePhoto).FirstOrDefaultAsync(c=>c.Id==id,cancellationToken);
-        }
+        //public async override Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        //{
+        //    return await DbSet.Include(c=>c.ProfilePhoto).FirstOrDefaultAsync(c=>c.Id==id,cancellationToken);
+        //}
 
 
         public override async Task<PagedList<User>> GetPagedAsync(UsersSearchObject searchObject, CancellationToken cancellationToken = default)

@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../models/user.dart';
+
 class Autentification {
   static String? token;
   static Map? tokenDecoded;
+  static User? loggedUser;
   //static String? password;
 }
 
@@ -16,7 +19,11 @@ dynamic DateEncode(dynamic item) {
 }
 
 Image imageFromBase64String(String base64Image) {
-  return Image.memory(base64Decode(base64Image),height: 400,width: 400,);
+  return Image.memory(
+    base64Decode(base64Image),
+    height: 400,
+    width: 400,
+  );
 }
 
 

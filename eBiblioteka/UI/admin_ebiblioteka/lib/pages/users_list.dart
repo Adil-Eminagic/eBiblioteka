@@ -35,8 +35,10 @@ class _UsersPageState extends State<UsersPage> {
 
   Future<void> initTable() async {
     try {
-      var data = await _userProvider.getPaged(
-          filter: {'roleName': widget.roleUser != null ? '${widget.roleUser}' : '', "fullName": _nameController.text});
+      var data = await _userProvider.getPaged(filter: {
+        'roleName': widget.roleUser != null ? '${widget.roleUser}' : '',
+        "fullName": _nameController.text
+      });
 
       setState(() {
         result = data;
@@ -64,7 +66,9 @@ class _UsersPageState extends State<UsersPage> {
                       try {
                         var data = await _userProvider.getPaged(filter: {
                           "fullName": _nameController.text,
-                          'roleName': widget.roleUser != null ? '${widget.roleUser}' : '',
+                          'roleName': widget.roleUser != null
+                              ? '${widget.roleUser}'
+                              : '',
                           'pageNumber': i + 1
                         });
 
@@ -106,7 +110,10 @@ class _UsersPageState extends State<UsersPage> {
                           onSelectChanged: (value) async {
                             var refresh = await Navigator.of(context)
                                 .push(MaterialPageRoute(
-                              builder: (context) => UserDetailPage(user: e, roleUser: widget.roleUser,),
+                              builder: (context) => UserDetailPage(
+                                user: e,
+                                roleUser: widget.roleUser,
+                              ),
                             ));
 
                             if (refresh == 'reload') {
@@ -148,7 +155,8 @@ class _UsersPageState extends State<UsersPage> {
               onPressed: () async {
                 try {
                   var data = await _userProvider.getPaged(filter: {
-                   'roleName': widget.roleUser != null ? '${widget.roleUser}' : '',
+                    'roleName':
+                        widget.roleUser != null ? '${widget.roleUser}' : '',
                     "fullName": _nameController.text
                   });
 
@@ -167,7 +175,7 @@ class _UsersPageState extends State<UsersPage> {
               onPressed: () async {
                 var refresh = await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>  UserDetailPage(
+                    builder: (context) => UserDetailPage(
                       user: null,
                       roleUser: widget.roleUser,
                     ),

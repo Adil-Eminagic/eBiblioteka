@@ -267,6 +267,7 @@ namespace eBiblioteka.Infrastructure
                      PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=", //Plain text: test
                      PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                      PhoneNumber = "38761123456",
+                     BirthDate= new DateTime(1992,4,23),
                      CreatedAt = _dateTime,
                      ModifiedAt = null,
                      CountryId = 1

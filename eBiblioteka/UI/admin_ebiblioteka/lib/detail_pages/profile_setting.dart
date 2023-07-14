@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:admin_ebiblioteka/models/photo.dart';
+import 'package:admin_ebiblioteka/providers/photo_provider.dart';
+import 'package:admin_ebiblioteka/special_pages/cahange_email.dart';
+import 'package:admin_ebiblioteka/special_pages/change%20password.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +18,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../models/gender.dart';
 import '../models/role.dart';
 import '../models/user.dart';
+import '../pages/login_page.dart';
 import '../providers/country_provider.dart';
 import '../providers/gender_provider.dart';
 import '../providers/role_provider.dart';
@@ -36,6 +41,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
   late CountryProvider _countryProvider = CountryProvider();
   late RoleProvider _roleProvider = RoleProvider();
   late UserProvider _userProvider = UserProvider();
+  late PhotoProvider _photoProvider = PhotoProvider();
 
   SearchResult<Country>? countryResult;
   SearchResult<Gender>? genderResult;
@@ -64,10 +70,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     _countryProvider = context.read<CountryProvider>();
     _roleProvider = context.read<RoleProvider>();
     _userProvider = context.read<UserProvider>();
-    if (widget.user != null && widget.user?.profilePhoto != null) {
-      photo = widget.user?.profilePhoto?.data ?? '';
-    }
-
+    _photoProvider = context.read<PhotoProvider>();
     initForm();
   }
 
@@ -75,6 +78,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     countryResult = await _countryProvider.getPaged();
     genderResult = await _genderProvider.getPaged();
     roleResult = await _roleProvider.getPaged();
+    Photo p = await _photoProvider.getById(widget.user?.profilePhotoId ?? 0);
+    if (p.data != null) {
+      photo = p.data;
+    }
 
     setState(() {
       isLoading = false;
@@ -98,45 +105,47 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                   children: [
                     widget.user == null
                         ? Container()
-                        : 
-                    ElevatedButton(
-                        onPressed: () async {
-                          // _formKey.currentState
-                          // ?.saveAndValidate(); //moramo spasiti vrijednosti forme kako bi se pohranile u currentstate
-                          _formKey.currentState?.save();
-                          print(_formKey.currentState?.value);
+                        : ElevatedButton(
+                            onPressed: () async {
+                              // _formKey.currentState
+                              // ?.saveAndValidate(); //moramo spasiti vrijednosti forme kako bi se pohranile u currentstate
+                              _formKey.currentState?.save();
+                              print(_formKey.currentState?.value);
 
-                          try {
-                            if (_formKey.currentState!.validate()) {
-                                Map<String, dynamic> request =
-                                    Map.of(_formKey.currentState!.value);
+                              try {
+                                if (_formKey.currentState!.validate()) {
+                                  Map<String, dynamic> request =
+                                      Map.of(_formKey.currentState!.value);
 
-                                request['id'] = widget.user?.id;
-                                request['birthDate'] = DateEncode(
-                                    _formKey.currentState?.value['birthDate']);
-                               
-                                if (_base64Image != null) {
-                                  request['profilePhoto'] = _base64Image;
+                                  request['id'] = widget.user?.id;
+                                  request['roleId'] = widget.user?.roleId;
+                                  request['birthDate'] = DateEncode(_formKey
+                                      .currentState?.value['birthDate']);
+
+                                  if (_base64Image != null) {
+                                    request['profilePhoto'] = _base64Image;
+                                  }
+
+                                  var res = await _userProvider.update(request);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Uspješna modifikacija profila')));
+
+                                  // Autentification.loggedUser =
+                                  //     await _userProvider.getById(widget.user!.id!);
+
+                                  Navigator.pop(context, 'getUser');
                                 }
-
-                                var res = await _userProvider.update(request);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Uspješna modifikacija profila')));
-
-                                Navigator.pop(context, 'reload');
-                              
-                            }
-                          } on Exception catch (e) {
-                            alertBox(context, 'Greška', e.toString());
-                          }
-                        },
-                        child: const Text(
-                          "Sačuvaj",
-                          style: TextStyle(fontSize: 15),
-                        )),
+                              } on Exception catch (e) {
+                                alertBox(context, 'Greška', e.toString());
+                              }
+                            },
+                            child: const Text(
+                              "Sačuvaj",
+                              style: TextStyle(fontSize: 15),
+                            )),
                   ],
                 ),
               )
@@ -214,37 +223,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
               const SizedBox(
                 width: 80,
               ),
-              Expanded(
-                  child: FormBuilderDropdown<String>(
-                name: 'roleId',
-                validator: (value) {
-                  if (value == null) {
-                    return "Obavezno polje";
-                  } else {
-                    return null;
-                  }
-                },
-                decoration: InputDecoration(
-                  labelText: 'Uloga',
-                  suffix: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      _formKey.currentState!
-                          .fields['roleId'] //brisnje selekcije iz forme
-                          ?.reset();
-                    },
-                  ),
-                  hintText: 'Odaberi ulogu',
-                ),
-                items: roleResult?.items
-                        .map((g) => DropdownMenuItem(
-                              alignment: AlignmentDirectional.center,
-                              value: g.id.toString(),
-                              child: Text(g.value ?? ''),
-                            ))
-                        .toList() ??
-                    [],
-              )),
+              textField('phoneNumber', 'Telefon')
             ],
           ),
           const SizedBox(
@@ -266,12 +245,34 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                   }
                 }),
                 name: 'email',
-                decoration: InputDecoration(label: Text('Email')),
+                readOnly: true,
+                decoration:
+                    const InputDecoration(label: Text('Email (readonly)')),
               )),
               const SizedBox(
                 width: 80,
               ),
-              textField('phoneNumber', 'Telefon')
+              Expanded(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: (() {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: ((context) => const ChangeEmailPage())));
+                      }),
+                      child: const Text('Promijeni email')),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  ElevatedButton(
+                      onPressed: (() {
+                         Navigator.of(context).push(MaterialPageRoute(
+                            builder: ((context) => const ChangePasswordPage())));
+                      }),
+                      child: const Text('Promijeni password')),
+                ],
+              ))
             ],
           ),
           const SizedBox(

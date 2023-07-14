@@ -2,7 +2,6 @@ using eBiblioteka.Api;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
-using eBiblioteka.Api;
 using eBiblioteka.Application;
 using eBiblioteka.Infrastructure;
 
@@ -22,7 +21,7 @@ webAppBuilder.Services.AddDatabase(connectionStringConfig);
 webAppBuilder.Services.AddAuthenticationAndAuthorization(jwtTokenConfig);
 webAppBuilder.Services.AddResponseCaching();
 webAppBuilder.Services.AddOther();
-webAppBuilder.Services.AddControllers()
+webAppBuilder.Services.AddControllers().AddNewtonsoftJson()
                       .AddJsonOptions(options =>
                       {
                           options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());

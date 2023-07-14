@@ -96,8 +96,7 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
                             ),
                      ElevatedButton(
                           onPressed: () async {
-                            // _formKey.currentState
-                            // ?.saveAndValidate(); //moramo spasiti vrijednosti forme kako bi se pohranile u currentstate
+                           
                             _formKey.currentState?.save();
                             print(_formKey.currentState?.value);
 
@@ -127,7 +126,7 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                           content: Text(
-                                              'Uspješna modifikacija žanra')));
+                                              'Uspješna dodavanje žanra')));
 
                                   Navigator.pop(context, 'reload');
                                 }
