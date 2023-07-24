@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import '../utils/util_widgets.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,11 +16,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   late SignProvider _signProvider = SignProvider();
-  late UserProvider _userProvider = UserProvider();
+  //late UserProvider _userProvider = UserProvider();
   bool isLoading = false;
 
   @override
@@ -29,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _signProvider = context.read<SignProvider>();
-    _userProvider = context.read<UserProvider>();
+    //_userProvider = context.read<UserProvider>();
   }
 
   @override
@@ -150,9 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SignupPage()));
+                              builder: (context) => const SignupPage()));
                         },
-                        child: Text('Registrujte se'),
+                        child: const Text('Registrujte se'),
                       ),
                     ],
                   )

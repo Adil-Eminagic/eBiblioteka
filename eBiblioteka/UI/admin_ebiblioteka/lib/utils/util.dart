@@ -26,6 +26,13 @@ Image imageFromBase64String(String base64Image) {
   );
 }
 
+// class Reload extends ChangeNotifier {
+//   // ↓ Add this.
+//   void reload() {
+//     set
+//     notifyListeners();
+//   }
+// }
 
 //TODOs
 //textare biografija
@@ -40,3 +47,4 @@ Image imageFromBase64String(String base64Image) {
 // ** style of button
 // ** smanjivanje base64 string
 // ** zabranniti userima da se logiranju na administratora
+

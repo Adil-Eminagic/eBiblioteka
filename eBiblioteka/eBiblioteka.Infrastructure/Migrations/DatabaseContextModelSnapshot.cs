@@ -22,6 +22,42 @@ namespace eBiblioteka.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("eBiblioteka.Core.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsTrue")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Answers");
+                });
+
             modelBuilder.Entity("eBiblioteka.Core.Author", b =>
                 {
                     b.Property<int>("Id")
@@ -422,7 +458,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                         new
                         {
                             Id = 24,
-                            AuthorID = 5,
+                            AuthorID = 6,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -432,7 +468,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                         new
                         {
                             Id = 25,
-                            AuthorID = 5,
+                            AuthorID = 6,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -442,7 +478,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                         new
                         {
                             Id = 26,
-                            AuthorID = 5,
+                            AuthorID = 6,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
                             OpeningCount = 0,
@@ -793,21 +829,21 @@ namespace eBiblioteka.Infrastructure.Migrations
                             Id = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
-                            Value = "Male"
+                            Value = "Muški"
                         },
                         new
                         {
                             Id = 2,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
-                            Value = "Female"
+                            Value = "Ženski"
                         },
                         new
                         {
                             Id = 3,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             IsDeleted = false,
-                            Value = "Other"
+                            Value = "Drugo"
                         });
                 });
 
@@ -920,6 +956,73 @@ namespace eBiblioteka.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("eBiblioteka.Core.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuizId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Quiz", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Quizzes");
+                });
+
             modelBuilder.Entity("eBiblioteka.Core.Quote", b =>
                 {
                     b.Property<int>("Id")
@@ -1009,7 +1112,8 @@ namespace eBiblioteka.Infrastructure.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "BookId")
+                        .IsUnique();
 
                     b.ToTable("Ratings");
                 });
@@ -1145,7 +1249,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BirthDate = new DateTime(1992, 4, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CountryId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             Email = "site.admin@gmail.com",
@@ -1192,6 +1296,17 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserBooks");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Answer", b =>
+                {
+                    b.HasOne("eBiblioteka.Core.Question", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.Author", b =>
@@ -1264,6 +1379,17 @@ namespace eBiblioteka.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Question", b =>
+                {
+                    b.HasOne("eBiblioteka.Core.Quiz", "Quiz")
+                        .WithMany("Questions")
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Quiz");
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.Quote", b =>
@@ -1392,6 +1518,16 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Navigation("Books");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Question", b =>
+                {
+                    b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("eBiblioteka.Core.Quiz", b =>
+                {
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.Role", b =>

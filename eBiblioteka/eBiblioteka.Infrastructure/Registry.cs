@@ -20,6 +20,9 @@ namespace eBiblioteka.Infrastructure
             services.AddScoped<IRatingsRepository, RatingsRepository>();
             services.AddScoped<IGendersRepository, GendersRepository>();
             services.AddScoped<IRolesRepository, RolesRepository>();
+            services.AddScoped<IQuizsRepository, QuizsRepository>();
+            services.AddScoped<IQuestionsRepository, QuestionsRepository>();
+            services.AddScoped<IAnswersRepository, AnswersRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

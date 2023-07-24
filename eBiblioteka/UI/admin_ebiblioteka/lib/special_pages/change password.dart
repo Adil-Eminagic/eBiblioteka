@@ -1,5 +1,5 @@
-import 'package:admin_ebiblioteka/utils/util.dart';
-import 'package:admin_ebiblioteka/widgets/master_screen.dart';
+import '../utils/util.dart';
+import '../widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 

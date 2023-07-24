@@ -1,24 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:admin_ebiblioteka/models/photo.dart';
-import 'package:admin_ebiblioteka/providers/photo_provider.dart';
-import 'package:admin_ebiblioteka/special_pages/cahange_email.dart';
-import 'package:admin_ebiblioteka/special_pages/change%20password.dart';
+import '../models/photo.dart';
+import '../providers/photo_provider.dart';
+import '../special_pages/cahange_email.dart';
+import '../special_pages/change%20password.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../models/country.dart';
 import '../models/search_result.dart';
-import 'package:admin_ebiblioteka/widgets/master_screen.dart';
+import '../widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../models/gender.dart';
 import '../models/role.dart';
 import '../models/user.dart';
-import '../pages/login_page.dart';
 import '../providers/country_provider.dart';
 import '../providers/gender_provider.dart';
 import '../providers/role_provider.dart';
@@ -46,7 +45,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
   SearchResult<Country>? countryResult;
   SearchResult<Gender>? genderResult;
   SearchResult<Role>? roleResult;
-  User? user;
+  //User? user;
   String? photo;
   bool isLoading = true;
 
@@ -78,11 +77,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     countryResult = await _countryProvider.getPaged();
     genderResult = await _genderProvider.getPaged();
     roleResult = await _roleProvider.getPaged();
-    Photo p = await _photoProvider.getById(widget.user?.profilePhotoId ?? 0);
-    if (p.data != null) {
+     if (widget.user != null &&  widget.user!.profilePhotoId != null &&  widget.user!.profilePhotoId! > 0) {
+      Photo p = await _photoProvider.getById(widget.user!.profilePhotoId!);
       photo = p.data;
     }
-
     setState(() {
       isLoading = false;
     });

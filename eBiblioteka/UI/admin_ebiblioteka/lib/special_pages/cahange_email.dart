@@ -1,7 +1,7 @@
-import 'package:admin_ebiblioteka/providers/user_provider.dart';
-import 'package:admin_ebiblioteka/utils/util.dart';
-import 'package:admin_ebiblioteka/utils/util_widgets.dart';
-import 'package:admin_ebiblioteka/widgets/master_screen.dart';
+import '../providers/user_provider.dart';
+import '../utils/util.dart';
+import '../utils/util_widgets.dart';
+import '../widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:admin_ebiblioteka/models/search_result.dart';
-import 'package:admin_ebiblioteka/utils/util.dart';
+import '../models/search_result.dart';
+import '../utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -46,6 +46,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
         result.items.add(fromJson(a));
       }
 
+      notifyListeners();
+
       return result;
     } else {
       throw Exception("Unknown error");
@@ -62,7 +64,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     Response response = await post(uri, headers: headers, body: jsonRequest);
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
-
+      notifyListeners();
       return fromJson(data);
     } else {
       throw Exception("Unknown error");
@@ -80,7 +82,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     Response response = await put(uri, headers: headers, body: jsonRequest);
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
-
+      notifyListeners();
       return fromJson(data);
     } else {
       throw Exception("Unknown error");

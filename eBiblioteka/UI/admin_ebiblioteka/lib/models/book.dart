@@ -1,5 +1,5 @@
-import 'package:admin_ebiblioteka/models/author.dart';
-import 'package:admin_ebiblioteka/models/photo.dart';
+import '../models/author.dart';
+import '../models/photo.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'book.g.dart';

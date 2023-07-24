@@ -25,7 +25,6 @@ class UserDetailPage extends StatefulWidget {
   final User? user;
   final String? roleUser;
 
-
   @override
   State<UserDetailPage> createState() => _UserDetailPageState();
 }
@@ -73,20 +72,24 @@ class _UserDetailPageState extends State<UserDetailPage> {
   }
 
   Future<void> initForm() async {
-    countryResult = await _countryProvider.getPaged();
-    genderResult = await _genderProvider.getPaged();
-    roleResult = await _roleProvider.getPaged();
+    try {
+      countryResult = await _countryProvider.getPaged();
+      genderResult = await _genderProvider.getPaged();
+      roleResult = await _roleProvider.getPaged();
 
-    setState(() {
-      isLoading = false;
-    });
+      setState(() {
+        isLoading = false;
+      });
+    } on Exception catch (e) {
+      alertBox(context, 'Greška', e.toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
         title: widget.user != null
-            ? "${widget.user!.roleId==3 ? 'Korinsik' : 'Administarator'} Id: ${(widget.user?.id.toString() ?? '')}"
+            ? "${widget.user!.roleId == 3 ? 'Korinsik' : 'Administarator'} Id: ${(widget.user?.id.toString() ?? '')}"
             : "Novi ${widget.roleUser == "User" ? 'korinsik' : 'administarator'}",
         child: SingleChildScrollView(
           child: Padding(

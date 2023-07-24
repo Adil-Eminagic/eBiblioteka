@@ -6,6 +6,7 @@
         public string? ShortDescription { get; set; } = null!;
         public int? PublishingYear { get; set; }
         public int OpeningCount { get; set; }
+        public int? AverageRate { get; set; }
 
         public int? CoverPhotoId { get; set; }
         public PhotoDto? CoverPhoto { get; set; } = null!;

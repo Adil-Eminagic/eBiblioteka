@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:admin_ebiblioteka/models/author.dart';
-import 'package:admin_ebiblioteka/models/book.dart';
-import 'package:admin_ebiblioteka/models/bookgenre.dart';
-import 'package:admin_ebiblioteka/models/search_result.dart';
-import 'package:admin_ebiblioteka/pages/bookgenre_list.dart';
-import 'package:admin_ebiblioteka/providers/author_provider.dart';
-import 'package:admin_ebiblioteka/providers/book_provider.dart';
-import 'package:admin_ebiblioteka/providers/bookgenre_provider.dart';
-import 'package:admin_ebiblioteka/widgets/master_screen.dart';
+import 'package:admin_ebiblioteka/pages/quote_list.dart';
+import 'package:admin_ebiblioteka/pages/rating_list.dart';
+
+import '../models/author.dart';
+import '../models/book.dart';
+import '../models/bookgenre.dart';
+import '../models/search_result.dart';
+import '../pages/bookgenre_list.dart';
+import '../providers/author_provider.dart';
+import '../providers/book_provider.dart';
+import '../providers/bookgenre_provider.dart';
+import '../widgets/master_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -64,18 +67,22 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   Future<void> initForm() async {
-    authorResult = await _authorProvider.getPaged();
-    if (widget.book != null) {
-      bookSend = await _bookProvider.getById(widget.book!.id!);
-      bookGenreResult = await _bookGenreProvider
-          .getPaged(filter: {'bookId': widget.book?.id});
-      if (bookGenreResult!.items.isNotEmpty) {
-        print(bookGenreResult?.items[0].genre?.name);
+    try {
+      authorResult = await _authorProvider.getPaged();
+      if (widget.book != null) {
+        bookSend = await _bookProvider.getById(widget.book!.id!);
+        bookGenreResult = await _bookGenreProvider
+            .getPaged(filter: {'bookId': widget.book?.id});
+        if (bookGenreResult!.items.isNotEmpty) {
+          print(bookGenreResult?.items[0].genre?.name);
+        }
       }
+      setState(() {
+        isLoading = false;
+      });
+    } on Exception catch (e) {
+      alertBox(context, 'Greška', e.toString());
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -266,7 +273,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               Expanded(
                   child: FormBuilderTextField(
                 name: 'shortDescription',
-                maxLines: 3,
+                maxLines: 5,
                 decoration:
                     const InputDecoration(label: Text('Kratak sadržaj')),
               )),
@@ -303,11 +310,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
                     icon: const Icon(Icons.close),
                     onPressed: () {
                       _formKey.currentState!
-                          .fields['roleId'] //brisnje selekcije iz forme
+                          .fields['authorId'] //brisnje selekcije iz forme
                           ?.reset();
                     },
                   ),
-                  hintText: 'Odaberi ulogu',
+                  hintText: 'Odaberi autora',
                 ),
                 items: authorResult?.items
                         .map((g) => DropdownMenuItem(
@@ -326,7 +333,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
           (widget.book == null || isLoading == true)
               ? Container()
               : Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Column(
@@ -349,30 +356,21 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                       .map((BookGenre i) => Row(
                                             children: [
                                               Container(
-                                                padding: const EdgeInsets.all(4),
+                                                padding:
+                                                    const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(
-                                                  border: Border.all(color: Colors.brown, width: 2)
-                                                ),
+                                                    border: Border.all(
+                                                        color: Colors.brown,
+                                                        width: 2)),
                                                 child: Text(
                                                   i.genre?.name ?? '',
                                                   style: const TextStyle(
-                                                    color: Colors.brown,
-                                                    fontWeight: FontWeight.bold
-                                                  ),
+                                                      color: Colors.brown,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
                                               ),
-                                              // TextButton(
-                                              //     onPressed: (() {}),
-                                              //     style: TextButton.styleFrom(
-                                              //         shape:
-                                              //             const RoundedRectangleBorder(
-                                              //                 side: BorderSide(
-                                              //                     color: Colors
-                                              //                         .brown,
-                                              //                     width: 2))),
-                                              //     child: Text(
-                                              //         i.genre?.name ?? '')),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 15,
                                               )
                                             ],
@@ -383,30 +381,78 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           const SizedBox(
                             height: 10,
                           ),
-                          ElevatedButton(
-                              onPressed: () async {
-                                var refresh = await Navigator.of(context)
-                                    .push(MaterialPageRoute(
-                                        builder: (context) => BookGenresPage(
-                                              book: bookSend,
-                                            )));
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    var refresh = await Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                BookGenresPage(
+                                                  book: bookSend,
+                                                )));
 
-                                if (refresh == 'reload2') {
-                                  initForm();
-                                }
-                              },
-                              child: const Text('Uredi žanrove knjige'))
+                                    if (refresh == 'reload2') {
+                                      initForm();
+                                    }
+                                  },
+                                  child: const Text('Uredi žanrove knjige')),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              ElevatedButton(
+                                  onPressed: (()async {
+                                    var refresh = await Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                QuotesListPage(
+                                                  bookId: widget.book!.id,
+                                                )));
+
+                                    if (refresh == 'reload2') {
+                                      initForm();
+                                    }
+                                  }),
+                                  child: const Text('Uredi citate knjige')),
+                                   const SizedBox(
+                                width: 20,
+                              ),
+                              ElevatedButton(
+                                  onPressed: (()async {
+                                    var refresh = await Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                RatingListPage(
+                                                  bookId: widget.book!.id,
+                                                )));
+
+                                    if (refresh == 'reload2') {
+                                      initForm();
+                                    }
+                                  }),
+                                  child: const Text('Upravljenje ocjenama')),
+                            ],
+                          )
                         ],
                       ),
                     ),
                     Expanded(
-                      child: Column(),
+                      child: Column(
+                        children: [],
+                      ),
                     ),
                   ],
                 ),
           const SizedBox(
             height: 45,
           ),
+          Row(
+            children: [
+              // PDFView(
+              //   pdfData: ,
+              // )
+            ],
+          )
         ],
       ),
     );

@@ -1,0 +1,179 @@
+import 'package:admin_ebiblioteka/detail_pages/quote_detail.dart';
+import 'package:admin_ebiblioteka/models/quote.dart';
+import 'package:admin_ebiblioteka/models/search_result.dart';
+import 'package:admin_ebiblioteka/providers/quotes_provider.dart';
+import 'package:admin_ebiblioteka/widgets/master_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../utils/util_widgets.dart';
+
+class QuotesListPage extends StatefulWidget {
+  const QuotesListPage({Key? key, this.bookId}) : super(key: key);
+  final int? bookId;
+
+  @override
+  State<QuotesListPage> createState() => _QuotesListPageState();
+}
+
+class _QuotesListPageState extends State<QuotesListPage> {
+  late QuoteProvider _quoteProvider = QuoteProvider();
+  final TextEditingController _contentConroller = TextEditingController();
+
+  SearchResult<Quote>? result;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _quoteProvider = context.read<QuoteProvider>();
+    initTable();
+  }
+
+  Future<void> initTable() async {
+    try {
+      var data = await _quoteProvider.getPaged(
+          filter: {"bookId": widget.bookId, "content": _contentConroller.text});
+
+      setState(() {
+        result = data;
+        isLoading = false;
+      });
+    } on Exception catch (e) {
+      alertBox(context, 'Greška', e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MasterScreenWidget(
+      title: 'Citati',
+      child: Column(children: [
+        _buildSearch(),
+        isLoading ? Container() : _buildDataTable(),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          if (isLoading == false && result != null && result!.pageCount > 1)
+            for (int i = 0; i < result!.pageCount; i++)
+              InkWell(
+                  onTap: () async {
+                    try {
+                      var data = await _quoteProvider.getPaged(filter: {
+                        "content": _contentConroller.text,
+                        "bookId": widget.bookId,
+                        'pageNumber': i + 1
+                      });
+
+                      setState(() {
+                        result = data;
+                      });
+                    } on Exception catch (e) {
+                      alertBox(context, 'Greška', e.toString());
+                    }
+                  },
+                  child: CircleAvatar(
+                      backgroundColor: (i + 1 == result?.pageNumber)
+                          ? Colors.brown
+                          : Colors.white,
+                      child: Text(
+                        (i + 1).toString(),
+                        style: TextStyle(
+                            color: (i + 1 == result?.pageNumber)
+                                ? Colors.white
+                                : Colors.brown),
+                      ))),
+        ]),
+      ]),
+    );
+  }
+
+ 
+
+  Expanded _buildDataTable() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(80, 0, 80, 0),
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text("Naziv")),
+            ],
+            rows: result?.items
+                    .map((Quote e) => DataRow(
+                            onSelectChanged: (value) async {
+                              var refresh = await Navigator.of(context)
+                                  .push(MaterialPageRoute(
+                                builder: (context) => QuoteDetailPage(quote: e,),
+                              ));
+
+                              if (refresh == 'reload') {
+                                initTable();
+                              }
+                            },
+                            cells: [
+                              DataCell(Text("${e.content}")),
+                            ]))
+                    .toList() ??
+                [],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buildSearch() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _contentConroller,
+              decoration: const InputDecoration(label: Text("Naziv")),
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                try {
+                  var data = await _quoteProvider.getPaged(filter: {
+                    "bookId": widget.bookId,
+                    "content": _contentConroller.text
+                  });
+
+                  setState(() {
+                    result = data;
+                  });
+                } on Exception catch (e) {
+                  alertBox(context, 'Greška', e.toString());
+                }
+              },
+              child: const Text('Traži')),
+          const SizedBox(
+            width: 15,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                var refresh = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>  QuoteDetailPage(
+                      quote: null,
+                      bookId: widget.bookId,
+                    ),
+                  ),
+                );
+                if (refresh == 'reload') {
+                  initTable();
+                }
+              },
+              child: const Text('Dodaj')),
+          const SizedBox(
+            width: 15,
+          ),
+        ],
+      ),
+    );
+  }
+}

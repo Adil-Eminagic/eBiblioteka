@@ -21,6 +21,10 @@ namespace eBiblioteka.Application
             services.AddScoped<IBookGenresService, BookGenresService>();
             services.AddScoped<IGendersService,GendersService>();
             services.AddScoped<IRolesService, RolesService>();
+            services.AddScoped<IRatingsService,RatingsService>();
+            services.AddScoped<IQuizsService, QuizsService>();
+            services.AddScoped<IQuestionsService, QuestionsService>();
+            services.AddScoped<IAnswersService, AnswersService>();
         }
 
         public static void AddValidators(this IServiceCollection services)
@@ -38,6 +42,11 @@ namespace eBiblioteka.Application
             services.AddScoped<IValidator<GenderUpsertDto>, GenderValidator>();
             services.AddScoped<IValidator<RoleUpsertDto>, RoleValidator>();
             services.AddScoped<IValidator<UserChangePasswordDto>, UserPasswordValidator>();
+            services.AddScoped<IValidator<RatingUpsertDto>, RatingValidator>();
+            services.AddScoped<IValidator<QuizUpsertDto>, QuizValidator>();
+            services.AddScoped<IValidator<QuestionUpsertDto>, QuestionValidator>();
+            services.AddScoped<IValidator<AnswerUpsertDto>, AnswerValidator>();
+
 
 
         }

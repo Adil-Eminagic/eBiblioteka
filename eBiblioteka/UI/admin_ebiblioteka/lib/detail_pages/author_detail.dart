@@ -15,9 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/util_widgets.dart';
+
 class AuthorDetailPage extends StatefulWidget {
- const  AuthorDetailPage({super.key, this.author});
- final Author? author;
+  const AuthorDetailPage({super.key, this.author});
+  final Author? author;
   @override
   State<AuthorDetailPage> createState() => _AuthorDetailPageState();
 }
@@ -82,78 +84,126 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            _formKey.currentState?.save();
-
-                            try {
-                              if (_formKey.currentState!.validate()) {
-                                if (widget.author != null) {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
-
-                                  request['id'] = widget.author?.id;
-                                  request['birthDate'] = DateEncode(_formKey
-                                      .currentState?.value['birthDate']);
-                                  request['mortalDate'] = DateEncode(_formKey
-                                      .currentState?.value['mortalDate']);
-                                  if (_base64Image != null) {
-                                    request['image'] = _base64Image;
-                                  }
-
-                                  var res =
-                                      await _authorProvider.update(request);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Uspješno mofikovanje autora')));
-
-                                  Navigator.pop(context, 'reload');
-                                } else {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
-
-                                  request['birthDate'] = DateEncode(_formKey
-                                      .currentState?.value['birthDate']);
-                                  request['mortalDate'] = DateEncode(_formKey
-                                      .currentState?.value['mortalDate']);
-                                  if (_base64Image != null) {
-                                    request['photo'] = _base64Image;
-                                  }
-                                  await _authorProvider.insert(request);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Uspješno dodavanje korisnika')));
-
-                                  Navigator.pop(context, 'reload');
-                                }
-                              }
-                            } on Exception catch (e) {
+                      child: Row(
+                        children: [
+                          widget.author == null
+                        ? Container()
+                        : TextButton(
+                            onPressed: () async {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
-                                        title: const Text('Error'),
-                                        content: Text(
-                                          e.toString(),
-                                        ),
+                                        title: const Text('Brisanje autora'),
+                                        content: const Text(
+                                            'Da li želite obrisati autora'),
                                         actions: [
                                           TextButton(
-                                              onPressed: () {
+                                              onPressed: (() {
                                                 Navigator.pop(context);
+                                              }),
+                                              child: const Text('Poništi')),
+                                          TextButton(
+                                              onPressed: () async {
+                                                try {
+                                                  await _authorProvider.remove(
+                                                      widget.author?.id ?? 0);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                          content: Text(
+                                                              'Uspješno brisanje autora.')));
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(
+                                                      context, 'reload');
+                                                } catch (e) {
+                                                  alertBoxMoveBack(context,
+                                                      'Greška', e.toString());
+                                                }
                                               },
-                                              child: const Text('Ok'))
+                                              child: const Text('Ok')),
                                         ],
                                       ));
-                            }
-                          },
-                          child: const Text(
-                            "Sačuvaj",
-                            style: TextStyle(fontSize: 15),
-                          )),
+                            },
+                            child: const Text('Obriši autora')),
+                    widget.author == null
+                        ? Container()
+                        : const SizedBox(
+                            width: 7,
+                          ),
+                          ElevatedButton(
+                              onPressed: () async {
+                                _formKey.currentState?.save();
+
+                                try {
+                                  if (_formKey.currentState!.validate()) {
+                                    if (widget.author != null) {
+                                      Map<String, dynamic> request =
+                                          Map.of(_formKey.currentState!.value);
+
+                                      request['id'] = widget.author?.id;
+                                      request['birthDate'] = DateEncode(_formKey
+                                          .currentState?.value['birthDate']);
+                                      request['mortalDate'] = DateEncode(_formKey
+                                          .currentState?.value['mortalDate']);
+                                      if (_base64Image != null) {
+                                        request['image'] = _base64Image;
+                                      }
+
+                                      var res =
+                                          await _authorProvider.update(request);
+
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Uspješno mofikovanje autora')));
+
+                                      Navigator.pop(context, 'reload');
+                                    } else {
+                                      Map<String, dynamic> request =
+                                          Map.of(_formKey.currentState!.value);
+
+                                      request['birthDate'] = DateEncode(_formKey
+                                          .currentState?.value['birthDate']);
+                                      request['mortalDate'] = DateEncode(_formKey
+                                          .currentState?.value['mortalDate']);
+                                      if (_base64Image != null) {
+                                        request['photo'] = _base64Image;
+                                      }
+                                      await _authorProvider.insert(request);
+
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Uspješno dodavanje korisnika')));
+
+                                      Navigator.pop(context, 'reload');
+                                    }
+                                  }
+                                } on Exception catch (e) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                            title: const Text('Error'),
+                                            content: Text(
+                                              e.toString(),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Ok'))
+                                            ],
+                                          ));
+                                }
+                              },
+                              child: const Text(
+                                "Sačuvaj",
+                                style: TextStyle(fontSize: 15),
+                              )),
+                        ],
+                      ),
                     ),
                   ],
                 )
@@ -206,6 +256,13 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
               Expanded(
                   child: FormBuilderTextField(
                 name: 'fullName',
+                validator: (value) {
+                  if (value == null) {
+                    return "Obavezno polje";
+                  } else {
+                    return null;
+                  }
+                },
                 decoration: const InputDecoration(label: Text("Naziv")),
               )),
               const SizedBox(
@@ -220,7 +277,7 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
               ),
             ],
           ),
-         const SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Row(
@@ -229,7 +286,7 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                   child: FormBuilderDateTimePicker(
                 name: 'birthDate',
                 validator: ((value) {
-                   if (value == null) {
+                  if (value == null) {
                     return "Obavezno polje";
                   } else {
                     return null;
@@ -256,11 +313,11 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                 child: FormBuilderDropdown<String>(
               name: 'genderId',
               validator: (value) {
-                 if (value == null) {
-                    return "Obavezno polje";
-                  } else {
-                    return null;
-                  }
+                if (value == null) {
+                  return "Obavezno polje";
+                } else {
+                  return null;
+                }
               },
               decoration: InputDecoration(
                 labelText: 'Spol',
@@ -290,11 +347,11 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                 child: FormBuilderDropdown<String>(
               name: 'countryId',
               validator: (value) {
-                 if (value == null) {
-                    return "Obavezno polje";
-                  } else {
-                    return null;
-                  }
+                if (value == null) {
+                  return "Obavezno polje";
+                } else {
+                  return null;
+                }
               },
               decoration: InputDecoration(
                 labelText: 'Država',

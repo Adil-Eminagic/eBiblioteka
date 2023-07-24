@@ -191,7 +191,7 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
                           ?.reset();
                     },
                   ),
-                  hintText: 'Odaberi ulogu',
+                  hintText: 'Odaberi žanr',
                 ),
                 items: genresResult?.items
                         .map((g) => DropdownMenuItem(

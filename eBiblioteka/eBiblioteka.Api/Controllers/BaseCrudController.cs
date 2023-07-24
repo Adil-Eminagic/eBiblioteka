@@ -33,7 +33,7 @@ namespace eBiblioteka.Api.Controllers
             catch (Exception e)
             {
                 Logger.LogError(e, "Problem when getting resource with ID {0}", id);
-                return BadRequest();
+                return BadRequest(e.Message+ " " + e?.InnerException);
             }
         }
 
@@ -49,7 +49,8 @@ namespace eBiblioteka.Api.Controllers
             catch (Exception e)
             {
                 Logger.LogError(e, "Problem when getting paged resources for page number {0}, with page size {1}", searchObject.PageNumber, searchObject.PageSize);
-                return BadRequest();
+                return BadRequest(e.Message+ " " + e?.InnerException);
+               
             }
         }
 
@@ -70,7 +71,8 @@ namespace eBiblioteka.Api.Controllers
             catch (Exception e)
             {
                 Logger.LogError(e, "Problem when posting resource");
-                return BadRequest();
+                return BadRequest(e.Message + " " + e?.InnerException);
+
             }
         }
 
@@ -91,7 +93,7 @@ namespace eBiblioteka.Api.Controllers
             catch (Exception e)
             {
                 Logger.LogError(e, "Problem when updating resource");
-                return BadRequest();
+                return BadRequest(e.Message + " " + e?.InnerException);
             }
         }
 

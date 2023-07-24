@@ -1,9 +1,8 @@
-import 'package:admin_ebiblioteka/providers/country_provider.dart';
-import 'package:admin_ebiblioteka/providers/gender_provider.dart';
-import 'package:admin_ebiblioteka/providers/sign_provider.dart';
-import 'package:admin_ebiblioteka/utils/util.dart';
-import 'package:admin_ebiblioteka/utils/util_widgets.dart';
-import 'package:admin_ebiblioteka/widgets/master_screen.dart';
+import '../providers/country_provider.dart';
+import '../providers/gender_provider.dart';
+import '../providers/sign_provider.dart';
+import '../utils/util.dart';
+import '../utils/util_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

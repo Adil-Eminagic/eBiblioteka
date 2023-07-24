@@ -1,9 +1,10 @@
-import 'dart:ffi';
 
 import 'package:admin_ebiblioteka/pages/book_list.dart';
 import 'package:admin_ebiblioteka/pages/genre_list.dart';
 import 'package:admin_ebiblioteka/detail_pages/profile_setting.dart';
+import 'package:admin_ebiblioteka/pages/quiz_list.dart';
 import 'package:admin_ebiblioteka/pages/users_list.dart';
+import 'package:admin_ebiblioteka/providers/quiz_provider.dart';
 import 'package:admin_ebiblioteka/providers/user_provider.dart';
 import 'package:admin_ebiblioteka/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -100,27 +101,28 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ? Container()
             : ListView(
                 children: [
-                  DrawerItem(context, "Autori", const AuthorsPage()),
-                  DrawerItem(
+                  drawerItem(context, "Autori", const AuthorsPage()),
+                  drawerItem(
                       context,
                       "Korisnici",
                       const UsersPage(
                         roleUser: "User",
                       )),
-                  DrawerItem(
+                  drawerItem(
                       context,
                       "Administratori",
                       const UsersPage(
                         roleUser: "Admin",
                       )),
-                  DrawerItem(context, 'Žarovi', const GenresPage()),
-                  DrawerItem(
+                  drawerItem(context, 'Žarovi', const GenresPage()),
+                  drawerItem(context, 'Knjige', const BooksPage()),
+                  drawerItem(context, 'Kvizovi', const QuizzesListPage()),
+                  drawerItem(
                       context,
                       'Postavke profila',
                       ProfileSettingsPage(
                         user: user!,
                       )), //( user: Autentification.loggedUser!,)
-                  DrawerItem(context, 'Knjige', const BooksPage()),
                 ],
               ),
       ),
@@ -128,7 +130,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     );
   }
 
-  ListTile DrawerItem(BuildContext context, String title, Widget route) {
+  ListTile drawerItem(BuildContext context, String title, Widget route) {
     return ListTile(
         title: Text(title),
         onTap: () async {
