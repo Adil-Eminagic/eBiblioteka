@@ -1,7 +1,9 @@
 import 'package:admin_ebiblioteka/providers/answer_provider.dart';
 import 'package:admin_ebiblioteka/providers/question_provider.dart';
 import 'package:admin_ebiblioteka/providers/quiz_provider.dart';
+import 'package:admin_ebiblioteka/providers/recommend_result_provider.dart';
 
+import 'providers/bookfile_provider.dart';
 import 'providers/quotes_provider.dart';
 
 import 'pages/login_page.dart';
@@ -38,7 +40,9 @@ void main() {
       ChangeNotifierProvider(create: ((context) => RatingProvider())),
       ChangeNotifierProvider(create: ((context) => QuizProvider())),
       ChangeNotifierProvider(create: ((context) => QuestionProvider())),
-      ChangeNotifierProvider(create: ((context) => AnswerProvider()))
+      ChangeNotifierProvider(create: ((context) => AnswerProvider())),
+      ChangeNotifierProvider(create: ((context) => BookFileProvider())),
+      ChangeNotifierProvider(create: ((context) => RecommendResultProvider()))
 
     ],
     child:  MyApp(),

@@ -16,9 +16,20 @@ class Book {
   Photo? coverPhoto;
   int? authorID;
   Author? author;
+  int? bookFileId;
 
-  Book(this.id, this.title, this.shortDescription, this.publishingYear,
-      this.openingCount, this.coverPhoto, this.coverPhotoId, this.author, this.authorID);
+  Book(
+      this.id,
+      this.title,
+      this.shortDescription,
+      this.publishingYear,
+      this.openingCount,
+      this.coverPhoto,
+      this.coverPhotoId,
+      this.author,
+      this.authorID,
+      this.bookFileId,
+      this.isActive);
 
   factory Book.fromJson(Map<String, dynamic> json) => _$BookFromJson(json);
 

@@ -42,6 +42,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
   SearchResult<Role>? roleResult;
   String? photo;
   bool isLoading = true;
+  bool? isActive;
 
   @override
   void initState() {
@@ -64,6 +65,10 @@ class _UserDetailPageState extends State<UserDetailPage> {
     _countryProvider = context.read<CountryProvider>();
     _roleProvider = context.read<RoleProvider>();
     _userProvider = context.read<UserProvider>();
+
+    if (widget.user != null) {
+      isActive = widget.user!.isActive!;
+    }
     if (widget.user != null && widget.user?.profilePhoto != null) {
       photo = widget.user?.profilePhoto?.data ?? '';
     }
@@ -104,48 +109,48 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      widget.user == null
-                          ? Container()
-                          : TextButton(
-                              onPressed: () async {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title:
-                                              const Text('Brisanje korisnika'),
-                                          content: const Text(
-                                              'Da li želite obrisati korisnika'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: (() {
-                                                  Navigator.pop(context);
-                                                }),
-                                                child: const Text('Poništi')),
-                                            TextButton(
-                                                onPressed: () async {
-                                                  try {
-                                                    await _userProvider.remove(
-                                                        widget.user?.id ?? 0);
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                            const SnackBar(
-                                                                content: Text(
-                                                                    'Uspješno brisanje korisnika')));
-                                                    Navigator.pop(context);
-                                                    Navigator.pop(
-                                                        context, 'reload');
-                                                  } catch (e) {
-                                                    alertBoxMoveBack(context,
-                                                        'Greška', e.toString());
-                                                  }
-                                                },
-                                                child: const Text('Ok')),
-                                          ],
-                                        ));
-                              },
-                              child: const Text('Obriši korisnika')),
+                      // widget.user == null
+                      //     ? Container()
+                      //     : TextButton(
+                      //         onPressed: () async {
+                      //           showDialog(
+                      //               context: context,
+                      //               builder: (BuildContext context) =>
+                      //                   AlertDialog(
+                      //                     title:
+                      //                         const Text('Brisanje korisnika'),
+                      //                     content: const Text(
+                      //                         'Da li želite obrisati korisnika'),
+                      //                     actions: [
+                      //                       TextButton(
+                      //                           onPressed: (() {
+                      //                             Navigator.pop(context);
+                      //                           }),
+                      //                           child: const Text('Poništi')),
+                      //                       TextButton(
+                      //                           onPressed: () async {
+                      //                             try {
+                      //                               await _userProvider.remove(
+                      //                                   widget.user?.id ?? 0);
+                      //                               ScaffoldMessenger.of(
+                      //                                       context)
+                      //                                   .showSnackBar(
+                      //                                       const SnackBar(
+                      //                                           content: Text(
+                      //                                               'Uspješno brisanje korisnika')));
+                      //                               Navigator.pop(context);
+                      //                               Navigator.pop(
+                      //                                   context, 'reload');
+                      //                             } catch (e) {
+                      //                               alertBoxMoveBack(context,
+                      //                                   'Greška', e.toString());
+                      //                             }
+                      //                           },
+                      //                           child: const Text('Ok')),
+                      //                     ],
+                      //                   ));
+                      //         },
+                      //         child: const Text('Obriši korisnika')),
                       widget.user == null
                           ? Container()
                           : const SizedBox(
@@ -174,6 +179,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                     request['profilePhoto'] = _base64Image;
                                   }
 
+                                  request['isActive'] = isActive;
                                   var res = await _userProvider.update(request);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -197,6 +203,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                   if (_base64Image != null) {
                                     request['profilePhoto'] = _base64Image;
                                   }
+                                  request['isActive'] = true;
 
                                   await _userProvider.insert(request);
 
@@ -205,7 +212,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                           content: Text(
                                               'Uspješno dodavanje korisnika')));
 
-                                  Navigator.pop(context, 'reload');
+                                   Navigator.pop(context, 'reload');
                                 }
                               }
                             } on Exception catch (e) {
@@ -231,6 +238,30 @@ class _UserDetailPageState extends State<UserDetailPage> {
       initialValue: _initialValue,
       child: Column(
         children: [
+          widget.user == null
+              ? Container()
+              : Row(
+                  children: [
+                    const Text(
+                      'Aktivnost',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    Switch(
+                      // This bool value toggles the switch.
+                      value: isActive!,
+                      activeColor: Colors.brown,
+                      onChanged: (bool value) {
+                        // This is called when the user toggles the switch.
+                        setState(() {
+                          isActive = value;
+                        });
+                      },
+                    )
+                  ],
+                ),
           Row(
             children: [
               Expanded(

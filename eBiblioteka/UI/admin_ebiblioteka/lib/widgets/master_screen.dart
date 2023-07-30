@@ -4,7 +4,6 @@ import 'package:admin_ebiblioteka/pages/genre_list.dart';
 import 'package:admin_ebiblioteka/detail_pages/profile_setting.dart';
 import 'package:admin_ebiblioteka/pages/quiz_list.dart';
 import 'package:admin_ebiblioteka/pages/users_list.dart';
-import 'package:admin_ebiblioteka/providers/quiz_provider.dart';
 import 'package:admin_ebiblioteka/providers/user_provider.dart';
 import 'package:admin_ebiblioteka/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -101,6 +100,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ? Container()
             : ListView(
                 children: [
+                  drawerItem(context, 'Knjige', const BooksPage()),
                   drawerItem(context, "Autori", const AuthorsPage()),
                   drawerItem(
                       context,
@@ -115,14 +115,13 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                         roleUser: "Admin",
                       )),
                   drawerItem(context, 'Žarovi', const GenresPage()),
-                  drawerItem(context, 'Knjige', const BooksPage()),
                   drawerItem(context, 'Kvizovi', const QuizzesListPage()),
                   drawerItem(
                       context,
                       'Postavke profila',
                       ProfileSettingsPage(
                         user: user!,
-                      )), //( user: Autentification.loggedUser!,)
+                      )), 
                 ],
               ),
       ),

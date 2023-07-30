@@ -27,7 +27,10 @@ namespace eBiblioteka.Infrastructure
             builder.Property(e => e.PasswordSalt)
                    .IsRequired();
 
-           
+
+            builder.Property(e => e.isActive)
+                   .IsRequired();
+
             builder.Property(e => e.LastSignInAt)
                    .IsRequired(false);
 

@@ -26,13 +26,7 @@ Image imageFromBase64String(String base64Image) {
   );
 }
 
-// class Reload extends ChangeNotifier {
-//   // ↓ Add this.
-//   void reload() {
-//     set
-//     notifyListeners();
-//   }
-// }
+
 
 //TODOs
 //textare biografija

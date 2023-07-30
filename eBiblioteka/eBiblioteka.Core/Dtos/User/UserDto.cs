@@ -9,6 +9,9 @@
         public DateTime? LastSignInAt { get; set; }
         public string? Biography { get; set; }
         public DateTime BirthDate { get; set; }
+        public bool isActive { get; set; }
+
+
 
         public int? ProfilePhotoId { get; set; }
         public PhotoDto? ProfilePhoto { get; set; }

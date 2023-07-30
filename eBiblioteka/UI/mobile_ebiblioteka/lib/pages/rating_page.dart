@@ -82,14 +82,14 @@ class _RatingListPageState extends State<RatingListPage> {
                         color: Colors.black,
                         thickness: 0.5,
                       ),
-                     (result == null || result!.items.isEmpty) ? const Expanded(child: Center(child: Text('Nema ocjena za ovu knjigu'))) : Expanded(
+                     (result == null || result!.items.isEmpty || isLoading==true) ? const Expanded(child: Center(child: Text('Nema ocjena za ovu knjigu'))) : Expanded(
                         child: ListView.builder(
                           itemCount: result!.items.length,
                           itemBuilder: (context, index) {
                             return Column(
                               children: [
                                 ListTile(
-                                  subtitle: Text(result!.items[index].comment!),
+                                  subtitle: Text(result!.items[index].comment ?? ''),
                                   title: Text(
                                       "${result!.items[index].user!.firstName} ${result!.items[index].user!.lastName}"),
                                   leading: Text(

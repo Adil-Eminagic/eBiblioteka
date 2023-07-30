@@ -9,13 +9,12 @@ class Rating {
   int? id;
   int? stars;
   String? comment;
-  DateTime? dateTime;
   int? userId;
   User? user;
   int? bookId;
   Book? book;
 
-  Rating(this.id, this.stars, this.comment, this.dateTime, this.bookId,
+  Rating(this.id, this.stars, this.comment, this.bookId,
       this.userId, this.user, this.book);
 
   factory Rating.fromJson(Map<String, dynamic> json) => _$RatingFromJson(json);

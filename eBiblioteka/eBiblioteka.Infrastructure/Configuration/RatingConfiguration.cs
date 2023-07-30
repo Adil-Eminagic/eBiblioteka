@@ -14,8 +14,6 @@ namespace eBiblioteka.Infrastructure
                    .IsRequired();
             builder.Property(e => e.Comment)
                   .IsRequired(false);
-            builder.Property(e => e.DateTime)
-                  .IsRequired();
 
             builder.HasOne(e => e.User)
                    .WithMany(e => e.RateBook)

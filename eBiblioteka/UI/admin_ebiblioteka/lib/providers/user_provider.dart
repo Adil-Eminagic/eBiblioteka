@@ -57,4 +57,50 @@ class UserProvider extends BaseProvider<User> {
       throw new Exception("Unknown error");
     }
   }
+
+  Future<dynamic> deactivate(int userId, String email) async {
+    var url = "${BaseProvider.baseUrl}$endpoint/Deactivate?userId=$userId";
+
+    var uri = Uri.parse(url);
+
+   
+   
+    var headers = createHeaders();
+
+    Response response = await put(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      var result = data;
+
+      return result;
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
+  Future<dynamic> activate(int userId) async {
+    var url = "${BaseProvider.baseUrl}$endpoint/Activate?userId=$userId";
+
+    var uri = Uri.parse(url);
+   
+    var headers = createHeaders();
+
+    Response response = await put(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      var result = data;
+
+      return result;
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
 }
+
+
+ 

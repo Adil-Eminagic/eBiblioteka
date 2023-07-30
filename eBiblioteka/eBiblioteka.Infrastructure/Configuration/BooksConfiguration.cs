@@ -12,6 +12,9 @@ namespace eBiblioteka.Infrastructure
             builder.Property(e => e.Title)
                    .IsRequired();
 
+            builder.Property(e => e.isActive)
+                 .IsRequired();
+
             builder.Property(e => e.ShortDescription)
                    .IsRequired(false);
 
@@ -25,6 +28,11 @@ namespace eBiblioteka.Infrastructure
                    .WithMany(e => e.Books)
                    .HasForeignKey(e => e.CoverPhotoId)
                    .IsRequired(false);
+
+            builder.HasOne(e => e.BookFile)
+                  .WithMany(e => e.Books)
+                  .HasForeignKey(e => e.BookFileId)
+                  .IsRequired(false);
 
 
             builder.HasOne(e => e.Author)

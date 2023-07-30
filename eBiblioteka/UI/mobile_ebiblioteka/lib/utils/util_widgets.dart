@@ -58,6 +58,15 @@ Row rowMethod(Widget item, [CrossAxisAlignment? crossAxisAlignment]) {
     ));
   }
 
+  Expanded textFieldReadOnly(String name, String label) {
+    return Expanded(
+        child: FormBuilderTextField(
+      readOnly: true,
+      name: name,
+      decoration: InputDecoration(label: Text(label)),
+    ));
+  }
+
 // napomene
 // za rabbit mq
 //za povećanje minisdkversion

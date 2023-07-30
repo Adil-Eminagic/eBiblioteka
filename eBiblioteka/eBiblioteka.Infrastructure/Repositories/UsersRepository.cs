@@ -38,7 +38,13 @@ namespace eBiblioteka.Infrastructure
             return await DbSet.Include(c=>c.ProfilePhoto).Include(c=>c.Role).Include(c=>c.Gender).Where(c => searchObject.FullName == null || c.FirstName.ToLower().Contains(searchObject.FullName.ToLower())
             || c.LastName.ToLower().Contains(searchObject.FullName.ToLower())).
             Where(c=> searchObject.RoleName==null || searchObject.RoleName==c.Role.Value)
+            .Where(c=>searchObject.isActive== null || c.isActive==searchObject.isActive)
             .ToPagedListAsync(searchObject, cancellationToken);
+        }
+
+        public List<User> UsersWithReadHistory()
+        {
+            return DbSet.Include(c => c.OpenedBooks).Where(s=>s.RoleId==3).ToList();
         }
     }
 }

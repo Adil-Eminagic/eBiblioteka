@@ -1,4 +1,5 @@
 import 'package:admin_ebiblioteka/pages/authors_list.dart';
+import 'package:admin_ebiblioteka/pages/book_list.dart';
 import 'package:admin_ebiblioteka/pages/signup_page.dart';
 import 'package:admin_ebiblioteka/providers/sign_provider.dart';
 import 'package:admin_ebiblioteka/providers/user_provider.dart';
@@ -87,8 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                               isLoading = true;
                             });
 
-                            // _emailController.text = "site.admin@gmail.com";
-                            // _passwordController.text = "test";
+                             _emailController.text = "site.admin@gmail.com";
+                             _passwordController.text = "test";
                             var email = _emailController.text;
                             var password = _passwordController.text;
 
@@ -109,17 +110,17 @@ class _LoginPageState extends State<LoginPage> {
                               // } else {
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(builder: (context) {
-                                return const AuthorsPage();
+                                return const BooksPage();
                               }));
                               isLoading = false;
                               //}
-                            } catch (e) {
+                            } on Exception catch (e) {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
                                         title: const Text('Error'),
-                                        content: Text(e.toString()),
+                                        content: Text(e.toString(),),
                                         actions: [
                                           TextButton(
                                               onPressed: () {

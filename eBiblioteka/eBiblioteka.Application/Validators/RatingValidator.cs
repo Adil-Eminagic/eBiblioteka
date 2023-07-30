@@ -9,7 +9,6 @@ namespace eBiblioteka.Application
         public RatingValidator()
         {
             RuleFor(u => u.Stars).LessThan(6).GreaterThan(0).NotNull().WithErrorCode(ErrorCodes.NotNull);
-            RuleFor(u => u.DateTime).NotNull().WithErrorCode(ErrorCodes.NotNull);
 
             RuleFor(c => c.UserId).NotNull().WithErrorCode(ErrorCodes.NotNull);
             RuleFor(c => c.BookId).NotNull().WithErrorCode(ErrorCodes.NotNull);

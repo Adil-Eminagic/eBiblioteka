@@ -8,5 +8,6 @@ namespace eBiblioteka.Infrastructure.Interfaces
     {
         Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
         Task<User?> ChangeEmailAsync(int userId, JsonPatchDocument jsonPatch, CancellationToken cancellationToken=default);
+        List<User> UsersWithReadHistory();
     }
 }

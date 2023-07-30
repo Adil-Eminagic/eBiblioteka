@@ -22,6 +22,8 @@ class _StartQuizPageState extends State<StartQuizPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('Maksimalan broj bodova: ${widget.quiz?.totalPoints}', style: const TextStyle(fontSize: 16)),
+            const SizedBox(height: 20,),
             ElevatedButton(
                 onPressed: (() {
                   Navigator.of(context).push(
@@ -29,7 +31,7 @@ class _StartQuizPageState extends State<StartQuizPage> {
                         quiz: widget.quiz,
                       ))));
                 }),
-                child:const Text('Započnite kviz')),
+                child:const Text('Započnite kviz', style: TextStyle(fontSize: 18),)),
 
           ],
         ),

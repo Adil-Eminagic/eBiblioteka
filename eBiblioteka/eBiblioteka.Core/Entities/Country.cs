@@ -7,8 +7,6 @@ namespace eBiblioteka.Core
         public string Abbreviation { get; set; } = null!;
         public bool IsActive { get; set; }
 
-        public ICollection<City> Cities { get; set; }= null!;
-
         public ICollection<User> Users { get; set; }
 
         public ICollection<Author> Authors { get; set; }

@@ -12,6 +12,7 @@ namespace eBiblioteka.Core
         public DateTime? LastSignInAt { get; set; }
         public string? Biography { get; set; }
         public DateTime BirthDate { get; set; }
+        public bool isActive { get; set; } = true;
 
         public int? ProfilePhotoId { get; set; }
         public Photo? ProfilePhoto { get; set; }
@@ -27,6 +28,7 @@ namespace eBiblioteka.Core
 
         public ICollection<UserBook> OpenedBooks { get; set; } = null!;
         public ICollection<Rating> RateBook { get; set; } = null!;
+        public ICollection<Notification> Notifications { get; set; }= null!;
 
     }
 }

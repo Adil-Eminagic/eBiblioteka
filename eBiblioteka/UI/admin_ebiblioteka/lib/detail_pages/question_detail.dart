@@ -276,6 +276,22 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                         child: const Text('Uredi odgovore')),
                   ],
                 ),
+                 const SizedBox(
+            height: 30,
+          ),
+          widget.question == null
+              ? Container()
+              : Row(
+                  children: const [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                            'Napomena: Da bi pitanje bilo aktivno mora imati jedan\ni samo jedan tačan odgovor i jedan ili više netačnih odgovora.'),
+                      ),
+                    )
+                  ],
+                ),
           const SizedBox(
             height: 50,
           ),

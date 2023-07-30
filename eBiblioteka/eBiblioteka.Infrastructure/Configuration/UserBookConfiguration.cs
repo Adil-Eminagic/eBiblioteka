@@ -20,6 +20,9 @@ namespace eBiblioteka.Infrastructure
                    .WithMany(e => e.OpenedBooks)
                    .HasForeignKey(e => e.UserId)
                    .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasIndex(e => new { e.UserId, e.BookId }).IsUnique();
+
         }
     }
 }

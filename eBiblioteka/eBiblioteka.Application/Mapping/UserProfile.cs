@@ -1,4 +1,5 @@
 ﻿using eBiblioteka.Core;
+using eBiblioteka.Core.Dtos.User;
 
 namespace eBiblioteka.Application
 {
@@ -9,6 +10,8 @@ namespace eBiblioteka.Application
             CreateMap<UserDto, User>().ReverseMap();
 
             CreateMap<User, UserSensitiveDto>();
+
+            CreateMap<User, UserHisoryDto>().ReverseMap();
 
             CreateMap<UserDto, UserUpsertDto>();
 

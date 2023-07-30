@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:mobile_ebiblioteka/pages/login_page.dart';
-import 'package:mobile_ebiblioteka/providers/quotes_provider.dart';
-import 'package:mobile_ebiblioteka/providers/rating_provider.dart';
-import 'package:mobile_ebiblioteka/providers/sign_provider.dart';
+import 'package:mobile_ebiblioteka/providers/recommend_result_provider.dart';
+import 'providers/bookfile_provider.dart';
+import 'providers/quotes_provider.dart';
+import 'providers/rating_provider.dart';
+import 'providers/sign_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/answer_provider.dart';
@@ -42,7 +44,9 @@ void main() {
       ChangeNotifierProvider(create: ((context) => RatingProvider())),
        ChangeNotifierProvider(create: ((context) => QuizProvider())),
       ChangeNotifierProvider(create: ((context) => QuestionProvider())),
-      ChangeNotifierProvider(create: ((context) => AnswerProvider()))
+      ChangeNotifierProvider(create: ((context) => AnswerProvider())),
+      ChangeNotifierProvider(create: ((context) => BookFileProvider())),
+      ChangeNotifierProvider(create: ((context) => RecommendResultProvider()))
     ],
     child: const  MyApp(),
   )

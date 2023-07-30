@@ -9,5 +9,6 @@ namespace eBiblioteka.Infrastructure
         Task CommitTransactionAsync(CancellationToken cancellationToken = default);
         Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        void SaveChanges();
     }
 }

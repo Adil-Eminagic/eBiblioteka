@@ -13,7 +13,6 @@ namespace eBiblioteka.Infrastructure
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Country> Countries { get; set; }
-        public DbSet<City> Cities { get; set;}
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<Quote> Quotes { get; set; }
@@ -26,6 +25,9 @@ namespace eBiblioteka.Infrastructure
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<BookFile> BookFiles { get; set; }
+        public DbSet<RecommendResult> RecommendResults { get; set; }
 
 
 

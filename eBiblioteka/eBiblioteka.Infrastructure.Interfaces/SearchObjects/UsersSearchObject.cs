@@ -5,6 +5,8 @@ namespace eBiblioteka.Infrastructure.Interfaces
     {
         public string? FullName { get; set; }
         public string? RoleName { get; set; }
+        public bool? isActive { get; set; }
+
 
     }
 }

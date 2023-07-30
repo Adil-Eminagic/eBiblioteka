@@ -17,6 +17,8 @@ class Book {
   Photo? coverPhoto;
   int? authorID;
   Author? author;
+  int? bookFileId;
+
 
   Book(
       this.id,
@@ -28,7 +30,8 @@ class Book {
       this.coverPhotoId,
       this.author,
       this.authorID,
-      this.averageRate);
+      this.averageRate,
+      this.bookFileId);
 
   factory Book.fromJson(Map<String, dynamic> json) => _$BookFromJson(json);
 

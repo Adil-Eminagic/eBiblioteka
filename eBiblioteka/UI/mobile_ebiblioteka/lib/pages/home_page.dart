@@ -112,7 +112,7 @@ class _GenreBooksWidgetState extends State<GenreBooksWidget> {
   Future<void> initData() async {
     try {
       bookGenreResult = await _bookGenreProvider
-          .getPaged(filter: {'genreId': widget.genre?.id, 'pageSize': 6});
+          .getPaged(filter: {'genreId': widget.genre?.id, 'pageSize': 6, 'isActive':true});
       setState(() {
         isLoading = false;
       });

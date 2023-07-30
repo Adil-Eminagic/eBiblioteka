@@ -22,6 +22,8 @@ class _UsersPageState extends State<UsersPage> {
   late UserProvider _userProvider = UserProvider();
   SearchResult<User>? result;
   bool isLoading = true;
+  int _dropdownValue = 1;
+
 
   TextEditingController _nameController = TextEditingController();
   @override
@@ -37,7 +39,8 @@ class _UsersPageState extends State<UsersPage> {
     try {
       var data = await _userProvider.getPaged(filter: {
         'roleName': widget.roleUser != null ? '${widget.roleUser}' : '',
-        "fullName": _nameController.text
+        "fullName": _nameController.text,
+        'isActive': _dropdownValue == 1 ? true : false
       });
 
       setState(() {
@@ -69,6 +72,7 @@ class _UsersPageState extends State<UsersPage> {
                           'roleName': widget.roleUser != null
                               ? '${widget.roleUser}'
                               : '',
+                              'isActive': _dropdownValue == 1 ? true : false,
                           'pageNumber': i + 1
                         });
 
@@ -141,13 +145,34 @@ class _UsersPageState extends State<UsersPage> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
-            child: TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(label: Text("Ime")),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(label: Text("Ime")),
+              ),
             ),
           ),
+           const SizedBox(
+            width: 15,
+          ),
+          Expanded(
+              child: DropdownButton(
+                  items: const [
+                DropdownMenuItem(value: 0, child: Text('Neaktivne')),
+                DropdownMenuItem(value: 1, child: Text('Aktivne')),
+              ],
+                  value: _dropdownValue,
+                  onChanged: ((value) {
+                    if (value is int) {
+                      setState(() {
+                        _dropdownValue = value;
+                      });
+                    }
+                  }))),
           const SizedBox(
             width: 20,
           ),
@@ -157,7 +182,8 @@ class _UsersPageState extends State<UsersPage> {
                   var data = await _userProvider.getPaged(filter: {
                     'roleName':
                         widget.roleUser != null ? '${widget.roleUser}' : '',
-                    "fullName": _nameController.text
+                    "fullName": _nameController.text,
+                    'isActive': _dropdownValue == 1 ? true : false
                   });
 
                   setState(() {

@@ -39,10 +39,13 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   bool isLoading = false;
   String? photo;
+  // String? fileData;
+  // String? fileName;
 
   Book? bookSend;
   SearchResult<Author>? authorResult;
   SearchResult<BookGenre>? bookGenreResult;
+  bool? isActive;
 
   @override
   void initState() {
@@ -54,7 +57,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
       'publishingYear': widget.book?.publishingYear.toString(), // mora biti
       'authorId': widget.book?.authorID.toString(),
     };
-
+    if (widget.book != null) {
+      isActive = widget.book!.isActive!;
+    }
     _authorProvider = context.read<AuthorProvider>();
     _bookProvider = context.read<BookProvider>();
     _bookGenreProvider = context.read<BookGenreProvider>();
@@ -102,45 +107,45 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    widget.book == null
-                        ? Container()
-                        : TextButton(
-                            onPressed: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title: const Text('Brisanje knjige'),
-                                        content: const Text(
-                                            'Da li želite obrisati knjigu'),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: (() {
-                                                Navigator.pop(context);
-                                              }),
-                                              child: const Text('Poništi')),
-                                          TextButton(
-                                              onPressed: () async {
-                                                try {
-                                                  await _bookProvider.remove(
-                                                      widget.book?.id ?? 0);
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                          content: Text(
-                                                              'Uspješno brisanje knjige.')));
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(
-                                                      context, 'reload');
-                                                } catch (e) {
-                                                  alertBoxMoveBack(context,
-                                                      'Greška', e.toString());
-                                                }
-                                              },
-                                              child: const Text('Ok')),
-                                        ],
-                                      ));
-                            },
-                            child: const Text('Obriši knjigu')),
+                    // widget.book == null
+                    //     ? Container()
+                    //     : TextButton(
+                    //         onPressed: () async {
+                    //           showDialog(
+                    //               context: context,
+                    //               builder: (BuildContext context) =>
+                    //                   AlertDialog(
+                    //                     title: const Text('Brisanje knjige'),
+                    //                     content: const Text(
+                    //                         'Da li želite obrisati knjigu'),
+                    //                     actions: [
+                    //                       TextButton(
+                    //                           onPressed: (() {
+                    //                             Navigator.pop(context);
+                    //                           }),
+                    //                           child: const Text('Poništi')),
+                    //                       TextButton(
+                    //                           onPressed: () async {
+                    //                             try {
+                    //                               await _bookProvider.remove(
+                    //                                   widget.book?.id ?? 0);
+                    //                               ScaffoldMessenger.of(context)
+                    //                                   .showSnackBar(const SnackBar(
+                    //                                       content: Text(
+                    //                                           'Uspješno brisanje knjige.')));
+                    //                               Navigator.pop(context);
+                    //                               Navigator.pop(
+                    //                                   context, 'reload');
+                    //                             } catch (e) {
+                    //                               alertBoxMoveBack(context,
+                    //                                   'Greška', e.toString());
+                    //                             }
+                    //                           },
+                    //                           child: const Text('Ok')),
+                    //                     ],
+                    //                   ));
+                    //         },
+                    //         child: const Text('Obriši knjigu')),
                     widget.book == null
                         ? Container()
                         : const SizedBox(
@@ -162,6 +167,14 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                 request['id'] = widget.book
                                     ?.id; // zbog ovoga nije radilo, treba id
 
+                                if (_base64Document != null) {
+                                  Map<String, dynamic> document = {
+                                    'name': _documentName,
+                                    'data': _base64Document
+                                  };
+                                  request['document'] = document;
+                                }
+
                                 var publishingYear = int.parse(_formKey
                                     .currentState!.value['publishingYear']);
                                 request['publishingYear'] = publishingYear;
@@ -172,9 +185,14 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                     widget.book?.openingCount as int;
                                 request['openingCount'] = 0;
 
+                                request['openingCount'] =
+                                    widget.book?.openingCount!;
+
                                 if (_base64Image != null) {
                                   request['image'] = _base64Image;
                                 }
+
+                                request['isActive'] = isActive;
 
                                 var res = await _bookProvider.update(request);
 
@@ -194,6 +212,18 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
                                 request['openingCount'] = 0;
 
+                                if (_base64Document != null) {
+                                  Map<String, dynamic> document = {
+                                    'name': _documentName,
+                                    'data': _base64Document
+                                  };
+                                  request['document'] = document;
+                                }
+
+                                request['openingCount'] =
+                                    widget.book?.openingCount!;
+
+                                request['isActive'] = true;
                                 if (_base64Image != null) {
                                   request['image'] = _base64Image;
                                 }
@@ -241,6 +271,33 @@ class _BookDetailPageState extends State<BookDetailPage> {
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 50),
                   child: Column(
                     children: [
+                      widget.book == null
+                          ? Container()
+                          : Row(
+                              children: [
+                                const Text(
+                                  'Aktivnost',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                const SizedBox(
+                                  width: 40,
+                                ),
+                                Switch(
+                                  // This bool value toggles the switch.
+                                  value: isActive!,
+                                  activeColor: Colors.brown,
+                                  onChanged: (bool value) {
+                                    // This is called when the user toggles the switch.
+                                    setState(() {
+                                      isActive = value;
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       (photo == null)
                           ? Container()
                           : Container(
@@ -401,7 +458,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                 width: 20,
                               ),
                               ElevatedButton(
-                                  onPressed: (()async {
+                                  onPressed: (() async {
                                     var refresh = await Navigator.of(context)
                                         .push(MaterialPageRoute(
                                             builder: (context) =>
@@ -414,11 +471,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                     }
                                   }),
                                   child: const Text('Uredi citate knjige')),
-                                   const SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                               ElevatedButton(
-                                  onPressed: (()async {
+                                  onPressed: (() async {
                                     var refresh = await Navigator.of(context)
                                         .push(MaterialPageRoute(
                                             builder: (context) =>
@@ -438,7 +495,19 @@ class _BookDetailPageState extends State<BookDetailPage> {
                     ),
                     Expanded(
                       child: Column(
-                        children: [],
+                        children: [
+                          widget.book?.bookFileId == null
+                              ? const Text('Nije dodan pdf dokumnet.')
+                              : const Text('Ova kjiga posjeduje pdf dokument'),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          ElevatedButton(
+                              onPressed: getFile,
+                              child: widget.book?.bookFileId != null
+                                  ? const Text('Promjeni dokument')
+                                  : const Text('Dodaj dokument')),
+                        ],
                       ),
                     ),
                   ],
@@ -446,13 +515,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
           const SizedBox(
             height: 45,
           ),
-          Row(
-            children: [
-              // PDFView(
-              //   pdfData: ,
-              // )
-            ],
-          )
         ],
       ),
     );
@@ -475,6 +537,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   File? _image; //dart.io
   String? _base64Image;
+  File? _document;
+  String? _documentName;
+  String? _base64Document;
 
   Future getimage() async {
     var result = await FilePicker.platform
@@ -487,6 +552,30 @@ class _BookDetailPageState extends State<BookDetailPage> {
       setState(() {
         photo = _base64Image; //opet !
       });
+    }
+  }
+
+  Future getFile() async {
+    var result = await FilePicker.platform
+        .pickFiles(type: FileType.any); //sam prepoznaj platformu u kjoj radi
+
+    if (result != null && result.files.single.path != null) {
+      var file = File(result.files.single.path!);
+      if (file.toString().substring(
+              file.toString().length - 4, file.toString().length - 1) ==
+          "pdf") {
+        _base64Document = base64Encode(file.readAsBytesSync());
+        _documentName = "${widget.book?.title}.pdf";
+
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Uspješno odabran fajl.')));
+      } else {
+        _document = null;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text(
+          'Dozvoljeni su samo pdf fajlovi.',
+        )));
+      }
     }
   }
 }

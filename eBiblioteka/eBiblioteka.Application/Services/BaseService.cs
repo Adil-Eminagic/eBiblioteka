@@ -15,7 +15,7 @@ namespace eBiblioteka.Application
         where TSearchObject : BaseSearchObject
         where TRepository : class, IBaseRepository<TEntity, int, TSearchObject>
     {
-        private const bool ShouldSoftDelete = true;
+        private const bool ShouldSoftDelete = false;
 
         protected readonly IMapper Mapper;
         protected readonly UnitOfWork UnitOfWork;

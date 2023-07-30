@@ -7,6 +7,8 @@ using eBiblioteka.Infrastructure.Interfaces;
 using eBiblioteka.Shared.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.JsonPatch;
+using eBiblioteka.Core.Dtos.User;
+using System.Threading;
 
 namespace eBiblioteka.Application
 {
@@ -122,6 +124,51 @@ namespace eBiblioteka.Application
 
             CurrentRepository.Update(user);
             await UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        public List<UserHisoryDto> UsersWithReadHistory()
+        {
+           var users=  CurrentRepository.UsersWithReadHistory();
+            return Mapper.Map<List<UserHisoryDto>>(users);
+        }
+
+        public async Task<UserDto> DeactivateAsync(int userId, CancellationToken cancellationToken = default)
+        {
+
+            var user = await CurrentRepository.GetByIdAsync(userId, cancellationToken);
+
+            if (user == null)
+                throw new UserNotFoundException();
+
+            if (user.isActive == false)
+                throw new Exception("Ne mozete deaktivirati usera koji je već nektivan");
+
+            user.isActive = false;
+
+            CurrentRepository.Update(user);
+            await UnitOfWork.SaveChangesAsync();
+
+            return Mapper.Map<UserDto>(user);
+
+
+        }
+
+        public async Task<UserDto> ActivateAsync(int userId, CancellationToken cancellationToken = default)
+        {
+            var user = await CurrentRepository.GetByIdAsync(userId, cancellationToken);
+
+            if (user == null)
+                throw new UserNotFoundException();
+
+            if (user.isActive == true)
+                throw new Exception("Ne mozete aktivirati usera koji je aktivan");
+
+            user.isActive = true;
+
+            CurrentRepository.Update(user);
+            await UnitOfWork.SaveChangesAsync();
+
+            return Mapper.Map<UserDto>(user);
         }
     }
 }

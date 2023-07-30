@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mobile_ebiblioteka/models/quote.dart';
 import 'package:mobile_ebiblioteka/models/search_result.dart';
 import 'package:mobile_ebiblioteka/providers/quotes_provider.dart';
@@ -45,21 +47,27 @@ class _QuoteListPageState extends State<QuoteListPage> {
         title: const Text('Citati'),
         centerTitle: true,
       ),
-      body: ListView(
-        children: [
-          if (result != null && result!.items.isEmpty == false)
-            for (var q in result!.items)
-              Column(
-                children: [
-                  ListTile(
-                    title: Text(q.content ?? ''),
-                  ),
-                  const Divider(color: Colors.black, thickness: 1,)
-                ],
-              )
-          
-        ],
-      ),
+      body: isLoading
+          ? const SpinKitRing(color: Colors.brown)
+          : ListView(
+              children: [
+                if (result != null && result!.items.isEmpty == false)
+                  for (var q in result!.items)
+                    Column(
+                      children: [
+                        ListTile(
+                          title: Text(q.content ?? ''),
+                        ),
+                        const Divider(
+                          color: Colors.black,
+                          thickness: 1,
+                        )
+                      ],
+                    )
+                else
+                  const Text('Nema citata', style: TextStyle(fontSize: 20))
+              ],
+            ),
     );
   }
 }

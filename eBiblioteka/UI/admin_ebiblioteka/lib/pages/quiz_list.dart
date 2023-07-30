@@ -107,7 +107,7 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
           const SizedBox(
             height: 15,
           ),
-          (result == null || result!.items.isEmpty)
+          (result == null || result!.items.isEmpty || isLoading==true)
               ? const Expanded(
                   child: Center(child: Text('Nema dodanih testova')))
               : Expanded(
@@ -119,7 +119,7 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
                         return Column(
                           children: [
                             ListTile(
-                              subtitle: Text(result!.items[index].description!),
+                              subtitle: Text(result!.items[index].description ?? ''),
                               title: Text("${result!.items[index].title}"),
                               leading: Text("${result!.items[index].id}"),
                               onTap: (() async {

@@ -29,7 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  pdf_viewer_plugin: ^2.0.1
+  easy_pdf_viewer: ^1.0.6
   http: ^0.13.5
   provider: ^6.0.5
   jwt_decoder: ^2.0.0

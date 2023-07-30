@@ -252,6 +252,22 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                   ],
                 ),
           const SizedBox(
+            height: 30,
+          ),
+          widget.quiz == null
+              ? Container()
+              : Row(
+                  children: const [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                            'Napomena: Da bi kviz bio aktivan mora imati najmanje jedno pitanje i sva pitanja moraju biti aktivna.'),
+                      ),
+                    )
+                  ],
+                ),
+          const SizedBox(
             height: 50,
           ),
         ],

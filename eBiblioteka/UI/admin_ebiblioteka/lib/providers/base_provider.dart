@@ -46,7 +46,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
         result.items.add(fromJson(a));
       }
 
-      notifyListeners();
 
       return result;
     } else {
@@ -131,7 +130,7 @@ bool isValidResponse(Response response) {
   } else {
     print(response.body);
     throw Exception(
-        "Something bad happened please try again, staus code ${response.statusCode}");
+        "Something bad happened please try again, staus code, ${response.body}");
   }
 }
 

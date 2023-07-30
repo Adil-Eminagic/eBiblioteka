@@ -59,7 +59,8 @@ class _RatingListPageState extends State<RatingListPage> {
                 Expanded(
                   child: TextField(
                     controller: _userConroller,
-                    decoration: const InputDecoration(label: Text("Naziv")),
+                    decoration:
+                        const InputDecoration(label: Text("Ime korisnika")),
                   ),
                 ),
                 const SizedBox(
@@ -70,10 +71,10 @@ class _RatingListPageState extends State<RatingListPage> {
                       try {
                         var data = await _ratingProvider.getPaged(filter: {
                           "bookId": widget.bookId,
-                          "userName": _userConroller.text,
-                          "pageSize":1000000
+                          "userName": _userConroller.text , //!=''?_userConroller.text : null
+                          "pageSize": 1000000
                         });
-
+                        
                         setState(() {
                           result = data;
                         });
@@ -91,7 +92,7 @@ class _RatingListPageState extends State<RatingListPage> {
           const SizedBox(
             height: 15,
           ),
-          (result == null || result!.items.isEmpty)
+          (result == null || result!.items.isEmpty || isLoading == true)
               ? const Expanded(
                   child: Center(child: Text('Nema ocjena za ovu knjigu')))
               : Expanded(
@@ -103,7 +104,8 @@ class _RatingListPageState extends State<RatingListPage> {
                         return Column(
                           children: [
                             ListTile(
-                              subtitle: Text(result!.items[index].comment!),
+                              subtitle:
+                                  Text(result?.items[index].comment ?? ''),
                               title: Text(
                                   "${result!.items[index].user!.firstName} ${result!.items[index].user!.lastName}"),
                               leading: Text(
@@ -111,54 +113,53 @@ class _RatingListPageState extends State<RatingListPage> {
                                 style: TextStyle(fontSize: 20),
                               ),
                               trailing: InkWell(
-                                  onTap: () async {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                              title:
-                                                  const Text('Brisanje ocjenu'),
-                                              content: const Text(
-                                                  'Da li želite obrisati ocjenu'),
-                                              actions: [
-                                                TextButton(
-                                                    onPressed: (() {
-                                                      Navigator.pop(context);
-                                                    }),
-                                                    child:
-                                                        const Text('Poništi')),
-                                                TextButton(
-                                                    onPressed: () async {
-                                                      try {
-                                                        await _ratingProvider
-                                                            .remove(result!
-                                                                    .items[
-                                                                        index]
-                                                                    .id ??
-                                                                0);
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                const SnackBar(
-                                                                    content: Text(
-                                                                        'Uspješno brisanje ocjene.')));
+                                onTap: () async {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                            title:
+                                                const Text('Brisanje ocjenu'),
+                                            content: const Text(
+                                                'Da li želite obrisati ocjenu'),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: (() {
+                                                    Navigator.pop(context);
+                                                  }),
+                                                  child: const Text('Poništi')),
+                                              TextButton(
+                                                  onPressed: () async {
+                                                    try {
+                                                      await _ratingProvider
+                                                          .remove(result!
+                                                                  .items[index]
+                                                                  .id ??
+                                                              0);
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              const SnackBar(
+                                                                  content: Text(
+                                                                      'Uspješno brisanje ocjene.')));
 
-                                                        Navigator.pop(
+                                                      Navigator.pop(
+                                                        context,
+                                                      );
+                                                      initData();
+                                                    } catch (e) {
+                                                      alertBoxMoveBack(
                                                           context,
-                                                        );
-                                                        initData();
-                                                      } catch (e) {
-                                                        alertBoxMoveBack(
-                                                            context,
-                                                            'Greška',
-                                                            e.toString());
-                                                      }
-                                                    },
-                                                    child: const Text('Ok')),
-                                              ],
-                                            ));
-                                  },
-                                  child: const Icon(Icons.delete),),
+                                                          'Greška',
+                                                          e.toString());
+                                                    }
+                                                  },
+                                                  child: const Text('Ok')),
+                                            ],
+                                          ));
+                                },
+                                child: const Icon(Icons.delete),
+                              ),
                             ),
                             const Divider(
                               color: Colors.black,

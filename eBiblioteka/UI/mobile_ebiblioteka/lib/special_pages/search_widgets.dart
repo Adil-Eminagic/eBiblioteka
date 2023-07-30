@@ -43,7 +43,7 @@ class _SearchTitleState extends State<SearchTitle> {
   Future<void> initData() async {
     try {
       result = await _bookProvider.getPaged(
-          filter: {'title': _valueController.text, 'pageSize': 100000});
+          filter: {'title': _valueController.text, 'pageSize': 100000, 'isActive':true});
       setState(() {
         isLoading = false;
       });
@@ -141,7 +141,7 @@ class _SearchAuthorsState extends State<SearchAuthors> {
   Future<void> initData() async {
     try {
       result = await _bookProvider.getPaged(
-          filter: {'authorName': _valueController.text, 'pageSize': 1000000});
+          filter: {'authorName': _valueController.text, 'pageSize': 1000000,'isActive':true});
       setState(() {
         isLoading = false;
       });
@@ -260,6 +260,7 @@ class _SearchGenreState extends State<SearchGenre> {
       if (_formKey.currentState!.validate()) {
         bookGenreResult = await _bookGenreProvider.getPaged(filter: {
           'genreId': _formKey.currentState?.value['genreId'],
+          'isActive':true,
           'pageSize': 1000000
         });
         setState(() {

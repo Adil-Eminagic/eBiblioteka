@@ -84,8 +84,8 @@ class _LoginPageState extends State<LoginPage> {
                             isLoading = true;
                           });
           
-                          _emailController.text = "nejra@gmail.com";
-                          _passwordController.text = "Password8";
+                          _emailController.text = "user1@gmail.com";
+                          _passwordController.text = "test";
                           var email = _emailController.text;
                           var password = _passwordController.text;
           
@@ -96,9 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                             Autentification.token = token;
                             Autentification.tokenDecoded =
                                 JwtDecoder.decode(token);
-                            print(Autentification.tokenDecoded);
-          
-                            print(Autentification.tokenDecoded);
+                            
                             // if (Autentification.tokenDecoded?['Role'] == 'User') {
                             //   alertBox(context, 'Greška',
                             //       'Korisnicima zabranjen pristup desktop aplikaciji');

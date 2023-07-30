@@ -60,7 +60,36 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pitanje broj ${count + 1}')),
+      appBar: AppBar(
+        title: Text('Pitanje broj ${count + 1}'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: (() {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Napuštanje kviza'),
+                      content: const Text('Da li želite napustiti kviz.\n Rezultati će se izbrisati.'),
+                      actions: [
+                        TextButton(
+                            onPressed: (() {
+                              Navigator.pop(context);
+                            }),
+                            child: const Text('Poništi')),
+                        TextButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+
+                            },
+                            child: const Text('Ok')),
+                      ],
+                    ));
+          }),
+        ),
+      ),
       body: isLoading
           ? Container()
           : SingleChildScrollView(
@@ -73,7 +102,9 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                     result!.items[count].content!,
                     style: const TextStyle(fontSize: 25),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   // Row(
                   //   children: [
                   //     count > 0
@@ -143,38 +174,38 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                   points += result!.items[count].points!;
                                   print(points);
                                   Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => QuizResultPage(
-                                      totalPoint: widget.quiz!.totalPoints,
-                                      wonPoints: points,
+                                    MaterialPageRoute(
+                                      builder: (context) => QuizResultPage(
+                                        totalPoint: widget.quiz!.totalPoints,
+                                        wonPoints: points,
+                                      ),
                                     ),
-                                  ),
-                                );
-                                }
-                              else if (currentOption == 0) {
+                                  );
+                                } else if (currentOption == 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        duration: Duration(seconds: 2),
+                                          duration: Duration(seconds: 2),
                                           content:
                                               Text('Morate odabrati odgovor')));
                                 } else {
                                   print(points);
                                   Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => QuizResultPage(
-                                      totalPoint: widget.quiz!.totalPoints,
-                                      wonPoints: points,
+                                    MaterialPageRoute(
+                                      builder: (context) => QuizResultPage(
+                                        totalPoint: widget.quiz!.totalPoints,
+                                        wonPoints: points,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
                                 }
                               }),
                               child: Text('Završi test'))
                           : ElevatedButton(
                               onPressed: (() {
-                                if (currentOption!=0 && answerResult!
-                                        .items[currentOption - 1].isTrue! ==
-                                    true) {
+                                if (currentOption != 0 &&
+                                    answerResult!
+                                            .items[currentOption - 1].isTrue! ==
+                                        true) {
                                   points += result!.items[count].points!;
                                   print(points);
                                   setState(() {
@@ -186,11 +217,11 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                 } else if (currentOption == 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        duration: Duration(seconds: 2),
+                                          duration: Duration(seconds: 2),
                                           content:
                                               Text('Morate odabrati odgovor')));
                                 } else {
- print(points);
+                                  print(points);
                                   setState(() {
                                     count += 1;
                                     currentOption = 0;

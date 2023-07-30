@@ -5,7 +5,6 @@ namespace eBiblioteka.Core
     {
         public int Stars { get; set; }
         public string? Comment { get; set; }
-        public DateTime DateTime { get; set; }
 
         public int UserId { get; set; }
         public User User { get; set; } = null!;

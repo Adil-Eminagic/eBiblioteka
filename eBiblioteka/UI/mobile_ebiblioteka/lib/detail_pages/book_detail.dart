@@ -1,15 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mobile_ebiblioteka/models/recommend_result.dart';
 import 'package:mobile_ebiblioteka/pages/rating_page.dart';
+import 'package:mobile_ebiblioteka/providers/photo_provider.dart';
+import 'package:mobile_ebiblioteka/providers/recommend_result_provider.dart';
+import 'package:mobile_ebiblioteka/special_pages/book_pdf.dart';
 import 'package:mobile_ebiblioteka/special_pages/quotes_list.dart';
 import 'package:mobile_ebiblioteka/special_pages/show_book_desc.dart';
+import 'package:mobile_ebiblioteka/widgets/recommended_book.dart';
 
 import '../models/author.dart';
 import '../models/book.dart';
 import '../models/bookgenre.dart';
+import '../models/photo.dart';
 import '../models/search_result.dart';
-import '../providers/author_provider.dart';
 import '../providers/book_provider.dart';
 import '../providers/bookgenre_provider.dart';
 import '../widgets/master_screen.dart';
@@ -33,12 +38,16 @@ class BookDetailPage extends StatefulWidget {
 class _BookDetailPageState extends State<BookDetailPage> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
-  late AuthorProvider _authorProvider = AuthorProvider();
   late BookProvider _bookProvider = BookProvider();
   late BookGenreProvider _bookGenreProvider = BookGenreProvider();
+  late RecommendResultProvider _recommendResultProvider =
+      RecommendResultProvider();
+  late PhotoProvider _photoProvider = PhotoProvider();
 
-  bool isLoading = false;
+  bool isLoading = true;
+  bool isRecommendLoading = true;
   String? photo;
+  RecommendResult? recommendResult;
 
   Book? bookSend;
   SearchResult<Author>? authorResult;
@@ -52,23 +61,25 @@ class _BookDetailPageState extends State<BookDetailPage> {
       'title': widget.book?.title,
       'shortDescription': widget.book?.shortDescription,
       'publishingYear': widget.book?.publishingYear.toString(), // mora biti
-      'authorId': widget.book?.authorID.toString(),
+      'author': widget.book?.author?.fullName,
     };
 
-    _authorProvider = context.read<AuthorProvider>();
+    print(widget.book?.bookFileId);
     _bookProvider = context.read<BookProvider>();
     _bookGenreProvider = context.read<BookGenreProvider>();
+    _recommendResultProvider = context.read<RecommendResultProvider>();
+    _photoProvider = context.read<PhotoProvider>();
 
     if (widget.book != null && widget.book?.coverPhoto != null) {
       photo = widget.book?.coverPhoto?.data ?? '';
     }
 
     initForm();
+    initRecommend();
   }
 
   Future<void> initForm() async {
     try {
-      authorResult = await _authorProvider.getPaged();
       if (widget.book != null) {
         bookSend = await _bookProvider.getById(widget.book!.id!);
         bookGenreResult = await _bookGenreProvider
@@ -76,12 +87,31 @@ class _BookDetailPageState extends State<BookDetailPage> {
         if (bookGenreResult!.items.isNotEmpty) {
           print(bookGenreResult?.items[0].genre?.name);
         }
+        if (widget.book != null &&
+            widget.book?.coverPhotoId != null &&
+            widget.book!.coverPhotoId! > 0 &&
+            widget.book?.coverPhoto == null) {
+          Photo pic = await _photoProvider.getById(widget.book!.coverPhotoId!);
+          photo = pic.data;
+        }
       }
       setState(() {
         isLoading = false;
       });
     } on Exception catch (e) {
       alertBox(context, 'Greška', e.toString());
+    }
+  }
+
+  Future<void> initRecommend() async {
+    try {
+      recommendResult =
+          await _recommendResultProvider.getById(widget.book!.id!);
+      setState(() {
+        isRecommendLoading = false;
+      });
+    } catch (e) {
+      recommendResult = null;
     }
   }
 
@@ -104,39 +134,47 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       )),
                 ],
               ),
-              const SizedBox(height: 5,),
+              const SizedBox(
+                height: 5,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children:  [
-                
+                children: [
                   InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => RatingListPage(
-                            bookId: widget.book!.id,
-                          ))));
-                   
-                    },
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: ((context) => RatingListPage(
+                                  bookId: widget.book!.id,
+                                ))));
+                      },
                       child: const Text(
-                    'Pogledajte ocjene',
-                    style: TextStyle(fontSize: 17, color: Colors.brown),
-                  ))
+                        'Pogledajte ocjene',
+                        style: TextStyle(fontSize: 17, color: Colors.brown),
+                      ))
                 ],
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: widget.book?.bookFileId != null ? 20 : 45,
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          "Čitaj",
-                          style: TextStyle(fontSize: 18),
-                        )),
+                    (widget.book?.bookFileId != null)
+                        ? ElevatedButton(
+                            onPressed: () async {
+                              await _bookProvider.openBook(widget.book!.id!);
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: ((context) => BookPdfShow(
+                                        fileId: widget.book!.bookFileId!,
+                                      ))));
+                            },
+                            child: const Text(
+                              "Čitaj",
+                              style: TextStyle(fontSize: 18),
+                            ))
+                        : const Text('Nije dostupno čitanje'),
                   ],
                 ),
               ),
@@ -170,51 +208,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
               )
             ],
           ),
-          rowMethod(textField('title', 'Nalov')),
+          rowMethod(textFieldReadOnly('title', 'Naslov')),
           const SizedBox(height: 15),
-          rowMethod(
-            Expanded(
-                child: FormBuilderTextField(
-              name: 'publishingYear',
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(label: Text('Godina objave')),
-            )),
-          ),
+          rowMethod(textFieldReadOnly('publishingYear', 'Godina objave')),
           const SizedBox(height: 15),
-          rowMethod(
-            Expanded(
-                child: FormBuilderDropdown<String>(
-              name: 'authorId',
-              
-              validator: (value) {
-                if (value == null) {
-                  return "Obavezno polje";
-                } else {
-                  return null;
-                }
-              },
-              decoration: InputDecoration(
-                labelText: 'Autor',
-                suffix: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    _formKey.currentState!
-                        .fields['authorId'] //brisnje selekcije iz forme
-                        ?.reset();
-                  },
-                ),
-                hintText: 'Odaberi autora',
-              ),
-              items: authorResult?.items
-                      .map((g) => DropdownMenuItem(
-                            alignment: AlignmentDirectional.center,
-                            value: g.id.toString(),
-                            child: Text(g.fullName ?? ''),
-                          ))
-                      .toList() ??
-                  [],
-            )),
-          ),
+          rowMethod(textFieldReadOnly('author', 'Autor')),
           const SizedBox(
             height: 20,
           ),
@@ -244,7 +242,19 @@ class _BookDetailPageState extends State<BookDetailPage> {
             thickness: 0.7,
           ),
           const SizedBox(
+            height: 35,
+          ),
+          Row(
+            children: const [Text('Prepotučeno knjige za vas')],
+          ),
+           const SizedBox(
             height: 25,
+          ),
+          (recommendResult != null && isRecommendLoading == true)
+              ? Container()
+              : _recommendList(),
+          const SizedBox(
+            height: 35,
           ),
           (widget.book == null || isLoading == true)
               ? Container()
@@ -304,6 +314,26 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 ),
           const SizedBox(
             height: 5,
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox _recommendList() {
+    return SizedBox(
+      height: 200,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          RecommendedBookWidget(
+            bookId: recommendResult!.firstCobookId,
+          ),
+          RecommendedBookWidget(
+            bookId: recommendResult!.secondCobookId,
+          ),
+          RecommendedBookWidget(
+            bookId: recommendResult!.thirdCobookId,
           ),
         ],
       ),

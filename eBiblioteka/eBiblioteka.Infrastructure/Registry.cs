@@ -7,7 +7,6 @@ namespace eBiblioteka.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services)
         {
-            services.AddScoped<ICitiesRepository, CitiesRepository>();
             services.AddScoped<ICountriesRepository, CountriesRepository>();
             services.AddScoped<IPhotosRepository,PhotosRepository>();
             services.AddScoped<IBooksRepository, BooksRepository>();
@@ -23,6 +22,9 @@ namespace eBiblioteka.Infrastructure
             services.AddScoped<IQuizsRepository, QuizsRepository>();
             services.AddScoped<IQuestionsRepository, QuestionsRepository>();
             services.AddScoped<IAnswersRepository, AnswersRepository>();
+            services.AddScoped<INotificationsRepository, NotificationsRepository>();
+            services.AddScoped<IBookFilesRepository, BookFilesRepository>();
+            services.AddScoped<IRecommendResultsRepository, RecommendResultsRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

@@ -18,6 +18,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vaš rezultat'),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -32,8 +33,11 @@ class _QuizResultPageState extends State<QuizResultPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-                'Osvojili ste ${widget.wonPoints}/${widget.totalPoint}, što je $result%')
+            Center(
+              child: Text(
+                  'Osvojili ste ${widget.wonPoints}/${widget.totalPoint} ,što je $result%',
+                  style: const TextStyle(fontSize: 20),),
+            )
           ],
         ),
       ),

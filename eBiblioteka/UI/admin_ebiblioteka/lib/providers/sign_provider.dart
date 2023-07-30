@@ -66,7 +66,7 @@ bool isValidResponse(Response response) {
   } else {
     print(response.body);
     throw Exception(
-        "Something bad happened please try again, Status code: ${response.statusCode}");
+        "Something bad happened please try again,\n${response.body}");
   }
 }
 

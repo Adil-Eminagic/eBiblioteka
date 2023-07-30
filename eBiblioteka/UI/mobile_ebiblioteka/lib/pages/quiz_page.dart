@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mobile_ebiblioteka/special_pages/start_quiz.dart';
 import 'package:mobile_ebiblioteka/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
@@ -92,7 +93,7 @@ late QuizProvider _quizProvider = QuizProvider();
           (result == null || result!.items.isEmpty)
               ? const Expanded(
                   child: Center(child: Text('Nema dodanih testova')))
-              : Expanded(
+              : (isLoading ? const SpinKitRing(color: Colors.brown) : Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
                     child: ListView.builder(
@@ -101,7 +102,7 @@ late QuizProvider _quizProvider = QuizProvider();
                         return Column(
                           children: [
                             ListTile(
-                              subtitle: Text(result!.items[index].description!),
+                              subtitle: Text(result!.items[index].description ?? ''),
                               title: Text("${result!.items[index].title}"),
                               leading: Text("${result!.items[index].id}"),
                               onTap: (() async {
@@ -126,7 +127,7 @@ late QuizProvider _quizProvider = QuizProvider();
                       },
                     ),
                   ),
-                ),
+                ))
         ],
       ),
     );

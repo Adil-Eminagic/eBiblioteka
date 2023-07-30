@@ -9,7 +9,6 @@ namespace eBiblioteka.Infrastructure
         private readonly DatabaseContext _databaseContext;
 
         public readonly ICountriesRepository CountriesRepository;
-        public readonly ICitiesRepository CitiesRepository;
         public readonly IPhotosRepository PhotosRepository;
         public readonly IBooksRepository BooksRepository;
         public readonly IQuotesRepository QuotesRepository;
@@ -24,12 +23,14 @@ namespace eBiblioteka.Infrastructure
         public readonly IQuizsRepository QuizsRepository;
         public readonly IQuestionsRepository QuestionsRepository;
         public readonly IAnswersRepository AnswersRepository;
+        public readonly INotificationsRepository NotificationsRepository;
+        public readonly IBookFilesRepository BookFilesRepository;
+        public readonly IRecommendResultsRepository RecommendResultsRepository;
 
 
         public UnitOfWork(
             DatabaseContext databaseContext,
             ICountriesRepository countriesRepository,
-            ICitiesRepository citiesRepository,
             IPhotosRepository photosRepository,
             IBooksRepository booksRepository,
             IQuotesRepository quotesRepository,
@@ -43,12 +44,14 @@ namespace eBiblioteka.Infrastructure
             IRolesRepository rolesRepository,
             IQuizsRepository quizsRepository,
             IQuestionsRepository questionsRepository,
-            IAnswersRepository answersRepository)
+            IAnswersRepository answersRepository,
+            INotificationsRepository notificationsRepository,
+            IBookFilesRepository bookFilesRepository,
+            IRecommendResultsRepository recommendResultsRepository)
         {
             _databaseContext = databaseContext;
 
             CountriesRepository = countriesRepository;
-            CitiesRepository = citiesRepository;
             PhotosRepository = photosRepository;
             BooksRepository = booksRepository;
             QuotesRepository = quotesRepository;
@@ -63,6 +66,9 @@ namespace eBiblioteka.Infrastructure
             QuizsRepository = quizsRepository;
             QuestionsRepository = questionsRepository;
             AnswersRepository = answersRepository;
+            NotificationsRepository = notificationsRepository;
+            BookFilesRepository = bookFilesRepository;
+            RecommendResultsRepository = recommendResultsRepository;
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
@@ -83,6 +89,11 @@ namespace eBiblioteka.Infrastructure
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await _databaseContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public void SaveChanges()
+        {
+            _databaseContext.SaveChanges();
         }
     }
 }
