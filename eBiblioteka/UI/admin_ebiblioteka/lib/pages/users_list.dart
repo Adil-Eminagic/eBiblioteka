@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class UsersPage extends StatefulWidget {
   const UsersPage({Key? key, this.roleUser}) : super(key: key);
   final String? roleUser;
@@ -24,11 +26,9 @@ class _UsersPageState extends State<UsersPage> {
   bool isLoading = true;
   int _dropdownValue = 1;
 
-
-  TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _userProvider = context.read<UserProvider>();
 
@@ -48,14 +48,14 @@ class _UsersPageState extends State<UsersPage> {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title: widget.roleUser == 'User' ? 'Korisnici' : 'Administaratori',
+        title: widget.roleUser == 'User' ? AppLocalizations.of(context).users : AppLocalizations.of(context).admins,
         child: Column(children: [
           _buildSearch(),
           isLoading
@@ -72,7 +72,7 @@ class _UsersPageState extends State<UsersPage> {
                           'roleName': widget.roleUser != null
                               ? '${widget.roleUser}'
                               : '',
-                              'isActive': _dropdownValue == 1 ? true : false,
+                          'isActive': _dropdownValue == 1 ? true : false,
                           'pageNumber': i + 1
                         });
 
@@ -80,7 +80,7 @@ class _UsersPageState extends State<UsersPage> {
                           result = data;
                         });
                       } on Exception catch (e) {
-                        alertBox(context, 'Greška', e.toString());
+                        alertBox(context, AppLocalizations.of(context).error, e.toString());
                       }
                     },
                     child: CircleAvatar(
@@ -102,12 +102,12 @@ class _UsersPageState extends State<UsersPage> {
     return Expanded(
       child: SingleChildScrollView(
         child: DataTable(
-          columns: const [
-            DataColumn(label: Text("Id")),
-            DataColumn(label: Text("Ime")),
-            DataColumn(label: Text("Spol")),
-            DataColumn(label: Text("Datum rođenja")),
-            DataColumn(label: Text("Uloga")),
+          columns: [
+            const DataColumn(label: Text("Id")),
+            DataColumn(label: Text(AppLocalizations.of(context).name)),
+            DataColumn(label: Text(AppLocalizations.of(context).gender)),
+            DataColumn(label: Text(AppLocalizations.of(context).birth_date)),
+            DataColumn(label: Text(AppLocalizations.of(context).role)),
           ],
           rows: result?.items
                   .map((User e) => DataRow(
@@ -152,18 +152,22 @@ class _UsersPageState extends State<UsersPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(label: Text("Ime")),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).name)),
               ),
             ),
           ),
-           const SizedBox(
+          const SizedBox(
             width: 15,
           ),
           Expanded(
               child: DropdownButton(
-                  items: const [
-                DropdownMenuItem(value: 0, child: Text('Neaktivne')),
-                DropdownMenuItem(value: 1, child: Text('Aktivne')),
+                  items: [
+                DropdownMenuItem(
+                    value: 0,
+                    child: Text(AppLocalizations.of(context).inactive)),
+                DropdownMenuItem(
+                    value: 1, child: Text(AppLocalizations.of(context).active)),
               ],
                   value: _dropdownValue,
                   onChanged: ((value) {
@@ -190,10 +194,11 @@ class _UsersPageState extends State<UsersPage> {
                     result = data;
                   });
                 } on Exception catch (e) {
-                  alertBox(context, 'Greška', e.toString());
+                  alertBox(context, AppLocalizations.of(context).error,
+                      e.toString());
                 }
               },
-              child: const Text('Traži')),
+              child: Text(AppLocalizations.of(context).search)),
           const SizedBox(
             width: 15,
           ),
@@ -211,7 +216,7 @@ class _UsersPageState extends State<UsersPage> {
                   initTable();
                 }
               },
-              child: const Text('Dodaj')),
+              child: Text(AppLocalizations.of(context).add)),
           const SizedBox(
             width: 15,
           ),

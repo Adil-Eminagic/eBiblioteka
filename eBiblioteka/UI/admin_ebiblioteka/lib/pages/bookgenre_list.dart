@@ -10,6 +10,9 @@ import 'package:provider/provider.dart';
 import '../models/book.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class BookGenresPage extends StatefulWidget {
   const BookGenresPage({Key? key, this.book}) : super(key: key);
   final Book? book;
@@ -28,7 +31,6 @@ class _BookGenresPageState extends State<BookGenresPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _bookGenreProvider = context.read<BookGenreProvider>();
     _bookProvider = context.read<BookProvider>();
@@ -47,14 +49,14 @@ class _BookGenresPageState extends State<BookGenresPage> {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title: "Žanrovi knjige ${widget.book?.title}",
+        title: "${AppLocalizations.of(context).bookgenre_title} ${widget.book?.title}",
         child: Column(children: [
           _buildSearch(),
           (isLoading || result == null || result!.items.isEmpty )? Container() : _buildDataTable(),
@@ -65,9 +67,9 @@ class _BookGenresPageState extends State<BookGenresPage> {
     return Expanded(
       child: SingleChildScrollView(
         child: DataTable(
-          columns: const [
-            DataColumn(label: Text("Žanr")),
-            DataColumn(label: Text("Knjiga")),
+          columns:  [
+            DataColumn(label: Text(AppLocalizations.of(context).genre)),
+            DataColumn(label: Text(AppLocalizations.of(context).book)),
           ],
           rows: result?.items
                   .map((BookGenre e) => DataRow(
@@ -115,7 +117,7 @@ class _BookGenresPageState extends State<BookGenresPage> {
                   initTable();
                 }
               },
-              child: const Text('Dodaj')),
+              child: Text(AppLocalizations.of(context).add)),
           const SizedBox(
             width: 15,
           ),

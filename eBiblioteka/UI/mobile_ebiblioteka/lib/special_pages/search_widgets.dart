@@ -9,12 +9,14 @@ import 'package:mobile_ebiblioteka/models/genre.dart';
 import 'package:mobile_ebiblioteka/models/search_result.dart';
 import 'package:mobile_ebiblioteka/providers/book_provider.dart';
 import 'package:mobile_ebiblioteka/providers/bookgenre_provider.dart';
-import 'package:mobile_ebiblioteka/providers/gender_provider.dart';
 import 'package:mobile_ebiblioteka/providers/genre_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../models/book.dart';
 import '../utils/util_widgets.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SearchTitle extends StatefulWidget {
   const SearchTitle({Key? key}) : super(key: key);
@@ -48,7 +50,7 @@ class _SearchTitleState extends State<SearchTitle> {
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -62,14 +64,14 @@ class _SearchTitleState extends State<SearchTitle> {
               // mora u expande jer ne zan koliko da se širi
               child: TextField(
                 controller: _valueController,
-                decoration: const InputDecoration(label: Text('Vrijednost')),
+                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).value_name)),
               ),
             ),
             ElevatedButton(
                 onPressed: (() async {
                   initData();
                 }),
-                child: const Text('Traži'))
+                child: Text(AppLocalizations.of(context).search))
           ],
         ),
         const SizedBox(
@@ -146,7 +148,7 @@ class _SearchAuthorsState extends State<SearchAuthors> {
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -160,14 +162,14 @@ class _SearchAuthorsState extends State<SearchAuthors> {
               // mora u expande jer ne zan koliko da se širi
               child: TextField(
                 controller: _valueController,
-                decoration: const InputDecoration(label: Text('Vrijednost')),
+                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).value_name)),
               ),
             ),
             ElevatedButton(
                 onPressed: (() async {
                   initData();
                 }),
-                child: const Text('Traži'))
+                child:  Text(AppLocalizations.of(context).search))
           ],
         ),
         const SizedBox(
@@ -177,8 +179,8 @@ class _SearchAuthorsState extends State<SearchAuthors> {
             child: (result == null || result!.items.isEmpty)
                 ? (isLoading
                     ? const SpinKitRing(color: Colors.brown)
-                    : const Center(
-                        child: Text('Nema rezultata'),
+                    : Center(
+                        child: Text(AppLocalizations.of(context).no_result),
                       ))
                 : ListView.builder(
                     // kada se koristi buider ucitavaju se kako scrollamo a ne sve od jednom
@@ -250,7 +252,7 @@ class _SearchGenreState extends State<SearchGenre> {
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -268,7 +270,7 @@ class _SearchGenreState extends State<SearchGenre> {
         });
       }
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -285,13 +287,13 @@ class _SearchGenreState extends State<SearchGenre> {
                   name: 'genreId',
                   validator: (value) {
                     if (value == null) {
-                      return "Splo je obavezan.";
+                      return "Žanr je obavezan.";
                     } else {
                       return null;
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'Odaberite žanr',
+                    labelText: AppLocalizations.of(context).choose_genre,
                     suffix: IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () {
@@ -300,7 +302,7 @@ class _SearchGenreState extends State<SearchGenre> {
                             ?.reset();
                       },
                     ),
-                    hintText: 'Odaberi žanr',
+                   
                   ),
                   items: genreResult?.items
                           .map((g) => DropdownMenuItem(
@@ -319,7 +321,7 @@ class _SearchGenreState extends State<SearchGenre> {
               onPressed: (() async {
                 initBooks();
               }),
-              child: const Text('Traži'))
+              child: Text(AppLocalizations.of(context).search))
         ]),
         const SizedBox(
           height: 30,
@@ -328,8 +330,8 @@ class _SearchGenreState extends State<SearchGenre> {
             child: (bookGenreResult == null || bookGenreResult!.items.isEmpty)
                 ? (isLoading
                     ? const SpinKitRing(color: Colors.brown)
-                    : const Center(
-                        child: Text('Nema rezultata'),
+                    : Center(
+                        child: Text(AppLocalizations.of(context).no_result),
                       ))
                 : ListView.builder(
                     // kada se koristi buider ucitavaju se kako scrollamo a ne sve od jednom

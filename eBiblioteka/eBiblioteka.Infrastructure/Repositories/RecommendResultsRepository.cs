@@ -29,15 +29,15 @@ namespace eBiblioteka.Infrastructure
                     list[i].SecondCobookId = results[i].SecondCobookId;
                     list[i].ThirdCobookId = results[i].ThirdCobookId;
                 }
-                //var num = results.Count() - DbSet.Count();
+                var num = results.Count() - DbSet.Count();
 
-                //if (num>0)
-                //{
-                //    for(int i = results.Count() - num;i < results.Count(); i++)
-                //    {
-                //        list.Add(results[i]);
-                //    }
-                //}
+                if (num > 0)
+                {
+                    for (int i = results.Count() - num; i < results.Count(); i++)
+                    {
+                        DbSet.Add(results[i]);
+                    }
+                }
             }
             else
             {

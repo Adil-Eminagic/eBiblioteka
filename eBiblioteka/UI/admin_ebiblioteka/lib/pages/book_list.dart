@@ -11,6 +11,9 @@ import '../models/book.dart';
 import '../utils/util_widgets.dart';
 import '../widgets/master_screen.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class BooksPage extends StatefulWidget {
   const BooksPage({Key? key}) : super(key: key);
 
@@ -26,7 +29,7 @@ class _BooksPageState extends State<BooksPage> {
   bool isLoading = true;
   int _dropdownValue = 1;
 
-  TextEditingController _titleController = TextEditingController();
+ final TextEditingController _titleController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -56,7 +59,7 @@ class _BooksPageState extends State<BooksPage> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title: "Knjige",
+        title: AppLocalizations.of(context).books,
         child: Column(children: [
           _buildSearch(),
           isLoading
@@ -106,12 +109,12 @@ class _BooksPageState extends State<BooksPage> {
     return Expanded(
       child: SingleChildScrollView(
         child: DataTable(
-          columns: const [
-            DataColumn(label: Text("Id")),
-            DataColumn(label: Text("Naslov")),
-            DataColumn(label: Text("Napisana")),
+          columns:  [
+           const DataColumn(label:  Text("Id")),
+            DataColumn(label: Text(AppLocalizations.of(context).title)),
+            DataColumn(label: Text(AppLocalizations.of(context).wrote)),
             //DataColumn(label: Text("Žanr")),
-            DataColumn(label: Text("Autor")),
+            DataColumn(label: Text(AppLocalizations.of(context).author)),
           ],
           rows: result?.items
                   .map((Book e) => DataRow(
@@ -149,7 +152,7 @@ class _BooksPageState extends State<BooksPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: _titleController,
-                decoration: const InputDecoration(label: Text("Naziv")),
+                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).title)),
               ),
             ),
           ),
@@ -158,9 +161,9 @@ class _BooksPageState extends State<BooksPage> {
           ),
           Expanded(
               child: DropdownButton(
-                  items: const [
-                DropdownMenuItem(value: 0, child: Text('Neaktivne')),
-                DropdownMenuItem(value: 1, child: Text('Aktivne')),
+                  items:  [
+                DropdownMenuItem(value: 0, child: Text(AppLocalizations.of(context).inactive)),
+                DropdownMenuItem(value: 1, child: Text(AppLocalizations.of(context).active)),
               ],
                   value: _dropdownValue,
                   onChanged: ((value) {
@@ -178,12 +181,11 @@ class _BooksPageState extends State<BooksPage> {
                 try {
                     var data = await _recommendResultProvider.trainData();
 
-                  print(data);
                 } on Exception catch (e) {
-                  alertBox(context, 'Greška', e.toString());
+                  alertBox(context, AppLocalizations.of(context).error, e.toString());
                 }
               },
-              child: const Text('Treniraj preporuku')),
+              child:  Text(AppLocalizations.of(context).train_recommend)),
           const SizedBox(
             width: 15,
           ),
@@ -202,7 +204,7 @@ class _BooksPageState extends State<BooksPage> {
                   alertBox(context, 'Greška', e.toString());
                 }
               },
-              child: const Text('Traži')),
+              child: Text(AppLocalizations.of(context).search)),
           const SizedBox(
             width: 15,
           ),
@@ -219,7 +221,7 @@ class _BooksPageState extends State<BooksPage> {
                   initTable();
                 }
               },
-              child: const Text('Dodaj')),
+              child: Text(AppLocalizations.of(context).add)),
           const SizedBox(
             width: 15,
           ),

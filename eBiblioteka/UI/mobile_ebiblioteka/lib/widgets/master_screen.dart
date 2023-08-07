@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mobile_ebiblioteka/pages/profil_setting.dart';
 import 'package:mobile_ebiblioteka/pages/quiz_page.dart';
@@ -9,14 +7,18 @@ import '../models/user.dart';
 import '../pages/home_page.dart';
 
 import '../pages/login_page.dart';
+import '../providers/language_provider.dart';
 import '../providers/user_provider.dart';
 import '../utils/util.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MasterScreenWidget extends StatefulWidget {
   final Widget? child;
   final String? title;
 
-  MasterScreenWidget({super.key, this.child, this.title});
+  const MasterScreenWidget({super.key, this.child, this.title});
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -25,6 +27,8 @@ class MasterScreenWidget extends StatefulWidget {
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   User? user;
   late UserProvider _userProvider = UserProvider();
+  late LanguageProvider _languageProvider = LanguageProvider();
+
   bool isLoading = true;
 
   @override
@@ -32,6 +36,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     // TODO: implement initState
     super.initState();
     _userProvider = context.read<UserProvider>();
+    _languageProvider = context.read<LanguageProvider>();
+
     if (user == null) {
       initUser();
     } else {
@@ -72,7 +78,47 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ),
           ),
           IconButton(onPressed: (() {
-            //
+            showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                          content: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                  onTap: (() {
+                                    _languageProvider.changeLanguage('en');
+                                    Navigator.pop(context);
+                                  }),
+                                  child: Image.asset(
+                                    'assets/uk.png',
+                                    width: 70,
+                                    height: 70,
+                                  )),
+                              const SizedBox(
+                                width: 50,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  _languageProvider.changeLanguage('bs');
+                                  Navigator.pop(context);
+                                },
+                                child: Image.asset(
+                                  'assets/bih.png',
+                                  width: 70,
+                                  height: 70,
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child:
+                                    Text(AppLocalizations.of(context).cancel)),
+                          ],
+                        ));
           }), icon: const Icon(Icons.language))
         ],
       ),
@@ -94,19 +140,19 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ),
             ),
           ),
-          drawerItem(context, "Početna", const HomePage(), Icons.home),
-          drawerItem(context, "Kvizovi", const QuizzesListPage(), Icons.quiz),
+          drawerItem(context, AppLocalizations.of(context).home, const HomePage(), Icons.home),
+          drawerItem(context, AppLocalizations.of(context).quizes, const QuizzesListPage(), Icons.quiz),
 
           drawerItem(
               context,
-              'Postavke profila',
+              AppLocalizations.of(context).profile_settings,
               ProfileSettings(
                 user: user,
               ),
               Icons.settings),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Odjava'),
+            title:  Text(AppLocalizations.of(context).log_out),
             onTap: () {
               Autentification.token = '';
 

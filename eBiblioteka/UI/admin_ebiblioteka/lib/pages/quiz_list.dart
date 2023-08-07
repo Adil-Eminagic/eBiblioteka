@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 import '../models/search_result.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class QuizzesListPage extends StatefulWidget {
   const QuizzesListPage({Key? key}) : super(key: key);
 
@@ -39,14 +42,14 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Testovi',
+      title: AppLocalizations.of(context).quizes,
       child: Column(
         children: [
           const SizedBox(
@@ -59,7 +62,7 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
                 Expanded(
                   child: TextField(
                     controller: _titleController,
-                    decoration: const InputDecoration(label: Text("Naslov")),
+                    decoration:  InputDecoration(label: Text(AppLocalizations.of(context).title)),
                   ),
                 ),
                 const SizedBox(
@@ -77,10 +80,10 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
                           result = data;
                         });
                       } on Exception catch (e) {
-                        alertBox(context, 'Greška', e.toString());
+                        alertBox(context, AppLocalizations.of(context).error, e.toString());
                       }
                     },
-                    child: const Text('Traži')),
+                    child:  Text(AppLocalizations.of(context).search)),
                 const SizedBox(
                   width: 15,
                 ),
@@ -97,7 +100,7 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
                         initData();
                       }
                     },
-                    child: const Text('Dodaj')),
+                    child:  Text(AppLocalizations.of(context).add)),
                 const SizedBox(
                   width: 15,
                 ),
@@ -108,8 +111,8 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
             height: 15,
           ),
           (result == null || result!.items.isEmpty || isLoading==true)
-              ? const Expanded(
-                  child: Center(child: Text('Nema dodanih testova')))
+              ?  Expanded(
+                  child: Center(child: Text(AppLocalizations.of(context).no_quizzes)))
               : Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_ebiblioteka/detail_pages/question_detail.dart';
-import 'package:mobile_ebiblioteka/models/question.dart';
 import 'package:mobile_ebiblioteka/widgets/master_screen.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import '../models/quiz.dart';
 
@@ -22,7 +24,7 @@ class _StartQuizPageState extends State<StartQuizPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Maksimalan broj bodova: ${widget.quiz?.totalPoints}', style: const TextStyle(fontSize: 16)),
+            Text('${AppLocalizations.of(context).max_points}: ${widget.quiz?.totalPoints}', style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20,),
             ElevatedButton(
                 onPressed: (() {
@@ -31,7 +33,7 @@ class _StartQuizPageState extends State<StartQuizPage> {
                         quiz: widget.quiz,
                       ))));
                 }),
-                child:const Text('Započnite kviz', style: TextStyle(fontSize: 18),)),
+                child: Text(AppLocalizations.of(context).start_quiz, style: const TextStyle(fontSize: 18),)),
 
           ],
         ),

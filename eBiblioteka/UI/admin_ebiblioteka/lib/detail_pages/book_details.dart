@@ -22,6 +22,8 @@ import 'package:provider/provider.dart';
 import '../utils/util.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class BookDetailPage extends StatefulWidget {
   const BookDetailPage({Key? key, this.book}) : super(key: key);
   final Book? book;
@@ -86,7 +88,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -94,8 +96,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: widget.book != null
-          ? "Knjiga Id: ${(widget.book?.id.toString() ?? '')}"
-          : "Nova knjiga",
+          ? "${AppLocalizations.of(context).book_id} ${(widget.book?.id.toString() ?? '')}"
+          : AppLocalizations.of(context).new_book,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
@@ -197,9 +199,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                 var res = await _bookProvider.update(request);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                    SnackBar(
                                         content: Text(
-                                            'Uspješna modifikacija knjige')));
+                                            AppLocalizations.of(context)
+                                                .su_mod_book)));
 
                                 Navigator.pop(context, 'reload');
                               } else {
@@ -231,19 +234,23 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                 await _bookProvider.insert(request);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content:
-                                            Text('Uspješno dodavanje knjige')));
+                                    SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)
+                                                .su_add_book)));
 
                                 Navigator.pop(context, 'reload');
                               }
                             }
                           } on Exception catch (e) {
-                            alertBox(context, 'Greška', e.toString());
+                            alertBox(
+                                context,
+                                AppLocalizations.of(context).error,
+                                e.toString());
                           }
                         },
-                        child: const Text(
-                          "Sačuvaj",
+                        child: Text(
+                          AppLocalizations.of(context).save,
                           style: TextStyle(fontSize: 15),
                         )),
                   ],
@@ -275,9 +282,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           ? Container()
                           : Row(
                               children: [
-                                const Text(
-                                  'Aktivnost',
-                                  style: TextStyle(fontSize: 20),
+                                Text(
+                                  AppLocalizations.of(context).activity,
+                                  style: const TextStyle(fontSize: 20),
                                 ),
                                 const SizedBox(
                                   width: 40,
@@ -312,8 +319,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       ElevatedButton(
                           onPressed: getimage,
                           child: photo == null
-                              ? const Text('Odaberi sliku')
-                              : const Text('Promijeni sliku')),
+                              ? Text(AppLocalizations.of(context).choose_image)
+                              : Text(
+                                  AppLocalizations.of(context).change_image)),
                     ],
                   ),
                 )),
@@ -323,7 +331,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              textField('title', 'Nalov'),
+              textField('title', AppLocalizations.of(context).title),
               const SizedBox(
                 width: 80,
               ),
@@ -331,8 +339,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
                   child: FormBuilderTextField(
                 name: 'shortDescription',
                 maxLines: 5,
-                decoration:
-                    const InputDecoration(label: Text('Kratak sadržaj')),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).short_desc)),
               )),
             ],
           ),
@@ -345,8 +353,16 @@ class _BookDetailPageState extends State<BookDetailPage> {
               Expanded(
                   child: FormBuilderTextField(
                 name: 'publishingYear',
+                 validator: (value) {
+                  if (value == null) {
+                    return AppLocalizations.of(context).mfield;
+                  } else {
+                    return null;
+                  }
+                },
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(label: Text('Godina objave')),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).publishing_year)),
               )),
               const SizedBox(
                 width: 80,
@@ -356,13 +372,13 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 name: 'authorId',
                 validator: (value) {
                   if (value == null) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
                 decoration: InputDecoration(
-                  labelText: 'Autor',
+                  labelText: AppLocalizations.of(context).author,
                   suffix: IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
@@ -371,7 +387,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           ?.reset();
                     },
                   ),
-                  hintText: 'Odaberi autora',
                 ),
                 items: authorResult?.items
                         .map((g) => DropdownMenuItem(
@@ -396,9 +411,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Žanrovi:',
-                            style: TextStyle(
+                           Text(
+                            AppLocalizations.of(context).genres,
+                            style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(
@@ -406,7 +421,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           ),
                           if (bookGenreResult == null ||
                               bookGenreResult!.items.isEmpty)
-                            const Text('Nema žanrova')
+                             Text(AppLocalizations.of(context).no_genres)
                           else
                             Row(
                               children: bookGenreResult?.items
@@ -453,7 +468,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                       initForm();
                                     }
                                   },
-                                  child: const Text('Uredi žanrove knjige')),
+                                  child:  Text(AppLocalizations.of(context).mod_b_genres)),
                               const SizedBox(
                                 width: 20,
                               ),
@@ -470,7 +485,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                       initForm();
                                     }
                                   }),
-                                  child: const Text('Uredi citate knjige')),
+                                  child: Text(AppLocalizations.of(context).mod_b_quotes)),
                               const SizedBox(
                                 width: 20,
                               ),
@@ -487,7 +502,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                       initForm();
                                     }
                                   }),
-                                  child: const Text('Upravljenje ocjenama')),
+                                  child: Text(AppLocalizations.of(context).mod_b_rates)),
                             ],
                           )
                         ],
@@ -497,16 +512,18 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       child: Column(
                         children: [
                           widget.book?.bookFileId == null
-                              ? const Text('Nije dodan pdf dokumnet.')
-                              : const Text('Ova kjiga posjeduje pdf dokument'),
+                              ? (_base64Document == null
+                                  ?  Text(AppLocalizations.of(context).no_doc)
+                                  :  Text(AppLocalizations.of(context).chosen_doc))
+                              : Text(AppLocalizations.of(context).added_doc),
                           const SizedBox(
                             height: 20,
                           ),
                           ElevatedButton(
                               onPressed: getFile,
                               child: widget.book?.bookFileId != null
-                                  ? const Text('Promjeni dokument')
-                                  : const Text('Dodaj dokument')),
+                                  ? Text(AppLocalizations.of(context).change_doc)
+                                  : Text(AppLocalizations.of(context).choose_doc)),
                         ],
                       ),
                     ),
@@ -525,7 +542,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         child: FormBuilderTextField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Obavezno polje";
+          return AppLocalizations.of(context).mfield;
         } else {
           return null;
         }
@@ -564,16 +581,18 @@ class _BookDetailPageState extends State<BookDetailPage> {
       if (file.toString().substring(
               file.toString().length - 4, file.toString().length - 1) ==
           "pdf") {
-        _base64Document = base64Encode(file.readAsBytesSync());
-        _documentName = "${widget.book?.title}.pdf";
+        setState(() {
+          _base64Document = base64Encode(file.readAsBytesSync());
+          _documentName = "${widget.book?.title}.pdf";
+        });
 
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Uspješno odabran fajl.')));
+             SnackBar(content: Text(AppLocalizations.of(context).su_ch_doc)));
       } else {
         _document = null;
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar( SnackBar(
             content: Text(
-          'Dozvoljeni su samo pdf fajlovi.',
+          AppLocalizations.of(context).doc_rule,
         )));
       }
     }

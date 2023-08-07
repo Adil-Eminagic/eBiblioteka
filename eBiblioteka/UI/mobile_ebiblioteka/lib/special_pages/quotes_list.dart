@@ -6,6 +6,9 @@ import 'package:mobile_ebiblioteka/models/search_result.dart';
 import 'package:mobile_ebiblioteka/providers/quotes_provider.dart';
 import 'package:mobile_ebiblioteka/utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class QuoteListPage extends StatefulWidget {
   const QuoteListPage({Key? key, this.bookId}) : super(key: key);
   final int? bookId;
@@ -36,7 +39,7 @@ class _QuoteListPageState extends State<QuoteListPage> {
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -44,7 +47,7 @@ class _QuoteListPageState extends State<QuoteListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Citati'),
+        title:  Text(AppLocalizations.of(context).quotes),
         centerTitle: true,
       ),
       body: isLoading
@@ -65,7 +68,10 @@ class _QuoteListPageState extends State<QuoteListPage> {
                       ],
                     )
                 else
-                  const Text('Nema citata', style: TextStyle(fontSize: 20))
+                   Padding(
+                     padding: const EdgeInsets.all(20.0),
+                     child: Text(AppLocalizations.of(context).no_quotes, style: const TextStyle(fontSize: 20)),
+                   )
               ],
             ),
     );

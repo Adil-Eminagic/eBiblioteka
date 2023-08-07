@@ -16,10 +16,11 @@ namespace eBiblioteka.Infrastructure
            return DbSet.ToList<Book>();
         }
 
-        //public override async Task<Book?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        //{
-        //    return await DbSet.Include(c => c.UserRate).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
-        //}
+
+        public override async Task<Book?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.Include(c => c.UserRate).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+        }
 
         public async Task<IEnumerable<Book>> GetByAuthorIdAsync(int authorId, CancellationToken cancellationToken)
         {

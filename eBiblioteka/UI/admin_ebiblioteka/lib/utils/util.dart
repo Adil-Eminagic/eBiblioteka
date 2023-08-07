@@ -11,6 +11,10 @@ class Autentification {
   //static String? password;
 }
 
+class Language {
+  static String lang = 'bs';
+}
+
 dynamic DateEncode(dynamic item) {
   if (item is DateTime) {
     return item.toIso8601String();

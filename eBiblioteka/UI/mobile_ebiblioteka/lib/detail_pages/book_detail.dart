@@ -3,8 +3,11 @@ import 'dart:io';
 
 import 'package:mobile_ebiblioteka/models/recommend_result.dart';
 import 'package:mobile_ebiblioteka/pages/rating_page.dart';
+import 'package:mobile_ebiblioteka/providers/author_provider.dart';
 import 'package:mobile_ebiblioteka/providers/photo_provider.dart';
+import 'package:mobile_ebiblioteka/providers/rating_provider.dart';
 import 'package:mobile_ebiblioteka/providers/recommend_result_provider.dart';
+import 'package:mobile_ebiblioteka/providers/userbook_provider.dart';
 import 'package:mobile_ebiblioteka/special_pages/book_pdf.dart';
 import 'package:mobile_ebiblioteka/special_pages/quotes_list.dart';
 import 'package:mobile_ebiblioteka/special_pages/show_book_desc.dart';
@@ -27,6 +30,8 @@ import 'package:provider/provider.dart';
 import '../utils/util.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class BookDetailPage extends StatefulWidget {
   const BookDetailPage({Key? key, this.book}) : super(key: key);
   final Book? book;
@@ -43,6 +48,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
   late RecommendResultProvider _recommendResultProvider =
       RecommendResultProvider();
   late PhotoProvider _photoProvider = PhotoProvider();
+  late UserBookProvider _userBookProvider = UserBookProvider();
+  late AuthorProvider _authorProvider = AuthorProvider();
+  late RatingProvider _ratingProvider = RatingProvider();
+
+  final TextEditingController _authorController = TextEditingController();
 
   bool isLoading = true;
   bool isRecommendLoading = true;
@@ -50,18 +60,21 @@ class _BookDetailPageState extends State<BookDetailPage> {
   RecommendResult? recommendResult;
 
   Book? bookSend;
-  SearchResult<Author>? authorResult;
+  Author? bookAuthor;
+  int? rating;
+
   SearchResult<BookGenre>? bookGenreResult;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'title': widget.book?.title,
       'shortDescription': widget.book?.shortDescription,
       'publishingYear': widget.book?.publishingYear.toString(), // mora biti
-      'author': widget.book?.author?.fullName,
+      'author': widget.book?.author == null
+          ? bookAuthor
+          : widget.book?.author?.fullName,
     };
 
     print(widget.book?.bookFileId);
@@ -69,6 +82,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
     _bookGenreProvider = context.read<BookGenreProvider>();
     _recommendResultProvider = context.read<RecommendResultProvider>();
     _photoProvider = context.read<PhotoProvider>();
+    _userBookProvider = context.read<UserBookProvider>();
+    _authorProvider = context.read<AuthorProvider>();
+    _ratingProvider = context.read<RatingProvider>();
 
     if (widget.book != null && widget.book?.coverPhoto != null) {
       photo = widget.book?.coverPhoto?.data ?? '';
@@ -94,12 +110,19 @@ class _BookDetailPageState extends State<BookDetailPage> {
           Photo pic = await _photoProvider.getById(widget.book!.coverPhotoId!);
           photo = pic.data;
         }
+        if (widget.book?.author == null) {
+          bookAuthor = await _authorProvider.getById(widget.book!.authorID!);
+          _authorController.text = bookAuthor?.fullName ?? '';
+        } else {
+          _authorController.text = widget.book?.author?.fullName ?? '';
+        }
+        rating = await _ratingProvider.getAverageBookRate(widget.book!.id!);
       }
       setState(() {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -122,64 +145,88 @@ class _BookDetailPageState extends State<BookDetailPage> {
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-          child: Column(
-            children: [
-              isLoading ? const SpinKitRing(color: Colors.brown) : _buildForm(),
-              Row(
-                children: [
-                  Text(
-                      'Ocjena : ${widget.book?.averageRate == null ? "nema ocjena" : widget.book?.averageRate.toString()}',
-                      style: const TextStyle(
-                        fontSize: 17,
-                      )),
-                ],
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: ((context) => RatingListPage(
-                                  bookId: widget.book!.id,
-                                ))));
-                      },
-                      child: const Text(
-                        'Pogledajte ocjene',
-                        style: TextStyle(fontSize: 17, color: Colors.brown),
-                      ))
-                ],
-              ),
-              SizedBox(
-                height: widget.book?.bookFileId != null ? 20 : 45,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          child: isLoading
+              ? const SpinKitRing(color: Colors.brown)
+              : Column(
                   children: [
-                    (widget.book?.bookFileId != null)
-                        ? ElevatedButton(
-                            onPressed: () async {
-                              await _bookProvider.openBook(widget.book!.id!);
+                    _buildForm(),
+                    Row(
+                      children: [
+                        Text(
+                            '${AppLocalizations.of(context).rate} :  ${rating==0 ? AppLocalizations.of(context).no_rates : rating.toString()}',
+                            style: const TextStyle(
+                              fontSize: 17,
+                            )),
+                            ///*${widget.book?.averageRate == null*/
+                            //widget.book?.averageRate.toString()
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InkWell(
+                            onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: ((context) => BookPdfShow(
-                                        fileId: widget.book!.bookFileId!,
+                                  builder: ((context) => RatingListPage(
+                                        bookId: widget.book!.id,
                                       ))));
                             },
-                            child: const Text(
-                              "Čitaj",
-                              style: TextStyle(fontSize: 18),
+                            child: Text(
+                              AppLocalizations.of(context).see_rates,
+                              style: const TextStyle(
+                                  fontSize: 17, color: Colors.brown),
                             ))
-                        : const Text('Nije dostupno čitanje'),
+                      ],
+                    ),
+                    SizedBox(
+                      height: widget.book?.bookFileId != null ? 20 : 45,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          (widget.book?.bookFileId != null)
+                              ? ElevatedButton(
+                                  onPressed: () async {
+                                    try {
+                                      await _userBookProvider.insert({
+                                        'userId': int.parse(Autentification
+                                            .tokenDecoded?['Id']),
+                                        'bookId': widget.book?.id
+                                      });
+                                    } catch (e) {}
+                                    try {
+                                      await _bookProvider
+                                          .openBook(widget.book!.id!);
+
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  BookPdfShow(
+                                                    fileId: widget
+                                                        .book!.bookFileId!,
+                                                  ))));
+                                    } on Exception catch (e) {
+                                      alertBox(
+                                          context,
+                                          AppLocalizations.of(context).error,
+                                          e.toString());
+                                    }
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context).read,
+                                    style: const TextStyle(fontSize: 18),
+                                  ))
+                              : Text(AppLocalizations.of(context).no_reading),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -208,11 +255,20 @@ class _BookDetailPageState extends State<BookDetailPage> {
               )
             ],
           ),
-          rowMethod(textFieldReadOnly('title', 'Naslov')),
+          rowMethod(
+              textFieldReadOnly('title', AppLocalizations.of(context).title)),
           const SizedBox(height: 15),
-          rowMethod(textFieldReadOnly('publishingYear', 'Godina objave')),
+          rowMethod(textFieldReadOnly(
+              'publishingYear', AppLocalizations.of(context).publishing_year)),
           const SizedBox(height: 15),
-          rowMethod(textFieldReadOnly('author', 'Autor')),
+          rowMethod(Expanded(
+            child: TextField(
+              controller: _authorController,
+              decoration: InputDecoration(
+                  label: Text(AppLocalizations.of(context).author)),
+            ),
+          )),
+          const SizedBox(height: 15),
           const SizedBox(
             height: 20,
           ),
@@ -226,7 +282,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                               decription: widget.book?.shortDescription,
                             ))));
                   }),
-                  child: const Text('Kratak sadržaj')),
+                  child: Text(AppLocalizations.of(context).short_desc)),
               TextButton(
                   onPressed: (() {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -234,7 +290,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                               bookId: widget.book!.id,
                             ))));
                   }),
-                  child: const Text('Citati')),
+                  child: Text(AppLocalizations.of(context).quotes)),
             ],
           ),
           const Divider(
@@ -244,13 +300,17 @@ class _BookDetailPageState extends State<BookDetailPage> {
           const SizedBox(
             height: 35,
           ),
-          Row(
-            children: const [Text('Prepotučeno knjige za vas')],
-          ),
-           const SizedBox(
-            height: 25,
-          ),
-          (recommendResult != null && isRecommendLoading == true)
+          (recommendResult == null || isRecommendLoading == true)
+              ? Container()
+              : Row(
+                  children: [Text(AppLocalizations.of(context).rec_books)],
+                ),
+          (recommendResult == null || isRecommendLoading == true)
+              ? Container()
+              : const SizedBox(
+                  height: 25,
+                ),
+          (recommendResult == null || isRecommendLoading == true)
               ? Container()
               : _recommendList(),
           const SizedBox(
@@ -265,9 +325,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Žanrovi:',
-                            style: TextStyle(
+                          Text(
+                            '${AppLocalizations.of(context).genres}:',
+                            style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(
@@ -275,7 +335,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           ),
                           if (bookGenreResult == null ||
                               bookGenreResult!.items.isEmpty)
-                            const Text('Nema žanrova')
+                            Text(AppLocalizations.of(context).no_genres)
                           else
                             Row(
                               children: bookGenreResult?.items
@@ -338,22 +398,5 @@ class _BookDetailPageState extends State<BookDetailPage> {
         ],
       ),
     );
-  }
-
-  File? _image; //dart.io
-  String? _base64Image;
-
-  Future getimage() async {
-    var result = await FilePicker.platform
-        .pickFiles(type: FileType.image); //sam prepoznaj platformu u kjoj radi
-    if (result != null && result.files.single.path != null) {
-      _image = File(
-          result.files.single.path!); //jer smo sa if provjerili pa je sigurn !
-      _base64Image = base64Encode(_image!.readAsBytesSync());
-
-      setState(() {
-        photo = _base64Image; //opet !
-      });
-    }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:admin_ebiblioteka/detail_pages/answer_detail.dart';
 import 'package:admin_ebiblioteka/models/question.dart';
 import 'package:admin_ebiblioteka/pages/answer_list.dart';
 import 'package:admin_ebiblioteka/providers/answer_provider.dart';
@@ -9,6 +8,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuestionDetailPage extends StatefulWidget {
   const QuestionDetailPage({Key? key, this.question, this.quizId})
@@ -28,14 +29,12 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'content': widget.question?.content,
       'points': widget.question?.points.toString()
     };
     _questionProvider = context.read<QuestionProvider>();
-    
   }
 
   @override
@@ -43,8 +42,8 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
     _answerProvider = context.watch<AnswerProvider>();
     return MasterScreenWidget(
         title: widget.question != null
-            ? "Pitanje Id: ${(widget.question?.id.toString() ?? '')}"
-            : "Novo pitanje",
+            ? "${AppLocalizations.of(context).question_id} ${(widget.question?.id.toString() ?? '')}"
+            : AppLocalizations.of(context).question_new,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(65, 20, 65, 100),
@@ -66,17 +65,21 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                                         context: context,
                                         builder: (BuildContext context) =>
                                             AlertDialog(
-                                              title: const Text(
-                                                  'Brisanje pitanja'),
-                                              content: const Text(
-                                                  'Da li želite obrisati pitanje'),
+                                              title: Text(
+                                                  AppLocalizations.of(context)
+                                                      .question_del_title),
+                                              content: Text(
+                                                  AppLocalizations.of(context)
+                                                      .question_del_mes),
                                               actions: [
                                                 TextButton(
                                                     onPressed: (() {
                                                       Navigator.pop(context);
                                                     }),
-                                                    child:
-                                                        const Text('Poništi')),
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .cancel)),
                                                 TextButton(
                                                     onPressed: () async {
                                                       try {
@@ -88,16 +91,16 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                                                         ScaffoldMessenger.of(
                                                                 context)
                                                             .showSnackBar(
-                                                                const SnackBar(
+                                                                 SnackBar(
                                                                     content: Text(
-                                                                        'Uspješno brisanje pitanja.')));
+                                                                        AppLocalizations.of(context).question_del_su)));
                                                         Navigator.pop(context);
                                                         Navigator.pop(
                                                             context, 'reload');
                                                       } catch (e) {
                                                         alertBoxMoveBack(
                                                             context,
-                                                            'Greška',
+                                                            AppLocalizations.of(context).error,
                                                             e.toString());
                                                       }
                                                     },
@@ -105,7 +108,7 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                                               ],
                                             ));
                                   },
-                                  child: const Text('Obriši pitanje')),
+                                  child: Text(AppLocalizations.of(context).question_del_lbl)),
                           widget.question == null
                               ? Container()
                               : const SizedBox(
@@ -132,9 +135,9 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                                           .update(request);
 
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
+                                          .showSnackBar( SnackBar(
                                               content: Text(
-                                                  'Uspješno mofikovanje kviza')));
+                                                  AppLocalizations.of(context).question_mod_su)));
 
                                       Navigator.pop(context, 'reload');
                                     } else {
@@ -148,9 +151,9 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                                       await _questionProvider.insert(request);
 
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
+                                          .showSnackBar( SnackBar(
                                               content: Text(
-                                                  'Uspješno dodavanje pitnja')));
+                                                  AppLocalizations.of(context).question_add_su)));
 
                                       Navigator.pop(context, 'reload');
                                     }
@@ -160,7 +163,7 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                            title: const Text('Error'),
+                                            title: Text(AppLocalizations.of(context).error),
                                             content: Text(
                                               e.toString(),
                                             ),
@@ -174,9 +177,9 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                                           ));
                                 }
                               },
-                              child: const Text(
-                                "Sačuvaj",
-                                style: TextStyle(fontSize: 15),
+                              child: Text(
+                               AppLocalizations.of(context).save,
+                                style: const TextStyle(fontSize: 15),
                               )),
                         ],
                       ),
@@ -203,12 +206,12 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                 name: 'content',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
-                decoration: const InputDecoration(label: Text("Sadržaj")),
+                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).content)),
               )),
               const SizedBox(
                 width: 20,
@@ -219,13 +222,14 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'obavezno polje';
+                      return AppLocalizations.of(context).mfield;
                       //}
                     } else if (int.tryParse(value) == null) {
-                      return 'vrijedopst mora biti numerička';
+                      return AppLocalizations.of(context).numeric_field;
                     }
                   },
-                  decoration: const InputDecoration(label: Text("Bodovi")),
+                  decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context).points)),
                 ),
               ),
             ],
@@ -273,21 +277,22 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                           //   inittt();
                           // }
                         },
-                        child: const Text('Uredi odgovore')),
+                        child: Text(
+                            AppLocalizations.of(context).question_answers)),
                   ],
                 ),
-                 const SizedBox(
+          const SizedBox(
             height: 30,
           ),
           widget.question == null
               ? Container()
               : Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Text(
-                            'Napomena: Da bi pitanje bilo aktivno mora imati jedan\ni samo jedan tačan odgovor i jedan ili više netačnih odgovora.'),
+                        child:
+                            Text(AppLocalizations.of(context).quiestion_rule),
                       ),
                     )
                   ],

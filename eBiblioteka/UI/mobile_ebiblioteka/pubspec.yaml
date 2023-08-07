@@ -31,6 +31,8 @@ dependencies:
     sdk: flutter
   easy_pdf_viewer: ^1.0.6
   http: ^0.13.5
+  flutter_localizations:
+   sdk: flutter
   provider: ^6.0.5
   jwt_decoder: ^2.0.0
   json_annotation: ^4.0.1
@@ -66,11 +68,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/no_image.png
-  #   - images/a_dot_ham.jpeg
+    - assets/uk.png
+    - assets/bih.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

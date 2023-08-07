@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class GenreDetailPage extends StatefulWidget {
   const GenreDetailPage({Key? key, this.genre}) : super(key: key);
   final Genre? genre;
@@ -35,130 +37,138 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: widget.genre==null ? 'Novi žanr' : "Žanr Id: ${widget.genre?.id}",
+      title: widget.genre == null
+          ? AppLocalizations.of(context).genre_new
+          : "${AppLocalizations.of(context).genre_id} ${widget.genre?.id}",
       child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-            child: Column(
-              children: [
-                 _buildForm(),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      widget.genre == null
-                          ? Container()
-                          : TextButton(
-                              onPressed: () async {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title:
-                                              const Text('Brisanje žanra'),
-                                          content: const Text(
-                                              'Da li želite obrisati žanr'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: (() {
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
+          child: Column(
+            children: [
+              _buildForm(),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    widget.genre == null
+                        ? Container()
+                        : TextButton(
+                            onPressed: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: Text(AppLocalizations.of(context)
+                                            .genre_del_title),
+                                        content: Text(
+                                            AppLocalizations.of(context)
+                                                .genre_del_mes),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: (() {
+                                                Navigator.pop(context);
+                                              }),
+                                              child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .cancel)),
+                                          TextButton(
+                                              onPressed: () async {
+                                                try {
+                                                  await _genreProvider.remove(
+                                                      widget.genre?.id ?? 0);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .genre_del_su)));
                                                   Navigator.pop(context);
-                                                }),
-                                                child: const Text('Poništi')),
-                                            TextButton(
-                                                onPressed: () async {
-                                                  try {
-                                                    await _genreProvider.remove(
-                                                        widget.genre?.id ?? 0);
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                            const SnackBar(
-                                                                content: Text(
-                                                                    'Uspješno brisanje žanra')));
-                                                    Navigator.pop(context);
-                                                    Navigator.pop(
-                                                        context, 'reload');
-                                                  } catch (e) {
-                                                    alertBoxMoveBack(context,
-                                                        'Greška', e.toString());
-                                                  }
-                                                },
-                                                child: const Text('Ok')),
-                                          ],
-                                        ));
-                              },
-                              child: const Text('Obriši žanr')),
-                      widget.genre == null
-                          ? Container()
-                          : const SizedBox(
-                              width: 7,
-                            ),
-                     ElevatedButton(
-                          onPressed: () async {
-                           
-                            _formKey.currentState?.save();
-                            print(_formKey.currentState?.value);
+                                                  Navigator.pop(
+                                                      context, 'reload');
+                                                } catch (e) {
+                                                  alertBoxMoveBack(
+                                                      context,
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .error,
+                                                      e.toString());
+                                                }
+                                              },
+                                              child: const Text('Ok')),
+                                        ],
+                                      ));
+                            },
+                            child: Text(
+                                AppLocalizations.of(context).genre_del_lbl)),
+                    widget.genre == null
+                        ? Container()
+                        : const SizedBox(
+                            width: 7,
+                          ),
+                    ElevatedButton(
+                        onPressed: () async {
+                          _formKey.currentState?.save();
+                          print(_formKey.currentState?.value);
 
-                            try {
-                              if (_formKey.currentState!.validate()) {
-                                if (widget.genre != null) {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
+                          try {
+                            if (_formKey.currentState!.validate()) {
+                              if (widget.genre != null) {
+                                Map<String, dynamic> request =
+                                    Map.of(_formKey.currentState!.value);
 
-                                  request['id'] = widget.genre?.id;
-                                  
+                                request['id'] = widget.genre?.id;
 
-                                  var res = await _genreProvider.update(request);
+                                var res = await _genreProvider.update(request);
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Uspješna modifikacija žanra')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)
+                                                .genre_mod_su)));
 
-                                  Navigator.pop(context, 'reload');
-                                } else {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
+                                Navigator.pop(context, 'reload');
+                              } else {
+                                Map<String, dynamic> request =
+                                    Map.of(_formKey.currentState!.value);
 
-                                  await _genreProvider.insert(request);
+                                await _genreProvider.insert(request);
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Uspješna dodavanje žanra')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                   SnackBar(
+                                        content:
+                                            Text(AppLocalizations.of(context).genre_add_su)));
 
-                                  Navigator.pop(context, 'reload');
-                                }
+                                Navigator.pop(context, 'reload');
                               }
-                            } on Exception catch (e) {
-                              alertBox(context, 'Greška', e.toString());
                             }
-                          },
-                          child: const Text(
-                            "Sačuvaj",
-                            style: TextStyle(fontSize: 15),
-                          )),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                          } on Exception catch (e) {
+                            alertBox(context, AppLocalizations.of(context).error, e.toString());
+                          }
+                        },
+                        child: Text(
+                          AppLocalizations.of(context).save,
+                          style: const TextStyle(fontSize: 15),
+                        )),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
+      ),
     );
   }
 
-   FormBuilder _buildForm() {
+  FormBuilder _buildForm() {
     return FormBuilder(
       key: _formKey,
       initialValue: _initialValue,
       child: Column(
         children: [
-        
           Row(
             children: [
-              textField('name', 'Naziv'),
+              textField('name', AppLocalizations.of(context).name_2),
             ],
           ),
           const SizedBox(
@@ -174,7 +184,7 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
         child: FormBuilderTextField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Obavezno polje";
+          return AppLocalizations.of(context).mfield;
         } else {
           return null;
         }
@@ -183,5 +193,4 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
       decoration: InputDecoration(label: Text(label)),
     ));
   }
-
 }

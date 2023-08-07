@@ -9,10 +9,14 @@ import 'package:mobile_ebiblioteka/models/search_result.dart';
 import 'package:mobile_ebiblioteka/pages/search_books.dart';
 import 'package:mobile_ebiblioteka/providers/bookgenre_provider.dart';
 import 'package:mobile_ebiblioteka/providers/genre_provider.dart';
-import 'package:mobile_ebiblioteka/special_pages/show_book_desc.dart';
 import 'package:mobile_ebiblioteka/utils/util_widgets.dart';
 import 'package:mobile_ebiblioteka/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -42,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -62,8 +66,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: ((context) => SearchBooksPage())));
                     }),
-                    child: const Text(
-                      'Traži',
+                    child:  Text(
+                      AppLocalizations.of(context).search,
                       style: TextStyle(fontSize: 17),
                     )),
               ],
@@ -183,7 +187,7 @@ class _GenreBooksWidgetState extends State<GenreBooksWidget> {
                       ),
                     )
                 else
-                  const Text('Nema knjiga')
+                   Text(AppLocalizations.of(context).no_books)
               else
                 const SpinKitRing(color: Colors.brown)
             ],

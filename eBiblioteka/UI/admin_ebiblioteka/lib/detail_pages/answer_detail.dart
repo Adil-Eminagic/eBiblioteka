@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 
 class AnswerDetailPage extends StatefulWidget {
   const AnswerDetailPage({Key? key, this.answer, this.questionId}) : super(key: key);
@@ -37,8 +40,8 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: widget.answer != null
-          ? "Odgovor Id: ${(widget.answer?.id.toString() ?? '')}"
-          : "Novi odgovor",
+          ? "${AppLocalizations.of(context).answer_id} ${(widget.answer?.id.toString() ?? '')}"
+          : AppLocalizations.of(context).answer_new,
       child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(65, 20, 65, 100),
@@ -60,17 +63,17 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                                         context: context,
                                         builder: (BuildContext context) =>
                                             AlertDialog(
-                                              title: const Text(
-                                                  'Brisanje odgovora'),
-                                              content: const Text(
-                                                  'Da li želite obrisati odgovor'),
+                                              title:  Text(
+                                                  AppLocalizations.of(context).answer_del_title),
+                                              content:  Text(
+                                                  AppLocalizations.of(context).answer_del_mes),
                                               actions: [
                                                 TextButton(
                                                     onPressed: (() {
                                                       Navigator.pop(context);
                                                     }),
                                                     child:
-                                                        const Text('Poništi')),
+                                                         Text(AppLocalizations.of(context).cancel)),
                                                 TextButton(
                                                     onPressed: () async {
                                                       try {
@@ -82,9 +85,9 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                                                         ScaffoldMessenger.of(
                                                                 context)
                                                             .showSnackBar(
-                                                                const SnackBar(
+                                                                 SnackBar(
                                                                     content: Text(
-                                                                        'Uspješno brisanje odgovora.')));
+                                                                       AppLocalizations.of(context).answer_del_su)));
                                                         Navigator.pop(context);
                                                         Navigator.pop(
                                                             context, 'reload');
@@ -99,7 +102,7 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                                               ],
                                             ));
                                   },
-                                  child: const Text('Obriši odgovor')),
+                                  child: Text(AppLocalizations.of(context).answer_del_lbl)),
                           widget.answer == null
                               ? Container()
                               : const SizedBox(
@@ -123,9 +126,9 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                                           .update(request);
 
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
+                                          .showSnackBar( SnackBar(
                                               content: Text(
-                                                  'Uspješno mofikovanje odgovora')));
+                                                  AppLocalizations.of(context).answer_mod_su)));
 
                                       Navigator.pop(context, 'reload');
                                     } else {
@@ -137,9 +140,9 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                                       await _answerProvider.insert(request);
 
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
+                                          .showSnackBar( SnackBar(
                                               content: Text(
-                                                  'Uspješno dodavanje odgovora')));
+                                                  AppLocalizations.of(context).answer_add_su)));
 
                                       Navigator.pop(context, 'reloadQ');
                                     }
@@ -149,7 +152,7 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                            title: const Text('Error'),
+                                            title: Text(AppLocalizations.of(context).error),
                                             content: Text(
                                               e.toString(),
                                             ),
@@ -163,8 +166,8 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                                           ));
                                 }
                               },
-                              child: const Text(
-                                "Sačuvaj",
+                              child:  Text(
+                                AppLocalizations.of(context).save,
                                 style: TextStyle(fontSize: 15),
                               )),
                         ],
@@ -192,12 +195,12 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                 name: 'content',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
-                decoration: const InputDecoration(label: Text("Sadržaj")),
+                decoration: InputDecoration(label: Text(AppLocalizations.of(context).content)),
               )),
               const SizedBox(
                 width: 20,
@@ -205,8 +208,8 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
               Expanded(
                 child: FormBuilderCheckbox(
                   name: 'isTrue',
-                 title: const Text('Da li je tačno'),
-                  decoration: const InputDecoration(label: Text("Tačno")),
+                 title:   Text(AppLocalizations.of(context).true_val),
+                  decoration:  InputDecoration(label: Text(AppLocalizations.of(context).is_true)),
                 ),
               ),
             ],

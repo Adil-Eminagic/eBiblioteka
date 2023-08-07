@@ -13,7 +13,7 @@ class QuizResultPage extends StatefulWidget {
 class _QuizResultPageState extends State<QuizResultPage> {
   @override
   Widget build(BuildContext context) {
-    var result = widget.wonPoints! / widget.totalPoint! * 100;
+    var result =  (widget.wonPoints! / widget.totalPoint! * 100).round();
 
     return Scaffold(
       appBar: AppBar(

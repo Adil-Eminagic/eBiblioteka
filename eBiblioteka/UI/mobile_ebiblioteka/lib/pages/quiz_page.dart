@@ -9,6 +9,9 @@ import '../models/search_result.dart';
 import '../providers/quiz_provider.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class QuizzesListPage extends StatefulWidget {
   const QuizzesListPage({Key? key}) : super(key: key);
 
@@ -41,14 +44,14 @@ late QuizProvider _quizProvider = QuizProvider();
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Kvizovi',
+      title: AppLocalizations.of(context).quizes,
       child: Column(
         children: [
           const SizedBox(
@@ -61,7 +64,7 @@ late QuizProvider _quizProvider = QuizProvider();
                 Expanded(
                   child: TextField(
                     controller: _titleController,
-                    decoration: const InputDecoration(label: Text("Naslov")),
+                    decoration:  InputDecoration(label: Text(AppLocalizations.of(context).title)),
                   ),
                 ),
                 const SizedBox(
@@ -80,10 +83,10 @@ late QuizProvider _quizProvider = QuizProvider();
                           result = data;
                         });
                       } on Exception catch (e) {
-                        alertBox(context, 'Greška', e.toString());
+                        alertBox(context, AppLocalizations.of(context).error, e.toString());
                       }
                     },
-                    child: const Text('Traži')),
+                    child:  Text(AppLocalizations.of(context).search)),
               ],
             ),
           ),
@@ -91,8 +94,8 @@ late QuizProvider _quizProvider = QuizProvider();
             height: 15,
           ),
           (result == null || result!.items.isEmpty)
-              ? const Expanded(
-                  child: Center(child: Text('Nema dodanih testova')))
+              ?  Expanded(
+                  child: Center(child: Text(AppLocalizations.of(context).no_quizzes)))
               : (isLoading ? const SpinKitRing(color: Colors.brown) : Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),

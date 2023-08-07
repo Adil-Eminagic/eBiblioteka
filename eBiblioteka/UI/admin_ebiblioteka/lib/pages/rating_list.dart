@@ -7,6 +7,9 @@ import '../models/search_result.dart';
 import '../providers/rating_provider.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class RatingListPage extends StatefulWidget {
   const RatingListPage({Key? key, this.bookId}) : super(key: key);
   final int? bookId;
@@ -18,14 +21,13 @@ class RatingListPage extends StatefulWidget {
 class _RatingListPageState extends State<RatingListPage> {
   late RatingProvider _ratingProvider = RatingProvider();
 
-  TextEditingController _userConroller = TextEditingController();
+  final TextEditingController _userConroller = TextEditingController();
   bool isLoading = true;
 
   SearchResult<Rating>? result;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _ratingProvider = context.read<RatingProvider>();
     initData();
@@ -39,14 +41,14 @@ class _RatingListPageState extends State<RatingListPage> {
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Ocjene knjige',
+      title: AppLocalizations.of(context).rates,
       child: Column(
         children: [
           const SizedBox(
@@ -60,7 +62,7 @@ class _RatingListPageState extends State<RatingListPage> {
                   child: TextField(
                     controller: _userConroller,
                     decoration:
-                        const InputDecoration(label: Text("Ime korisnika")),
+                         InputDecoration(label: Text(AppLocalizations.of(context).user_name)),
                   ),
                 ),
                 const SizedBox(
@@ -71,18 +73,19 @@ class _RatingListPageState extends State<RatingListPage> {
                       try {
                         var data = await _ratingProvider.getPaged(filter: {
                           "bookId": widget.bookId,
-                          "userName": _userConroller.text , //!=''?_userConroller.text : null
+                          "userName": _userConroller
+                              .text, //!=''?_userConroller.text : null
                           "pageSize": 1000000
                         });
-                        
+
                         setState(() {
                           result = data;
                         });
                       } on Exception catch (e) {
-                        alertBox(context, 'Greška', e.toString());
+                        alertBox(context, AppLocalizations.of(context).error, e.toString());
                       }
                     },
-                    child: const Text('Traži')),
+                    child: Text(AppLocalizations.of(context).search)),
                 const SizedBox(
                   width: 15,
                 ),
@@ -93,8 +96,8 @@ class _RatingListPageState extends State<RatingListPage> {
             height: 15,
           ),
           (result == null || result!.items.isEmpty || isLoading == true)
-              ? const Expanded(
-                  child: Center(child: Text('Nema ocjena za ovu knjigu')))
+              ? Expanded(
+                  child: Center(child: Text(AppLocalizations.of(context).no_rates)))
               : Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
@@ -110,7 +113,7 @@ class _RatingListPageState extends State<RatingListPage> {
                                   "${result!.items[index].user!.firstName} ${result!.items[index].user!.lastName}"),
                               leading: Text(
                                 result!.items[index].stars!.toString(),
-                                style: TextStyle(fontSize: 20),
+                                style: const TextStyle(fontSize: 20),
                               ),
                               trailing: InkWell(
                                 onTap: () async {
@@ -119,15 +122,15 @@ class _RatingListPageState extends State<RatingListPage> {
                                       builder: (BuildContext context) =>
                                           AlertDialog(
                                             title:
-                                                const Text('Brisanje ocjenu'),
-                                            content: const Text(
-                                                'Da li želite obrisati ocjenu'),
+                                                 Text(AppLocalizations.of(context).rate_del_title),
+                                            content:  Text(
+                                                AppLocalizations.of(context).rate_del_mes),
                                             actions: [
                                               TextButton(
                                                   onPressed: (() {
                                                     Navigator.pop(context);
                                                   }),
-                                                  child: const Text('Poništi')),
+                                                  child: Text(AppLocalizations.of(context).cancel)),
                                               TextButton(
                                                   onPressed: () async {
                                                     try {
@@ -139,9 +142,9 @@ class _RatingListPageState extends State<RatingListPage> {
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
-                                                              const SnackBar(
+                                                               SnackBar(
                                                                   content: Text(
-                                                                      'Uspješno brisanje ocjene.')));
+                                                                      AppLocalizations.of(context).rate_del_su)));
 
                                                       Navigator.pop(
                                                         context,
@@ -150,7 +153,7 @@ class _RatingListPageState extends State<RatingListPage> {
                                                     } catch (e) {
                                                       alertBoxMoveBack(
                                                           context,
-                                                          'Greška',
+                                                          AppLocalizations.of(context).error,
                                                           e.toString());
                                                     }
                                                   },

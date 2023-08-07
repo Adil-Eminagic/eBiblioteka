@@ -17,6 +17,8 @@ import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class AuthorDetailPage extends StatefulWidget {
   const AuthorDetailPage({super.key, this.author});
   final Author? author;
@@ -71,8 +73,8 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
         title: widget.author != null
-            ? "Autor Id: ${(widget.author?.id.toString() ?? '')}"
-            : "Novi autor",
+            ? "${AppLocalizations.of(context).author_id} ${(widget.author?.id.toString() ?? '')}"
+            : AppLocalizations.of(context).new_author,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(65, 20, 65, 100),
@@ -87,49 +89,66 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                       child: Row(
                         children: [
                           widget.author == null
-                        ? Container()
-                        : TextButton(
-                            onPressed: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title: const Text('Brisanje autora'),
-                                        content: const Text(
-                                            'Da li želite obrisati autora'),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: (() {
-                                                Navigator.pop(context);
-                                              }),
-                                              child: const Text('Poništi')),
-                                          TextButton(
-                                              onPressed: () async {
-                                                try {
-                                                  await _authorProvider.remove(
-                                                      widget.author?.id ?? 0);
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                          content: Text(
-                                                              'Uspješno brisanje autora.')));
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(
-                                                      context, 'reload');
-                                                } catch (e) {
-                                                  alertBoxMoveBack(context,
-                                                      'Greška', e.toString());
-                                                }
-                                              },
-                                              child: const Text('Ok')),
-                                        ],
-                                      ));
-                            },
-                            child: const Text('Obriši autora')),
-                    widget.author == null
-                        ? Container()
-                        : const SizedBox(
-                            width: 7,
-                          ),
+                              ? Container()
+                              : TextButton(
+                                  onPressed: () async {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                              title: Text(
+                                                  AppLocalizations.of(context)
+                                                      .del_author_title),
+                                              content: Text(
+                                                  AppLocalizations.of(context)
+                                                      .del_author_mes),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: (() {
+                                                      Navigator.pop(context);
+                                                    }),
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .cancel)),
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      try {
+                                                        await _authorProvider
+                                                            .remove(widget
+                                                                    .author
+                                                                    ?.id ??
+                                                                0);
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(SnackBar(
+                                                                content: Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .su_del_author)));
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(
+                                                            context, 'reload');
+                                                      } catch (e) {
+                                                        alertBoxMoveBack(
+                                                            context,
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .error,
+                                                            e.toString());
+                                                      }
+                                                    },
+                                                    child: const Text('Ok')),
+                                              ],
+                                            ));
+                                  },
+                                  child: Text(AppLocalizations.of(context)
+                                      .author_del_lbl)),
+                          widget.author == null
+                              ? Container()
+                              : const SizedBox(
+                                  width: 7,
+                                ),
                           ElevatedButton(
                               onPressed: () async {
                                 _formKey.currentState?.save();
@@ -143,8 +162,9 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                                       request['id'] = widget.author?.id;
                                       request['birthDate'] = DateEncode(_formKey
                                           .currentState?.value['birthDate']);
-                                      request['mortalDate'] = DateEncode(_formKey
-                                          .currentState?.value['mortalDate']);
+                                      request['mortalDate'] = DateEncode(
+                                          _formKey.currentState
+                                              ?.value['mortalDate']);
                                       if (_base64Image != null) {
                                         request['image'] = _base64Image;
                                       }
@@ -152,10 +172,11 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                                       var res =
                                           await _authorProvider.update(request);
 
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
                                               content: Text(
-                                                  'Uspješno mofikovanje autora')));
+                                                  AppLocalizations.of(context)
+                                                      .su_mod_author)));
 
                                       Navigator.pop(context, 'reload');
                                     } else {
@@ -164,17 +185,19 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
 
                                       request['birthDate'] = DateEncode(_formKey
                                           .currentState?.value['birthDate']);
-                                      request['mortalDate'] = DateEncode(_formKey
-                                          .currentState?.value['mortalDate']);
+                                      request['mortalDate'] = DateEncode(
+                                          _formKey.currentState
+                                              ?.value['mortalDate']);
                                       if (_base64Image != null) {
                                         request['photo'] = _base64Image;
                                       }
                                       await _authorProvider.insert(request);
 
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
                                               content: Text(
-                                                  'Uspješno dodavanje korisnika')));
+                                                  AppLocalizations.of(context)
+                                                      .su_add_author)));
 
                                       Navigator.pop(context, 'reload');
                                     }
@@ -184,7 +207,9 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                            title: const Text('Error'),
+                                            title: Text(
+                                                AppLocalizations.of(context)
+                                                    .error),
                                             content: Text(
                                               e.toString(),
                                             ),
@@ -198,9 +223,9 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                                           ));
                                 }
                               },
-                              child: const Text(
-                                "Sačuvaj",
-                                style: TextStyle(fontSize: 15),
+                              child: Text(
+                                AppLocalizations.of(context).save,
+                                style: const TextStyle(fontSize: 15),
                               )),
                         ],
                       ),
@@ -242,8 +267,9 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                       ElevatedButton(
                           onPressed: getimage,
                           child: photo == null
-                              ? const Text('Odaberi sliku')
-                              : const Text('Promijeni sliku')),
+                              ? Text(AppLocalizations.of(context).choose_image)
+                              : Text(
+                                  AppLocalizations.of(context).change_image)),
                     ],
                   ),
                 )),
@@ -258,12 +284,13 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                 name: 'fullName',
                 validator: (value) {
                   if (value == null) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
-                decoration: const InputDecoration(label: Text("Naziv")),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).name)),
               )),
               const SizedBox(
                 width: 20,
@@ -272,7 +299,8 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                 child: FormBuilderTextField(
                   name: 'biography',
                   maxLines: 3,
-                  decoration: const InputDecoration(label: Text("Biografija")),
+                  decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context).biography)),
                 ),
               ),
             ],
@@ -287,12 +315,13 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                 name: 'birthDate',
                 validator: ((value) {
                   if (value == null) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 }),
-                decoration: const InputDecoration(label: Text("Datum rođenja")),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).birth_date)),
               )),
               const SizedBox(
                 width: 20,
@@ -300,7 +329,8 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
               Expanded(
                 child: FormBuilderDateTimePicker(
                   name: 'mortalDate',
-                  decoration: const InputDecoration(label: Text("Datum smrti")),
+                  decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context).mortal_date)),
                 ),
               ),
             ],
@@ -314,13 +344,13 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
               name: 'genderId',
               validator: (value) {
                 if (value == null) {
-                  return "Obavezno polje";
+                  return AppLocalizations.of(context).mfield;
                 } else {
                   return null;
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Spol',
+                labelText: AppLocalizations.of(context).gender,
                 suffix: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
@@ -329,7 +359,6 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                         ?.reset();
                   },
                 ),
-                hintText: 'Odaberi spol',
               ),
               items: genderResult?.items
                       .map((g) => DropdownMenuItem(
@@ -348,13 +377,13 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
               name: 'countryId',
               validator: (value) {
                 if (value == null) {
-                  return "Obavezno polje";
+                  return AppLocalizations.of(context).mfield;
                 } else {
                   return null;
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Država',
+                labelText: AppLocalizations.of(context).country,
                 suffix: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
@@ -363,7 +392,6 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                         ?.reset();
                   },
                 ),
-                hintText: 'Odaberi državu',
               ),
               items: countryResult?.items
                       .map((g) => DropdownMenuItem(

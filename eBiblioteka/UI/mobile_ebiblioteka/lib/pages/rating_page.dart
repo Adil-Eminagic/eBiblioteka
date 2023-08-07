@@ -9,6 +9,9 @@ import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class RatingListPage extends StatefulWidget {
   const RatingListPage({Key? key, this.bookId}) : super(key: key);
   final int? bookId;
@@ -39,14 +42,14 @@ class _RatingListPageState extends State<RatingListPage> {
         isLoading = false;
       });
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title: 'Ocjene',
+        title: AppLocalizations.of(context).rates,
         child:  Column(
                     children: [
                       const SizedBox(
@@ -69,7 +72,7 @@ class _RatingListPageState extends State<RatingListPage> {
                                   initData();
                                 }
                               }),
-                              child: const Text('Ocjeni')),
+                              child: Text(AppLocalizations.of(context).rate_action)),
                           const SizedBox(
                             width: 15,
                           )
@@ -94,7 +97,7 @@ class _RatingListPageState extends State<RatingListPage> {
                                       "${result!.items[index].user!.firstName} ${result!.items[index].user!.lastName}"),
                                   leading: Text(
                                     result!.items[index].stars!.toString(),
-                                    style: TextStyle(fontSize: 20),
+                                    style: const TextStyle(fontSize: 20),
                                   ),
                                   onTap: (() async {
                                     if (result!.items[index].userId ==

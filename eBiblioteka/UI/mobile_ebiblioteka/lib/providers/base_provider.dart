@@ -131,7 +131,7 @@ bool isValidResponse(Response response) {
   } else {
     print(response.body);
     throw Exception(
-        "Something bad happened please try again, staus code ${response.statusCode}");
+        "Something bad happened please try again. Message: ${response.body}");
   }
 }
 

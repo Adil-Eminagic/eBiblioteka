@@ -15,31 +15,31 @@ class PdfShowPage extends StatefulWidget {
 }
 
 class _PdfShowPageState extends State<PdfShowPage> {
-  bool isLoading = true;
-  late BookFileProvider _bookFileProvider = BookFileProvider();
-  late RecommendResultProvider _recommendResultProvider =
-      RecommendResultProvider();
-  RecommendResult? recommendResult;
+  // bool isLoading = true;
+  // late BookFileProvider _bookFileProvider = BookFileProvider();
+  // late RecommendResultProvider _recommendResultProvider =
+  //     RecommendResultProvider();
+  // RecommendResult? recommendResult;
 
   @override
   void initState() {
     super.initState();
-    _bookFileProvider = context.read<BookFileProvider>();
-    _recommendResultProvider = context.read<RecommendResultProvider>();
+    // _bookFileProvider = context.read<BookFileProvider>();
+    // _recommendResultProvider = context.read<RecommendResultProvider>();
 
     initForm();
   }
 
   Future<void> initForm() async {
-    try {
-      recommendResult = await _recommendResultProvider.getById(18);
+    // try {
+    //   recommendResult = await _recommendResultProvider.getById(18);
 
-      setState(() {
-        isLoading = false;
-      });
-    } on Exception catch (e) {
-      print(recommendResult);
-    }
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // } on Exception catch (e) {
+    //   print(recommendResult);
+    // }
   }
 
   @override
@@ -49,10 +49,8 @@ class _PdfShowPageState extends State<PdfShowPage> {
           centerTitle: false,
           title: const Text('Show'),
         ),
-        body: isLoading
-            ? Container()
-            : Column(
-                children: [Text(recommendResult?.bookId.toString() ?? '')],
-              ));
+        body: Center(
+          child: Placeholder(),
+        ));
   }
 }

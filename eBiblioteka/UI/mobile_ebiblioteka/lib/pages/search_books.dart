@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mobile_ebiblioteka/models/search_result.dart';
 import 'package:mobile_ebiblioteka/providers/book_provider.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +7,9 @@ import 'package:provider/provider.dart';
 import '../models/book.dart';
 import '../special_pages/search_widgets.dart';
 import '../utils/util_widgets.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SearchBooksPage extends StatefulWidget {
   const SearchBooksPage({Key? key}) : super(key: key);
@@ -54,18 +55,18 @@ class _SearchBooksPageState extends State<SearchBooksPage> {
         initialIndex: 0,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Pretraga po'),
+            title: Text(AppLocalizations.of(context).search_by),
             centerTitle: true,
-            bottom: const TabBar(
+            bottom:  TabBar(
               tabs: [
                 Tab(
-                  child: Text('Nazivima'),
+                  child: Text(AppLocalizations.of(context).titles),
                 ),
                 Tab(
-                  child: Text('Autorima'),
+                  child: Text(AppLocalizations.of(context).authors),
                 ),
                 Tab(
-                  child: Text('Žanrovia'),
+                  child: Text(AppLocalizations.of(context).genres),
                 ),
               ],
             ),

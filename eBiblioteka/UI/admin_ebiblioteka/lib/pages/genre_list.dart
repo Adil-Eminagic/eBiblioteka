@@ -5,7 +5,8 @@ import 'package:admin_ebiblioteka/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/book.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../models/search_result.dart';
 import '../utils/util_widgets.dart';
 
@@ -23,11 +24,10 @@ class _GenresPageState extends State<GenresPage> {
   SearchResult<Genre>? result;
   bool isLoading = true;
 
-  TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _genreProvider = context.read<GenreProvider>();
 
@@ -51,7 +51,7 @@ class _GenresPageState extends State<GenresPage> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title: 'Žanrovi',
+        title: AppLocalizations.of(context).genres,
         child: Column(children: [
           _buildSearch(),
           isLoading ? Container() : _buildDataTable(),
@@ -70,7 +70,8 @@ class _GenresPageState extends State<GenresPage> {
                           result = data;
                         });
                       } on Exception catch (e) {
-                        alertBox(context, 'Greška', e.toString());
+                        alertBox(context, AppLocalizations.of(context).error,
+                            e.toString());
                       }
                     },
                     child: CircleAvatar(
@@ -92,9 +93,9 @@ class _GenresPageState extends State<GenresPage> {
     return Expanded(
       child: SingleChildScrollView(
         child: DataTable(
-          columns: const [
-            DataColumn(label: Text("Id")),
-            DataColumn(label: Text("Naziv")),
+          columns: [
+            const DataColumn(label: Text("Id")),
+            DataColumn(label: Text(AppLocalizations.of(context).name_2)),
           ],
           rows: result?.items
                   .map((Genre e) => DataRow(
@@ -127,7 +128,7 @@ class _GenresPageState extends State<GenresPage> {
           Expanded(
             child: TextField(
               controller: _nameController,
-              decoration: const InputDecoration(label: Text("Naziv")),
+              decoration: InputDecoration(label: Text(AppLocalizations.of(context).name_2)),
             ),
           ),
           const SizedBox(
@@ -143,10 +144,10 @@ class _GenresPageState extends State<GenresPage> {
                     result = data;
                   });
                 } on Exception catch (e) {
-                  alertBox(context, 'Greška', e.toString());
+                  alertBox(context, AppLocalizations.of(context).error, e.toString());
                 }
               },
-              child: const Text('Traži')),
+              child: Text(AppLocalizations.of(context).search)),
           const SizedBox(
             width: 15,
           ),
@@ -163,7 +164,7 @@ class _GenresPageState extends State<GenresPage> {
                   initTable();
                 }
               },
-              child: const Text('Dodaj')),
+              child: Text(AppLocalizations.of(context).add)),
           const SizedBox(
             width: 15,
           ),

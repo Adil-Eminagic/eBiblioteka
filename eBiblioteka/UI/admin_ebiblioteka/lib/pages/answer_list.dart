@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 import '../models/search_result.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class AnswersListPage extends StatefulWidget {
   const AnswersListPage({Key? key, this.questionId}) : super(key: key);
   final int? questionId;
@@ -46,14 +49,14 @@ class _AnswesrListPageState extends State<AnswersListPage> {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Odgovori',
+      title: AppLocalizations.of(context).answers,
       child: Column(children: [
         _buildSearch(),
         isLoading ? Container() : _buildDataTable(),
@@ -76,7 +79,7 @@ class _AnswesrListPageState extends State<AnswersListPage> {
                         result = data;
                       });
                     } on Exception catch (e) {
-                      alertBox(context, 'Greška', e.toString());
+                      alertBox(context, AppLocalizations.of(context).error, e.toString());
                     }
                   },
                   child: CircleAvatar(
@@ -101,9 +104,9 @@ class _AnswesrListPageState extends State<AnswersListPage> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(80, 0, 80, 0),
           child: DataTable(
-            columns: const [
-              DataColumn(label: Text("Sadržaj")),
-              DataColumn(label: Text("Je li tačan")),
+            columns:  [
+              DataColumn(label: Text(AppLocalizations.of(context).content)),
+              DataColumn(label: Text(AppLocalizations.of(context).is_true)),
             ],
             rows: result?.items
                     .map((Answer e) => DataRow(
@@ -143,7 +146,7 @@ class _AnswesrListPageState extends State<AnswersListPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: _contentConroller,
-                decoration: const InputDecoration(label: Text("Naziv")),
+                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).name_2)),
               ),
             ),
           ),
@@ -152,10 +155,10 @@ class _AnswesrListPageState extends State<AnswersListPage> {
           ),
           Expanded(
               child: DropdownButton(
-            items: const [
-              DropdownMenuItem(value: 0, child: Text('Svi')),
-              DropdownMenuItem(value: 1, child: Text('Netačan')),
-              DropdownMenuItem(value: 2, child: Text('Tačan')),
+            items:  [
+              DropdownMenuItem(value: 0, child: Text(AppLocalizations.of(context).all)),
+              DropdownMenuItem(value: 1, child: Text(AppLocalizations.of(context).false_val)),
+              DropdownMenuItem(value: 2, child: Text(AppLocalizations.of(context).true_val)),
             ],
             value: _dropdownValue,
             onChanged: ((value) {
@@ -184,10 +187,10 @@ class _AnswesrListPageState extends State<AnswersListPage> {
                     result = data;
                   });
                 } on Exception catch (e) {
-                  alertBox(context, 'Greška', e.toString());
+                  alertBox(context, AppLocalizations.of(context).error, e.toString());
                 }
               },
-              child: const Text('Traži')),
+              child: Text(AppLocalizations.of(context).search)),
           const SizedBox(
             width: 15,
           ),
@@ -205,7 +208,7 @@ class _AnswesrListPageState extends State<AnswersListPage> {
                   initTable();
                 }
               },
-              child: const Text('Dodaj')),
+              child: Text(AppLocalizations.of(context).add)),
           const SizedBox(
             width: 15,
           ),

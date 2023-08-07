@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class QuizDetailPage extends StatefulWidget {
   const QuizDetailPage({Key? key, this.quiz}) : super(key: key);
   final Quiz? quiz;
@@ -23,7 +26,6 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'title': widget.quiz?.title,
@@ -36,8 +38,8 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
         title: widget.quiz != null
-            ? "Kviz Id: ${(widget.quiz?.id.toString() ?? '')}"
-            : "Kviz autor",
+            ? "${AppLocalizations.of(context).quiz_id} ${(widget.quiz?.id.toString() ?? '')}"
+            : AppLocalizations.of(context).quiz_new,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(65, 20, 65, 100),
@@ -60,16 +62,16 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                         builder: (BuildContext context) =>
                                             AlertDialog(
                                               title:
-                                                  const Text('Brisanje kviza'),
-                                              content: const Text(
-                                                  'Da li želite obrisati kviz'),
+                                                   Text(AppLocalizations.of(context).quiz_del_title),
+                                              content: Text(
+                                                  AppLocalizations.of(context).quiz_del_mes),
                                               actions: [
                                                 TextButton(
                                                     onPressed: (() {
                                                       Navigator.pop(context);
                                                     }),
                                                     child:
-                                                        const Text('Poništi')),
+                                                         Text(AppLocalizations.of(context).cancel)),
                                                 TextButton(
                                                     onPressed: () async {
                                                       try {
@@ -80,16 +82,16 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                                         ScaffoldMessenger.of(
                                                                 context)
                                                             .showSnackBar(
-                                                                const SnackBar(
+                                                                 SnackBar(
                                                                     content: Text(
-                                                                        'Uspješno brisanje kviza.')));
+                                                                        AppLocalizations.of(context).quiz_del_su)));
                                                         Navigator.pop(context);
                                                         Navigator.pop(
                                                             context, 'reload');
                                                       } catch (e) {
                                                         alertBoxMoveBack(
                                                             context,
-                                                            'Greška',
+                                                            AppLocalizations.of(context).error,
                                                             e.toString());
                                                       }
                                                     },
@@ -97,7 +99,7 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                               ],
                                             ));
                                   },
-                                  child: const Text('Obriši kviz')),
+                                  child: Text(AppLocalizations.of(context).quiz_del_lbl)),
                           widget.quiz == null
                               ? Container()
                               : const SizedBox(
@@ -119,9 +121,9 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                           await _quizProvider.update(request);
 
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
+                                          .showSnackBar( SnackBar(
                                               content: Text(
-                                                  'Uspješno mofikovanje kviza')));
+                                                 AppLocalizations.of(context).quiz_mod_su)));
 
                                       Navigator.pop(context, 'reload');
                                     } else {
@@ -131,9 +133,9 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                       await _quizProvider.insert(request);
 
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
+                                          .showSnackBar( SnackBar(
                                               content: Text(
-                                                  'Uspješno dodavanje kviza')));
+                                                  AppLocalizations.of(context).quiz_add_su)));
 
                                       Navigator.pop(context, 'reload');
                                     }
@@ -143,7 +145,7 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                            title: const Text('Error'),
+                                            title:  Text(AppLocalizations.of(context).error),
                                             content: Text(
                                               e.toString(),
                                             ),
@@ -157,9 +159,9 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                           ));
                                 }
                               },
-                              child: const Text(
-                                "Sačuvaj",
-                                style: TextStyle(fontSize: 15),
+                              child:  Text(
+                               AppLocalizations.of(context).save,
+                                style: const TextStyle(fontSize: 15),
                               )),
                         ],
                       ),
@@ -186,12 +188,12 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                 name: 'title',
                 validator: (value) {
                   if (value == null) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
-                decoration: const InputDecoration(label: Text("Naslov")),
+                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).title)),
               )),
               const SizedBox(
                 width: 20,
@@ -200,7 +202,7 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                 child: FormBuilderTextField(
                   name: 'description',
                   maxLines: 3,
-                  decoration: const InputDecoration(label: Text("Opis")),
+                  decoration:  InputDecoration(label: Text(AppLocalizations.of(context).description)),
                 ),
               ),
             ],
@@ -248,7 +250,7 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                           //   inittt();
                           // }
                         },
-                        child: const Text('Uredi pitanja')),
+                        child: Text(AppLocalizations.of(context).quiz_questions)),
                   ],
                 ),
           const SizedBox(
@@ -257,12 +259,12 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
           widget.quiz == null
               ? Container()
               : Row(
-                  children: const [
+                  children:  [
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Text(
-                            'Napomena: Da bi kviz bio aktivan mora imati najmanje jedno pitanje i sva pitanja moraju biti aktivna.'),
+                            AppLocalizations.of(context).quiz_rule),
                       ),
                     )
                   ],

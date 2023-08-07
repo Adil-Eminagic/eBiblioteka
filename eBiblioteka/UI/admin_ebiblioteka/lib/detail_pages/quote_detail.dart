@@ -1,12 +1,14 @@
 import 'package:admin_ebiblioteka/models/quote.dart';
-import 'package:admin_ebiblioteka/models/search_result.dart';
 import 'package:admin_ebiblioteka/providers/quotes_provider.dart';
 import 'package:admin_ebiblioteka/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class QuoteDetailPage extends StatefulWidget {
   const QuoteDetailPage({Key? key, this.quote, this.bookId}) : super(key: key);
@@ -20,13 +22,13 @@ class QuoteDetailPage extends StatefulWidget {
 class _QuoteDetailPageState extends State<QuoteDetailPage> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
-  QuoteProvider _quoteProvider = QuoteProvider();
+  late QuoteProvider _quoteProvider = QuoteProvider();
 
   bool isLoading = true;
 
   @override
   void initState() {
-    // TODO: implement initState
+    _quoteProvider = context.read<QuoteProvider>();
     super.initState();
     _initialValue = {
       'id': widget.quote?.id.toString(),
@@ -39,8 +41,8 @@ class _QuoteDetailPageState extends State<QuoteDetailPage> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: widget.quote != null
-          ? "Citat Id: ${(widget.quote?.id.toString() ?? '')}"
-          : "Novi citat",
+          ? "${AppLocalizations.of(context).quote_id} ${(widget.quote?.id.toString() ?? '')}"
+          : AppLocalizations.of(context).quote_id,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
@@ -63,89 +65,88 @@ class _QuoteDetailPageState extends State<QuoteDetailPage> {
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
-                                        title: const Text('Brisanje citata'),
-                                        content: const Text(
-                                            'Da li želite obrisati citat'),
+                                        title:  Text(AppLocalizations.of(context).quote_del_title),
+                                        content:  Text(
+                                            AppLocalizations.of(context).quote_del_mes),
                                         actions: [
                                           TextButton(
                                               onPressed: (() {
                                                 Navigator.pop(context);
                                               }),
-                                              child: const Text('Poništi')),
+                                              child:  Text(AppLocalizations.of(context).cancel)),
                                           TextButton(
                                               onPressed: () async {
                                                 try {
                                                   await _quoteProvider.remove(
                                                       widget.quote?.id ?? 0);
                                                   ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
+                                                      .showSnackBar( SnackBar(
                                                           content: Text(
-                                                              'Uspješno brisanje citata knjige')));
+                                                              AppLocalizations.of(context).quote_del_su)));
                                                   Navigator.pop(context);
                                                   Navigator.pop(
                                                       context, 'reload');
                                                 } catch (e) {
                                                   alertBoxMoveBack(context,
-                                                      'Greška', e.toString());
+                                                      AppLocalizations.of(context).error, e.toString());
                                                 }
                                               },
                                               child: const Text('Ok')),
                                         ],
                                       ));
                             },
-                            child: const Text('Obriši citat')),
+                            child: Text(AppLocalizations.of(context).quote_del_lbl)),
                     widget.quote == null
                         ? Container()
                         : const SizedBox(
                             width: 7,
                           ),
-                  
-                        ElevatedButton(
-                            onPressed: () async {
-                              _formKey.currentState?.save();
-                              print(_formKey.currentState?.value);
+                    ElevatedButton(
+                        onPressed: () async {
+                          _formKey.currentState?.save();
+                          print(_formKey.currentState?.value);
 
-                              try {
-                                if (_formKey.currentState!.validate()) {
-                                  if (widget.quote != null) {
-                                    Map<String, dynamic> request =
-                                        Map.of(_formKey.currentState!.value);
+                          try {
+                            if (_formKey.currentState!.validate()) {
+                              if (widget.quote != null) {
+                                Map<String, dynamic> request =
+                                    Map.of(_formKey.currentState!.value);
 
-                                    request['id'] = widget.quote?.id;
-                                    request['bookId'] = widget.quote?.bookId;
+                                request['id'] = widget.quote?.id;
+                                request['bookId'] = widget.quote?.bookId;
 
-                                    await _quoteProvider.update(request);
+                                await _quoteProvider.update(request);
 
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Uspješna modifikovanje citata')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                     SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context).quote_mod_su)));
 
-                                    Navigator.pop(context, 'reload');
-                                  } else {
-                                    Map<String, dynamic> request =
-                                        Map.of(_formKey.currentState!.value);
+                                Navigator.pop(context, 'reload');
+                              } else {
+                                Map<String, dynamic> request =
+                                    Map.of(_formKey.currentState!.value);
 
-                                    request['bookId'] = widget.bookId;
+                                request['bookId'] = widget.bookId;
 
-                                    await _quoteProvider.insert(request);
+                                await _quoteProvider.insert(request);
 
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Uspješna dodavanje citata')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                     SnackBar(
+                                        content:
+                                            Text(AppLocalizations.of(context).quote_add_su)));
 
-                                    Navigator.pop(context, 'reload');
-                                  }
-                                }
-                              } on Exception catch (e) {
-                                alertBox(context, 'Greška', e.toString());
+                                Navigator.pop(context, 'reload');
                               }
-                            },
-                            child: const Text(
-                              "Sačuvaj",
-                              style: TextStyle(fontSize: 15),
-                            )),
+                            }
+                          } on Exception catch (e) {
+                            alertBox(context, AppLocalizations.of(context).error, e.toString());
+                          }
+                        },
+                        child:  Text(
+                          AppLocalizations.of(context).save,
+                          style: TextStyle(fontSize: 15),
+                        )),
                   ],
                 ),
               )
@@ -169,12 +170,12 @@ class _QuoteDetailPageState extends State<QuoteDetailPage> {
                 name: 'content',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
-                decoration: const InputDecoration(label: Text('Sadržaj')),
+                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).content)),
               )),
             ],
           ),

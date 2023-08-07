@@ -12,6 +12,8 @@ import '../models/genre.dart';
 import '../providers/bookgenre_provider.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class BookGenreDetailPage extends StatefulWidget {
   const BookGenreDetailPage({Key? key, this.bookGenre, this.book})
       : super(key: key);
@@ -59,15 +61,17 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: widget.bookGenre == null
-          ? "Dodavanje žanra za knjigu"
-          : "Knjiga ${widget.bookGenre?.book?.title}, žanr ${widget.bookGenre?.genre?.name}",
+          ? AppLocalizations.of(context).bookgenre_insert
+          : "${AppLocalizations.of(context).book} ${widget.bookGenre?.book?.title}, ${AppLocalizations.of(context).genre} ${widget.bookGenre?.genre?.name}",
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
           child: Column(
             children: [
-               isLoading ? const SpinKitRing(color: Colors.brown) : _buildForm(),
-              const SizedBox(height: 20,),
+              isLoading ? const SpinKitRing(color: Colors.brown) : _buildForm(),
+              const SizedBox(
+                height: 20,
+              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
@@ -81,15 +85,19 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
-                                        title: const Text('Brisanje žanra'),
-                                        content: const Text(
-                                            'Da li želite obrisati žanr'),
+                                        title: Text(AppLocalizations.of(context)
+                                            .bookgenre_del_title),
+                                        content: Text(
+                                            AppLocalizations.of(context)
+                                                .bookgenre_del_mes),
                                         actions: [
                                           TextButton(
                                               onPressed: (() {
                                                 Navigator.pop(context);
                                               }),
-                                              child: const Text('Poništi')),
+                                              child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .cancel)),
                                           TextButton(
                                               onPressed: () async {
                                                 try {
@@ -98,61 +106,69 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
                                                               .bookGenre?.id ??
                                                           0);
                                                   ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
+                                                      .showSnackBar(SnackBar(
                                                           content: Text(
-                                                              'Uspješno brisanje žanra knjige')));
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .bookgenre_del_su)));
                                                   Navigator.pop(context);
                                                   Navigator.pop(
                                                       context, 'reload');
-                                                   
                                                 } catch (e) {
-                                                  alertBoxMoveBack(context,
-                                                      'Greška', e.toString());
+                                                  alertBoxMoveBack(
+                                                      context,
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .error,
+                                                      e.toString());
                                                 }
                                               },
                                               child: const Text('Ok')),
                                         ],
                                       ));
                             },
-                            child: const Text('Obriši žanr')),
+                            child: Text(AppLocalizations.of(context)
+                                .bookgenre_del_lbl)),
                     widget.bookGenre == null
                         ? Container()
                         : const SizedBox(
                             width: 7,
                           ),
-                   widget.bookGenre !=null ? Container(): ElevatedButton(
-                        onPressed: () async {
-                          
-                          _formKey.currentState?.save();
-                          print(_formKey.currentState?.value);
+                    widget.bookGenre != null
+                        ? Container()
+                        : ElevatedButton(
+                            onPressed: () async {
+                              _formKey.currentState?.save();
+                              print(_formKey.currentState?.value);
 
-                          try {
-                            if (_formKey.currentState!.validate()) {
-                              
-                                Map<String, dynamic> request =
-                                    Map.of(_formKey.currentState!.value);
+                              try {
+                                if (_formKey.currentState!.validate()) {
+                                  Map<String, dynamic> request =
+                                      Map.of(_formKey.currentState!.value);
 
-                                request['bookId'] = widget.book?.id;
+                                  request['bookId'] = widget.book?.id;
 
-                                await _bookGenreProvider.insert(request);
+                                  await _bookGenreProvider.insert(request);
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Uspješna dodavanje žanra')));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              AppLocalizations.of(context)
+                                                  .bookgenre_add_su)));
 
-                                Navigator.pop(context, 'reload');
-
-                              
-                            }
-                          } on Exception catch (e) {
-                            alertBox(context, 'Greška', e.toString());
-                          }
-                        },
-                        child: const Text(
-                          "Sačuvaj",
-                          style: TextStyle(fontSize: 15),
-                        )),
+                                  Navigator.pop(context, 'reload');
+                                }
+                              } on Exception catch (e) {
+                                alertBox(
+                                    context,
+                                    AppLocalizations.of(context).error,
+                                    e.toString());
+                              }
+                            },
+                            child: Text(
+                              AppLocalizations.of(context).save,
+                              style: TextStyle(fontSize: 15),
+                            )),
                   ],
                 ),
               )
@@ -176,13 +192,13 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
                 name: 'genreId',
                 validator: (value) {
                   if (value == null) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
                 decoration: InputDecoration(
-                  labelText: 'Žanr',
+                  labelText: AppLocalizations.of(context).genre,
                   suffix: IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
@@ -191,7 +207,6 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
                           ?.reset();
                     },
                   ),
-                  hintText: 'Odaberi žanr',
                 ),
                 items: genresResult?.items
                         .map((g) => DropdownMenuItem(

@@ -1,4 +1,5 @@
 import 'package:mobile_ebiblioteka/pages/home_page.dart';
+import 'package:mobile_ebiblioteka/providers/language_provider.dart';
 
 import '../providers/sign_provider.dart';
 import '../providers/user_provider.dart';
@@ -10,6 +11,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'signup_page.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -18,27 +21,27 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   late SignProvider _signProvider = SignProvider();
   late UserProvider _userProvider = UserProvider();
+  late LanguageProvider _languageProvider = LanguageProvider();
   bool isLoading = false;
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _signProvider = context.read<SignProvider>();
     _userProvider = context.read<UserProvider>();
+    _languageProvider = context.read<LanguageProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
-      //   title: const Text("Prijava"),
-      //   centerTitle: true,
+         
       // ),
       body: Center(
         child: Padding(
@@ -60,6 +63,84 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 70,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton.icon(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                            onTap: (() {
+                                              _languageProvider
+                                                  .changeLanguage('en');
+                                              Navigator.pop(context);
+                                            }),
+                                            child: Image.asset(
+                                              'assets/uk.png',
+                                              width: 70,
+                                              height: 70,
+                                            )),
+                                        const SizedBox(
+                                          width: 50,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            _languageProvider
+                                                .changeLanguage('bs');
+                                            Navigator.pop(context);
+                                          },
+                                          child: Image.asset(
+                                            'assets/bih.png',
+                                            width: 70,
+                                            height: 70,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .cancel)),
+                                    ],
+                                  ));
+                        },
+                        icon: const Icon(Icons.language),
+                        label: Text(
+                          AppLocalizations.of(context).language_name,
+                          style: TextStyle(fontSize: 19),
+                        )),
+                  ],
+                ),
+                // Expanded(
+                //     child: DropdownButton(
+                //   items: const [
+                //     DropdownMenuItem(value: "bs", child: Text("Bosanski")),
+                //     DropdownMenuItem(value: "en", child: Text("English")),
+                //   ],
+                //   value: _dropdownValue,
+                //   onChanged: ((value) async {
+                //     if (value is String) {
+                //        await _languageProvider.lang(value);
+                //       setState(() {
+                //         _dropdownValue = value;
+
+                //       });
+                //     }
+                //   }),
+                // )),
+                const SizedBox(
+                  height: 25,
+                ),
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -70,8 +151,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 TextField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
-                      label: Text('Password'), icon: Icon(Icons.password)),
+                  decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context).password),
+                      icon: const Icon(Icons.password)),
                 ),
                 const SizedBox(
                   height: 40,
@@ -83,12 +165,12 @@ class _LoginPageState extends State<LoginPage> {
                           setState(() {
                             isLoading = true;
                           });
-          
+
                           _emailController.text = "user1@gmail.com";
                           _passwordController.text = "test";
                           var email = _emailController.text;
                           var password = _passwordController.text;
-          
+
                           try {
                             var data =
                                 await _signProvider.signIn(email, password);
@@ -96,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                             Autentification.token = token;
                             Autentification.tokenDecoded =
                                 JwtDecoder.decode(token);
-                            
+
                             // if (Autentification.tokenDecoded?['Role'] == 'User') {
                             //   alertBox(context, 'Greška',
                             //       'Korisnicima zabranjen pristup desktop aplikaciji');
@@ -111,7 +193,8 @@ class _LoginPageState extends State<LoginPage> {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
-                                      title: const Text('Error'),
+                                      title: Text(
+                                          AppLocalizations.of(context).error),
                                       content: Text(e.toString()),
                                       actions: [
                                         TextButton(
@@ -121,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 isLoading = false;
                                               });
                                             },
-                                            child: Text('Ok'))
+                                            child: const Text('Ok'))
                                       ],
                                     ));
                           }
@@ -133,25 +216,25 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                isLoading ? Container() : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Nemate nalog',
-                      // style: TextStyle(
-                      //   decoration: TextDecoration.underline,
-                      // ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const SignupPage()
-                            ));
-                      },
-                      child: const Text('Registrujte se'),
-                    ),
-                  ],
-                )
+                isLoading
+                    ? Container()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(AppLocalizations.of(context).no_profile,
+                              style: const TextStyle(fontSize: 17)),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const SignupPage()));
+                            },
+                            child: Text(
+                              AppLocalizations.of(context).sign_up,
+                              style: const TextStyle(fontSize: 17),
+                            ),
+                          ),
+                        ],
+                      )
               ],
             ),
           ),

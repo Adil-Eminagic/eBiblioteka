@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mobile_ebiblioteka/providers/rating_provider.dart';
-import 'package:mobile_ebiblioteka/utils/util.dart';
 import 'package:mobile_ebiblioteka/utils/util_widgets.dart';
 import 'package:provider/provider.dart';
-import '../widgets/master_screen.dart';
 
 import '../models/rating.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class RatingDetailPage extends StatefulWidget {
   const RatingDetailPage({Key? key, this.rating, this.userId, this.bookId})
@@ -28,7 +29,6 @@ class _RatingDetailPageState extends State<RatingDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.rating != null) {
       num = widget.rating!.stars!;
@@ -46,7 +46,7 @@ class _RatingDetailPageState extends State<RatingDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget.rating == null ? 'Nova ocjena' : "Uredi ocjenu")),
+          title: Text(widget.rating == null ? AppLocalizations.of(context).rate_new : AppLocalizations.of(context).rate_mod)),
       body: SingleChildScrollView(
         child: Padding(
             padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
@@ -87,7 +87,7 @@ class _RatingDetailPageState extends State<RatingDetailPage> {
                       maxLines: 10,
                       name: 'comment',
                       decoration:
-                          const InputDecoration(label: Text('Komentar')),
+                         InputDecoration(label: Text(AppLocalizations.of(context).comment)),
                     ))),
                     const SizedBox(
                       height: 50,
@@ -102,37 +102,37 @@ class _RatingDetailPageState extends State<RatingDetailPage> {
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                            title: const Text('Brisanje ocjene'),
-                                            content: const Text(
-                                                'Da li želite obrisati ocjenu'),
+                                            title: Text(AppLocalizations.of(context).rate_del_title),
+                                            content: Text(
+                                                AppLocalizations.of(context).rate_del_mes),
                                             actions: [
                                               TextButton(
                                                   onPressed: (() {
                                                     Navigator.pop(context);
                                                   }),
-                                                  child: const Text('Poništi')),
+                                                  child: Text(AppLocalizations.of(context).cancel)),
                                               TextButton(
                                                   onPressed: () async {
                                                     try {
                                                       await _ratingProvider.remove(
                                                           widget.rating?.id ?? 0);
                                                       ScaffoldMessenger.of(context)
-                                                          .showSnackBar(const SnackBar(
+                                                          .showSnackBar( SnackBar(
                                                               content: Text(
-                                                                  'Uspješno brisanje ocjene.')));
+                                                                  AppLocalizations.of(context).rate_del_su)));
                                                       Navigator.pop(context);
                                                       Navigator.pop(
                                                           context, 'reload');
                                                     } catch (e) {
                                                       alertBoxMoveBack(context,
-                                                          'Greška', e.toString());
+                                                          AppLocalizations.of(context).error, e.toString());
                                                     }
                                                   },
                                                   child: const Text('Ok')),
                                             ],
                                           ));
                                 },
-                                child: const Text('Obriši ocjenu')),
+                                child: Text(AppLocalizations.of(context).rate_del_lbl)),
                         
                     widget.rating == null
                         ? Container()
@@ -161,9 +161,9 @@ class _RatingDetailPageState extends State<RatingDetailPage> {
                                 var res = await _ratingProvider.update(request);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                     SnackBar(
                                         content: Text(
-                                            'Uspješna modifikacija ocjene')));
+                                           AppLocalizations.of(context).rate_mod_su)));
 
                                 Navigator.pop(context, 'reload');
                               } else {
@@ -180,20 +180,20 @@ class _RatingDetailPageState extends State<RatingDetailPage> {
                                 await _ratingProvider.insert(request);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                     SnackBar(
                                         content:
-                                            Text('Uspješno dodavanje ocjene')));
+                                            Text(AppLocalizations.of(context).rate_mod_su)));
 
                                 Navigator.pop(context, 'reload');
                               }
                             }
                           } on Exception catch (e) {
-                            alertBox(context, 'Greška', e.toString());
+                            alertBox(context, AppLocalizations.of(context).error, e.toString());
                           }
                         },
-                        child: const Text(
-                          "Sačuvaj",
-                          style: TextStyle(fontSize: 15),
+                        child: Text(
+                          AppLocalizations.of(context).save,
+                          style: const TextStyle(fontSize: 15),
                         )),
                           ],
                         ),

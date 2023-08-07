@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class QuotesListPage extends StatefulWidget {
   const QuotesListPage({Key? key, this.bookId}) : super(key: key);
   final int? bookId;
@@ -25,7 +27,6 @@ class _QuotesListPageState extends State<QuotesListPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _quoteProvider = context.read<QuoteProvider>();
     initTable();
@@ -41,14 +42,14 @@ class _QuotesListPageState extends State<QuotesListPage> {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Citati',
+      title: AppLocalizations.of(context).quotes,
       child: Column(children: [
         _buildSearch(),
         isLoading ? Container() : _buildDataTable(),
@@ -87,23 +88,23 @@ class _QuotesListPageState extends State<QuotesListPage> {
     );
   }
 
- 
-
   Expanded _buildDataTable() {
     return Expanded(
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(80, 0, 80, 0),
           child: DataTable(
-            columns: const [
-              DataColumn(label: Text("Naziv")),
+            columns:  [
+              DataColumn(label: Text(AppLocalizations.of(context).name_2)),
             ],
             rows: result?.items
                     .map((Quote e) => DataRow(
                             onSelectChanged: (value) async {
                               var refresh = await Navigator.of(context)
                                   .push(MaterialPageRoute(
-                                builder: (context) => QuoteDetailPage(quote: e,),
+                                builder: (context) => QuoteDetailPage(
+                                  quote: e,
+                                ),
                               ));
 
                               if (refresh == 'reload') {
@@ -129,7 +130,7 @@ class _QuotesListPageState extends State<QuotesListPage> {
           Expanded(
             child: TextField(
               controller: _contentConroller,
-              decoration: const InputDecoration(label: Text("Naziv")),
+              decoration:  InputDecoration(label: Text(AppLocalizations.of(context).name_2)),
             ),
           ),
           const SizedBox(
@@ -147,10 +148,10 @@ class _QuotesListPageState extends State<QuotesListPage> {
                     result = data;
                   });
                 } on Exception catch (e) {
-                  alertBox(context, 'Greška', e.toString());
+                  alertBox(context, AppLocalizations.of(context).error, e.toString());
                 }
               },
-              child: const Text('Traži')),
+              child: Text(AppLocalizations.of(context).search)),
           const SizedBox(
             width: 15,
           ),
@@ -158,7 +159,7 @@ class _QuotesListPageState extends State<QuotesListPage> {
               onPressed: () async {
                 var refresh = await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>  QuoteDetailPage(
+                    builder: (context) => QuoteDetailPage(
                       quote: null,
                       bookId: widget.bookId,
                     ),
@@ -168,7 +169,7 @@ class _QuotesListPageState extends State<QuotesListPage> {
                   initTable();
                 }
               },
-              child: const Text('Dodaj')),
+              child: Text(AppLocalizations.of(context).add)),
           const SizedBox(
             width: 15,
           ),

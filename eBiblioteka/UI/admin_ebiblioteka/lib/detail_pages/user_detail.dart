@@ -20,6 +20,8 @@ import '../providers/gender_provider.dart';
 import '../utils/util.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class UserDetailPage extends StatefulWidget {
   const UserDetailPage({Key? key, this.user, this.roleUser}) : super(key: key);
   final User? user;
@@ -46,7 +48,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'firstName': widget.user?.firstName,
@@ -86,7 +87,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -94,8 +95,8 @@ class _UserDetailPageState extends State<UserDetailPage> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
         title: widget.user != null
-            ? "${widget.user!.roleId == 3 ? 'Korinsik' : 'Administarator'} Id: ${(widget.user?.id.toString() ?? '')}"
-            : "Novi ${widget.roleUser == "User" ? 'korinsik' : 'administarator'}",
+            ? "${widget.user!.roleId == 3 ? AppLocalizations.of(context).user : AppLocalizations.of(context).admin} id: ${(widget.user?.id.toString() ?? '')}"
+            : "${AppLocalizations.of(context).new_lbl} ${widget.roleUser == "User" ? AppLocalizations.of(context).user_lower : AppLocalizations.of(context).admin_lower}",
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
@@ -183,9 +184,10 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                   var res = await _userProvider.update(request);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                           content: Text(
-                                              'Uspješna modifikacija korisnika')));
+                                              AppLocalizations.of(context)
+                                                  .user_mod_su)));
 
                                   Navigator.pop(context, 'reload');
                                 } else {
@@ -208,20 +210,24 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                   await _userProvider.insert(request);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                           content: Text(
-                                              'Uspješno dodavanje korisnika')));
+                                              AppLocalizations.of(context)
+                                                  .user_add_su)));
 
-                                   Navigator.pop(context, 'reload');
+                                  Navigator.pop(context, 'reload');
                                 }
                               }
                             } on Exception catch (e) {
-                              alertBox(context, 'Greška', e.toString());
+                              alertBox(
+                                  context,
+                                  AppLocalizations.of(context).error,
+                                  e.toString());
                             }
                           },
-                          child: const Text(
-                            "Sačuvaj",
-                            style: TextStyle(fontSize: 15),
+                          child: Text(
+                            AppLocalizations.of(context).save,
+                            style: const TextStyle(fontSize: 15),
                           )),
                     ],
                   ),
@@ -242,8 +248,8 @@ class _UserDetailPageState extends State<UserDetailPage> {
               ? Container()
               : Row(
                   children: [
-                    const Text(
-                      'Aktivnost',
+                    Text(
+                      AppLocalizations.of(context).activity,
                       style: TextStyle(fontSize: 20),
                     ),
                     const SizedBox(
@@ -285,8 +291,9 @@ class _UserDetailPageState extends State<UserDetailPage> {
                       ElevatedButton(
                           onPressed: getimage,
                           child: photo == null
-                              ? const Text('Odaberi sliku')
-                              : const Text('Promijeni sliku')),
+                              ? Text(AppLocalizations.of(context).choose_image)
+                              : Text(
+                                  AppLocalizations.of(context).change_image)),
                     ],
                   ),
                 )),
@@ -295,11 +302,11 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           Row(
             children: [
-              textField('firstName', 'Ime'),
+              textField('firstName', AppLocalizations.of(context).name),
               const SizedBox(
                 width: 80,
               ),
-              textField('lastName', 'Prezime'),
+              textField('lastName', AppLocalizations.of(context).lname),
             ],
           ),
           const SizedBox(
@@ -313,12 +320,13 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 name: 'birthDate',
                 validator: (value) {
                   if (value == null) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
-                decoration: const InputDecoration(label: Text("Datum rođenja")),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).birth_date)),
               )),
               const SizedBox(
                 width: 80,
@@ -328,13 +336,13 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 name: 'roleId',
                 validator: (value) {
                   if (value == null) {
-                    return "Obavezno polje";
+                    return AppLocalizations.of(context).mfield;
                   } else {
                     return null;
                   }
                 },
                 decoration: InputDecoration(
-                  labelText: 'Uloga',
+                  labelText: AppLocalizations.of(context).role,
                   suffix: IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
@@ -343,7 +351,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                           ?.reset();
                     },
                   ),
-                  hintText: 'Odaberi ulogu',
                 ),
                 items: roleResult?.items
                         .map((g) => DropdownMenuItem(
@@ -365,22 +372,22 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   child: FormBuilderTextField(
                 validator: ((value) {
                   if (value == null || value.isEmpty) {
-                    return "Morate unijeti vrijednost";
+                    return AppLocalizations.of(context).mvalue;
                   } else if (!RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                       .hasMatch(value)) {
-                    return "Nevalidan email";
+                    return AppLocalizations.of(context).invalid_email;
                   } else {
                     return null;
                   }
                 }),
                 name: 'email',
-                decoration: InputDecoration(label: Text('Email')),
+                decoration: const InputDecoration(label: Text('Email')),
               )),
               const SizedBox(
                 width: 80,
               ),
-              textField('phoneNumber', 'Telefon')
+              textField('phoneNumber', AppLocalizations.of(context).telphone)
             ],
           ),
           const SizedBox(
@@ -392,13 +399,13 @@ class _UserDetailPageState extends State<UserDetailPage> {
               name: 'genderId',
               validator: (value) {
                 if (value == null) {
-                  return "Obavezno polje";
+                  return AppLocalizations.of(context).mfield;
                 } else {
                   return null;
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Spol',
+                labelText: AppLocalizations.of(context).gender,
                 suffix: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
@@ -407,7 +414,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                         ?.reset();
                   },
                 ),
-                hintText: 'Odaberi spol',
               ),
               items: genderResult?.items
                       .map((g) => DropdownMenuItem(
@@ -426,13 +432,13 @@ class _UserDetailPageState extends State<UserDetailPage> {
               name: 'countryId',
               validator: (value) {
                 if (value == null) {
-                  return "Obavezno polje";
+                  return AppLocalizations.of(context).mfield;
                 } else {
                   return null;
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Država',
+                labelText: AppLocalizations.of(context).country,
                 suffix: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
@@ -441,7 +447,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                         ?.reset();
                   },
                 ),
-                hintText: 'Odaberi državu',
               ),
               items: countryResult?.items
                       .map((g) => DropdownMenuItem(
@@ -465,18 +470,18 @@ class _UserDetailPageState extends State<UserDetailPage> {
                         name: 'password',
                         validator: ((value) {
                           if (value == null || value.isEmpty) {
-                            return "Morate unijeti vrijednost";
+                            return AppLocalizations.of(context).mvalue;
                           } else if (value.length < 8 ||
                               !value.contains(RegExp(r'[A-Z]')) ||
                               !value.contains(RegExp(r'[a-z]')) ||
                               !value.contains(RegExp(r'[0-9]'))) {
-                            return "Lozinka mora sadržati najmanje 8 karatera, velika i mala slova";
+                            return AppLocalizations.of(context).reg_password;
                           } else {
                             return null;
                           }
                         }),
-                        decoration: const InputDecoration(
-                          label: Text('Password'),
+                        decoration: InputDecoration(
+                          label: Text(AppLocalizations.of(context).password),
                         ),
                       ),
                     )
@@ -490,7 +495,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   child: FormBuilderTextField(
                 name: 'biography',
                 maxLines: 3,
-                decoration: const InputDecoration(label: Text('Biografija')),
+                decoration: InputDecoration(label: Text(AppLocalizations.of(context).biography)),
               )),
             ],
           ),
@@ -507,7 +512,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
         child: FormBuilderTextField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Obavezno polje";
+          return AppLocalizations.of(context).mfield;
         } else {
           return null;
         }

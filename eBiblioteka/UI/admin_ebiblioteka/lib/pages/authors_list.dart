@@ -11,6 +11,9 @@ import 'package:date_format/date_format.dart';
 
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class AuthorsPage extends StatefulWidget {
   const AuthorsPage({super.key});
 
@@ -46,14 +49,14 @@ class _AuthorsPageState extends State<AuthorsPage> {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: "Autori",
+      title: AppLocalizations.of(context).authors,
       child: Column(children: [
         _buildSearch(),
         isLoading ? const SpinKitRing(color: Colors.brown) : _buildDataTable(),
@@ -94,11 +97,11 @@ class _AuthorsPageState extends State<AuthorsPage> {
     return Expanded(
       child: SingleChildScrollView(
         child: DataTable(
-          columns: const [
-            DataColumn(label: Text("Id")),
-            DataColumn(label: Text("Ime")),
-            DataColumn(label: Text("Spol")),
-            DataColumn(label: Text("Datum rođenja"))
+          columns:  [
+            const DataColumn(label: Text("Id")),
+            DataColumn(label: Text(AppLocalizations.of(context).name)),
+            DataColumn(label: Text(AppLocalizations.of(context).gender)),
+            DataColumn(label: Text(AppLocalizations.of(context).birth_date))
           ],
           rows: result?.items
                   .map((Author e) => DataRow(
@@ -135,7 +138,7 @@ class _AuthorsPageState extends State<AuthorsPage> {
           Expanded(
             child: TextField(
               controller: _fullNameController,
-              decoration: const InputDecoration(label: Text("Ime")),
+              decoration:  InputDecoration(label: Text(AppLocalizations.of(context).name)),
             ),
           ),
           const SizedBox(
@@ -164,7 +167,7 @@ class _AuthorsPageState extends State<AuthorsPage> {
                           ));
                 }
               },
-              child: const Text('Dohvati')),
+              child:  Text(AppLocalizations.of(context).search)),
           const SizedBox(
             width: 15,
           ),
@@ -181,7 +184,7 @@ class _AuthorsPageState extends State<AuthorsPage> {
                   initTable();
                 }
               },
-              child: Text('Dodaj'))
+              child: Text(AppLocalizations.of(context).add))
         ],
       ),
     );

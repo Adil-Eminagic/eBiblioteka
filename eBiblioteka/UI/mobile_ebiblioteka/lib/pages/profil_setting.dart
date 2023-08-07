@@ -24,6 +24,9 @@ import '../providers/gender_provider.dart';
 import '../providers/role_provider.dart';
 import '../providers/user_provider.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class ProfileSettings extends StatefulWidget {
   const ProfileSettings({Key? key, this.user}) : super(key: key);
   final User? user;
@@ -89,7 +92,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Postavke profila',
+      title: AppLocalizations.of(context).profile_settings,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(65, 0, 65, 50),
@@ -127,9 +130,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   var res = await _userProvider.update(request);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                       SnackBar(
                                           content: Text(
-                                              'Uspješna modifikacija profila')));
+                                              AppLocalizations.of(context).su_mod_profie)));
 
                                   // Autentification.loggedUser =
                                   //     await _userProvider.getById(widget.user!.id!);
@@ -137,12 +140,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   Navigator.pop(context, 'getUser');
                                 }
                               } on Exception catch (e) {
-                                alertBox(context, 'Greška', e.toString());
+                                alertBox(context, AppLocalizations.of(context).error, e.toString());
                               }
                             },
-                            child: const Text(
-                              "Sačuvaj",
-                              style: TextStyle(fontSize: 17),
+                            child:  Text(
+                              AppLocalizations.of(context).save,
+                              style: const TextStyle(fontSize: 17),
                             )),
                   ],
                 ),
@@ -181,7 +184,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       photo == null
                           ? ElevatedButton(
                               onPressed: getimage,
-                              child: const Text('Odaberi sliku'))
+                              child:  Text(AppLocalizations.of(context).choose_image))
                           : Container()
                     ],
                   ),
@@ -190,12 +193,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             ],
           ),
           rowMethod(
-            textField('firstName', 'Ime'),
+            textField('firstName', AppLocalizations.of(context).name),
           ),
           const SizedBox(
             height: 15,
           ),
-          rowMethod(textField('lastName', 'Prezime')),
+          rowMethod(textField('lastName', AppLocalizations.of(context).lname)),
           const SizedBox(
             height: 15,
           ),
@@ -204,17 +207,17 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             name: 'birthDate',
             validator: (value) {
               if (value == null) {
-                return "Obavezno polje";
+                return AppLocalizations.of(context).mfield;
               } else {
                 return null;
               }
             },
-            decoration: const InputDecoration(label: Text("Datum rođenja")),
+            decoration: InputDecoration(label: Text(AppLocalizations.of(context).birth_date)),
           ))),
           const SizedBox(
             height: 15,
           ),
-          rowMethod(textField('phoneNumber', 'Telefon')),
+          rowMethod(textField('phoneNumber', AppLocalizations.of(context).telphone)),
           const SizedBox(
             height: 15,
           ),
@@ -222,11 +225,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
               child: FormBuilderTextField(
             validator: ((value) {
               if (value == null || value.isEmpty) {
-                return "Morate unijeti vrijednost";
+                return AppLocalizations.of(context).mvalue;
               } else if (!RegExp(
                       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                   .hasMatch(value)) {
-                return "Nevalidan email";
+                return AppLocalizations.of(context).invalid_email;
               } else {
                 return null;
               }
@@ -249,9 +252,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: ((context) => const ChangeEmailPage())));
                     }),
-                    child: const Text(
-                      'Novi email',
-                      style: TextStyle(fontSize: 17),
+                    child:  Text(
+                      AppLocalizations.of(context).new_email,
+                      style: const TextStyle(fontSize: 17),
                     ),
                   ),
                   const SizedBox(
@@ -263,8 +266,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             builder: ((context) =>
                                 const ChangePasswordPage())));
                       }),
-                      child: const Text('Nova lozinka',
-                          style: TextStyle(fontSize: 17))),
+                      child:  Text(AppLocalizations.of(context).new_password,
+                          style: const TextStyle(fontSize: 17))),
                 ],
               ))
             ],
@@ -277,13 +280,13 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             name: 'genderId',
             validator: (value) {
               if (value == null) {
-                return "Obavezno polje";
+                return AppLocalizations.of(context).mfield;
               } else {
                 return null;
               }
             },
             decoration: InputDecoration(
-              labelText: 'Spol',
+              labelText: AppLocalizations.of(context).gender,
               suffix: IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () {
@@ -292,7 +295,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       ?.reset();
                 },
               ),
-              hintText: 'Odaberi spol',
+             
             ),
             items: genderResult?.items
                     .map((g) => DropdownMenuItem(
@@ -311,13 +314,13 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             name: 'countryId',
             validator: (value) {
               if (value == null) {
-                return "Obavezno polje";
+                return AppLocalizations.of(context).mfield;
               } else {
                 return null;
               }
             },
             decoration: InputDecoration(
-              labelText: 'Država',
+              labelText: AppLocalizations.of(context).country,
               suffix: IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () {
@@ -326,7 +329,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       ?.reset();
                 },
               ),
-              hintText: 'Odaberi državu',
+            
             ),
             items: countryResult?.items
                     .map((g) => DropdownMenuItem(
@@ -349,18 +352,18 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                         name: 'password',
                         validator: ((value) {
                           if (value == null || value.isEmpty) {
-                            return "Morate unijeti vrijednost";
+                            return AppLocalizations.of(context).mvalue;
                           } else if (value.length < 8 ||
                               !value.contains(RegExp(r'[A-Z]')) ||
                               !value.contains(RegExp(r'[a-z]')) ||
                               !value.contains(RegExp(r'[0-9]'))) {
-                            return "Lozinka mora sadržati najmanje 8 karatera, velika i mala slova";
+                            return AppLocalizations.of(context).reg_password;
                           } else {
                             return null;
                           }
                         }),
-                        decoration: const InputDecoration(
-                          label: Text('Password'),
+                        decoration: InputDecoration(
+                          label: Text(AppLocalizations.of(context).password),
                         ),
                       ),
                     )
@@ -374,7 +377,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   child: FormBuilderTextField(
                 name: 'biography',
                 maxLines: 5,
-                decoration: const InputDecoration(label: Text('Biografija')),
+                decoration: InputDecoration(label: Text(AppLocalizations.of(context).biography)),
               )),
             ],
           ),
@@ -393,7 +396,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
         child: FormBuilderTextField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Obavezno polje";
+          return AppLocalizations.of(context).mfield;
         } else {
           return null;
         }

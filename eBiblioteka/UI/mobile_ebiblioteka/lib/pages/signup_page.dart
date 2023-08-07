@@ -12,6 +12,9 @@ import '../models/country.dart';
 import '../models/gender.dart';
 import '../models/search_result.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
@@ -50,7 +53,7 @@ class _SignupPageState extends State<SignupPage> {
         isLoading = false;
       });
     } catch (e) {
-      alertBoxMoveBack(context, 'Greška', e.toString());
+      alertBoxMoveBack(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -58,7 +61,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registracija'),
+        title:  Text(AppLocalizations.of(context).sign_up),
         centerTitle: true,
         ),
       body: isLoading
@@ -73,11 +76,11 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(
                         height: 60,
                       ),
-                      rowMethod(_textField('firstName', 'Ime')),
+                      rowMethod(_textField('firstName', AppLocalizations.of(context).error)),
                       const SizedBox(
                         height: 15,
                       ),
-                      rowMethod(_textField('lastName', 'Prezime')),
+                      rowMethod(_textField('lastName', AppLocalizations.of(context).lname)),
                       const SizedBox(
                         height: 15,
                       ),
@@ -87,11 +90,11 @@ class _SignupPageState extends State<SignupPage> {
                             name: 'email',
                             validator: ((value) {
                               if (value == null || value.isEmpty) {
-                                return "Morate unijeti vrijednost";
+                                return AppLocalizations.of(context).mvalue;
                               } else if (!RegExp(
                                       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                   .hasMatch(value)) {
-                                return "Nevalidan email";
+                                return AppLocalizations.of(context).invalid_email;
                               } else {
                                 return null;
                               }
@@ -105,7 +108,7 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(
                         height: 15,
                       ),
-                      rowMethod(_textField('phoneNumber', 'Telefon')),
+                      rowMethod(_textField('phoneNumber', AppLocalizations.of(context).telphone)),
                       const SizedBox(
                         height: 15,
                       ),
@@ -115,18 +118,18 @@ class _SignupPageState extends State<SignupPage> {
                             name: 'password',
                             validator: ((value) {
                               if (value == null || value.isEmpty) {
-                                return "Morate unijeti vrijednost";
+                                return AppLocalizations.of(context).mvalue;
                               } else if (value.length < 8 ||
                                   !value.contains(RegExp(r'[A-Z]')) ||
                                   !value.contains(RegExp(r'[a-z]')) ||
                                   !value.contains(RegExp(r'[0-9]'))) {
-                                return "Lozinka mora sadržati najmanje 8 karatera, velika i mala slova";
+                                return AppLocalizations.of(context).reg_password;
                               } else {
                                 return null;
                               }
                             }),
-                            decoration: const InputDecoration(
-                              label: Text('Password'),
+                            decoration:  InputDecoration(
+                              label: Text(AppLocalizations.of(context).password),
                             ),
                           ),
                         ),
@@ -140,13 +143,13 @@ class _SignupPageState extends State<SignupPage> {
                           name: 'birthDate',
                           validator: (value) {
                             if (value == null) {
-                              return "Obavezno polje";
+                              return AppLocalizations.of(context).mfield;
                             } else {
                               return null;
                             }
                           },
-                          decoration: const InputDecoration(
-                              label: Text("Datum rođenja")),
+                          decoration: InputDecoration(
+                              label: Text(AppLocalizations.of(context).birth_date)),
                         )),
                       ),
                        const SizedBox(
@@ -158,13 +161,13 @@ class _SignupPageState extends State<SignupPage> {
                           name: 'genderId',
                           validator: (value) {
                             if (value == null) {
-                              return "Splo je obavezan.";
+                              return AppLocalizations.of(context).mfield;
                             } else {
                               return null;
                             }
                           },
                           decoration: InputDecoration(
-                            labelText: 'Spol',
+                            labelText: AppLocalizations.of(context).gender,
                             suffix: IconButton(
                               icon: const Icon(Icons.close),
                               onPressed: () {
@@ -175,7 +178,7 @@ class _SignupPageState extends State<SignupPage> {
                                     ?.reset();
                               },
                             ),
-                            hintText: 'Odaberi spol',
+                           
                           ),
                           items: genderResult?.items
                                   .map((g) => DropdownMenuItem(
@@ -195,13 +198,13 @@ class _SignupPageState extends State<SignupPage> {
                         name: 'countryId',
                         validator: (value) {
                           if (value == null) {
-                            return "Država je obavezna.";
+                            return AppLocalizations.of(context).mfield;
                           } else {
                             return null;
                           }
                         },
                         decoration: InputDecoration(
-                          labelText: 'Država',
+                          labelText: AppLocalizations.of(context).country,
                           suffix: IconButton(
                             icon: const Icon(Icons.close),
                             onPressed: () {
@@ -212,7 +215,7 @@ class _SignupPageState extends State<SignupPage> {
                                   ?.reset();
                             },
                           ),
-                          hintText: 'Odaberi državu',
+                         
                         ),
                         items: countryResult?.items
                                 .map((g) => DropdownMenuItem(
@@ -241,17 +244,17 @@ class _SignupPageState extends State<SignupPage> {
                                     await _signProvider.signUp(request);
 
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
+                                         SnackBar(
                                             content:
-                                                Text('Uspješna registracija')));
+                                                Text(AppLocalizations.of(context).su_sign_up)));
 
                                     Navigator.pop(context);
                                   } else {}
                                 } catch (e) {
-                                  alertBox(context, 'Greška', e.toString());
+                                  alertBox(context, AppLocalizations.of(context).error, e.toString());
                                 }
                               },
-                              child: const Text("Registruj se"))
+                              child: Text(AppLocalizations.of(context).sign_up))
                         ],
                       ),
                       const SizedBox(

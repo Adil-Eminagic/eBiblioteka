@@ -10,6 +10,9 @@ import '../models/quiz.dart';
 import '../providers/answer_provider.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class QuestionDeatilPage extends StatefulWidget {
   const QuestionDeatilPage({Key? key, this.quiz}) : super(key: key);
   final Quiz? quiz;
@@ -53,7 +56,7 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -61,7 +64,7 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pitanje broj ${count + 1}'),
+        title: Text('${AppLocalizations.of(context).question_num} ${count + 1}'),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -69,14 +72,14 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
             showDialog(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Napuštanje kviza'),
-                      content: const Text('Da li želite napustiti kviz.\n Rezultati će se izbrisati.'),
+                      title: Text(AppLocalizations.of(context).leave_quiz_tit),
+                      content: Text(AppLocalizations.of(context).leave_quiz_msg),
                       actions: [
                         TextButton(
                             onPressed: (() {
                               Navigator.pop(context);
                             }),
-                            child: const Text('Poništi')),
+                            child: Text(AppLocalizations.of(context).cancel)),
                         TextButton(
                             onPressed: () async {
                               Navigator.pop(context);
@@ -183,10 +186,10 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                   );
                                 } else if (currentOption == 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                       SnackBar(
                                           duration: Duration(seconds: 2),
                                           content:
-                                              Text('Morate odabrati odgovor')));
+                                              Text(AppLocalizations.of(context).manswer)));
                                 } else {
                                   print(points);
                                   Navigator.of(context).push(
@@ -199,7 +202,7 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                   );
                                 }
                               }),
-                              child: Text('Završi test'))
+                              child: Text(AppLocalizations.of(context).finish_quiz))
                           : ElevatedButton(
                               onPressed: (() {
                                 if (currentOption != 0 &&
@@ -216,10 +219,10 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                   initData();
                                 } else if (currentOption == 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                       SnackBar(
                                           duration: Duration(seconds: 2),
                                           content:
-                                              Text('Morate odabrati odgovor')));
+                                              Text(AppLocalizations.of(context).manswer)));
                                 } else {
                                   print(points);
                                   setState(() {
@@ -230,7 +233,7 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                   initData();
                                 }
                               }),
-                              child: Text('Sljedeće pitanje')),
+                              child: Text(AppLocalizations.of(context).next_question)),
                       const SizedBox(
                         width: 25,
                       )

@@ -11,6 +11,31 @@ namespace eBiblioteka.Infrastructure
         {
         }
 
+        public async Task<int> GetBookAverageRatingAsync(int bookId, CancellationToken cancellationToken = default)
+        {
+            
+
+            var ratings= await DbSet.Where(c=> c.BookId==bookId).ToListAsync();
+
+
+
+            if (ratings == null)
+                throw new Exception("Error getting book rates");
+
+            if(ratings.Count()==0)
+                return 0;
+            else
+            {
+                var rate = 0;
+                foreach (var rating in ratings)
+                {
+                    rate += rating.Stars;
+                }
+                 return rate/ratings.Count();
+            }
+
+        }
+
         public override async Task<PagedList<Rating>> GetPagedAsync(RatingsSearchObject searchObject, CancellationToken cancellationToken = default)
         {
             return await DbSet.Where(c => searchObject.UserId == null || c.UserId==searchObject.UserId).

@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class QuestionsListPage extends StatefulWidget {
   const QuestionsListPage({Key? key, this.quizId}) : super(key: key);
   final int? quizId;
@@ -21,13 +23,11 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
   SearchResult<Question>? result;
   final TextEditingController _contentConroller = TextEditingController();
 
-
   bool isLoading = true;
   int _dropdownValue = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _questionProvider = context.read<QuestionProvider>();
 
@@ -36,23 +36,25 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
 
   Future<void> initTable() async {
     try {
-      var data = await _questionProvider.getPaged(
-          filter: {"quizId": widget.quizId, "content": _contentConroller.text,'points':_dropdownValue > 0 ? _dropdownValue : null });
+      var data = await _questionProvider.getPaged(filter: {
+        "quizId": widget.quizId,
+        "content": _contentConroller.text,
+        'points': _dropdownValue > 0 ? _dropdownValue : null
+      });
 
       setState(() {
         result = data;
         isLoading = false;
       });
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return MasterScreenWidget(
-      title: 'Pitanja',
+      title: AppLocalizations.of(context).questions,
       child: Column(children: [
         _buildSearch(),
         isLoading ? Container() : _buildDataTable(),
@@ -98,9 +100,9 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(80, 0, 80, 0),
           child: DataTable(
-            columns: const [
-              DataColumn(label: Text("Sadržaj")),
-              DataColumn(label: Text("Bodovi")),
+            columns: [
+              DataColumn(label: Text(AppLocalizations.of(context).content)),
+              DataColumn(label: Text(AppLocalizations.of(context).points)),
             ],
             rows: result?.items
                     .map((Question e) => DataRow(
@@ -140,7 +142,8 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: _contentConroller,
-                decoration: const InputDecoration(label: Text("Naziv")),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).name_2)),
               ),
             ),
           ),
@@ -149,12 +152,19 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
           ),
           Expanded(
               child: DropdownButton(
-            items: const [
-              DropdownMenuItem(value: 0, child: Text('Broj bodova')),
-              DropdownMenuItem(value: 1, child: Text('1')),
-              DropdownMenuItem(value: 2, child: Text('2')),
-              DropdownMenuItem(value: 3, child: Text('3')),
-              DropdownMenuItem(value: 4, child: Text('4')),
+            items: [
+              DropdownMenuItem(
+                  value: 0, child: Text(AppLocalizations.of(context).points)),
+              const DropdownMenuItem(value: 1, child: Text('1')),
+              const DropdownMenuItem(value: 2, child: Text('2')),
+              const DropdownMenuItem(value: 3, child: Text('3')),
+              const DropdownMenuItem(value: 4, child: Text('4')),
+              const DropdownMenuItem(value: 5, child: Text('5')),
+              const DropdownMenuItem(value: 6, child: Text('6')),
+              const DropdownMenuItem(value: 7, child: Text('7')),
+              const DropdownMenuItem(value: 8, child: Text('8')),
+              const DropdownMenuItem(value: 9, child: Text('9')),
+              const DropdownMenuItem(value: 10, child: Text('10')),
             ],
             value: _dropdownValue,
             onChanged: ((value) {
@@ -184,7 +194,7 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
                   alertBox(context, 'Greška', e.toString());
                 }
               },
-              child: const Text('Traži')),
+              child: Text(AppLocalizations.of(context).search)),
           const SizedBox(
             width: 15,
           ),
@@ -192,7 +202,7 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
               onPressed: () async {
                 var refresh = await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>  QuestionDetailPage(
+                    builder: (context) => QuestionDetailPage(
                       question: null,
                       quizId: widget.quizId,
                     ),
@@ -202,7 +212,7 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
                   initTable();
                 }
               },
-              child: const Text('Dodaj')),
+              child: Text(AppLocalizations.of(context).add)),
           const SizedBox(
             width: 15,
           ),
