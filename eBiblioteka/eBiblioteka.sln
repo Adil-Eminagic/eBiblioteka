@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBiblioteka.Application.Int
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBiblioteka.Application", "eBiblioteka.Application\eBiblioteka.Application.csproj", "{1B5BF8A6-14E5-4C10-855E-BAAFA7D22405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eBiblioteka.Common.Services", "eBiblioteka.Common.Services\eBiblioteka.Common.Services.csproj", "{8D2C2E65-B651-4731-9BFB-C1A5304AF13D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eBiblioteka.Common.Services", "eBiblioteka.Common.Services\eBiblioteka.Common.Services.csproj", "{8D2C2E65-B651-4731-9BFB-C1A5304AF13D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{86ABE2D4-0CB4-4DDC-84E1-8541449B414E}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

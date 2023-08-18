@@ -32,7 +32,7 @@
     "biography": "Biography",
     "save": "Save",
     "mfield": "Mandatory field",
-    "su_mod_profie": "Profile is successsufuly updated.",
+    "su_mod_profie": "Profile is successsfully updated.",
     "choose_image": "Choose image",
     "change_image": "Change Image",
     "mvalue": "You have to input value",
@@ -72,7 +72,7 @@
     "quote":"Quote",
     "user_name":"User name",
     "rates":"Book ratings",
-    "rate_del_su":"Rating is successsufuly deleted",
+    "rate_del_su":"Rating is successsfully deleted",
     "rate_del_title":"Deleting rating",
     "rate_del_mes":"Do you want to delete this rating?",
     "no_rates":"No ratings for this book",
@@ -89,7 +89,7 @@
     "mgenre":"Genre is mandatory",
     "new_password":"New password",
     "new_email":"New email",
-    "su_sign_up":"Successsufuly signed up",
+    "su_sign_up":"successsfully signed up",
     "start_quiz":"Start quiz",
     "max_points":"Maximum points",
     "next_question":"Next question",
@@ -110,8 +110,15 @@
     "rate_del_lbl":"Delete rating",
     "rate_new":"New rating",
     "rate_mod":"Edit rating",
-    "rate_add_su":"Rating is successsufuly added",
-    "rate_mod_su":"Rating is successsufuly updated"
+    "rate_add_su":"Rating is successsfully added",
+    "rate_mod_su":"Rating is successsfully updated",
+    "mebership":"Membership",
+    "pay":"Pay",
+    "payment":"Payment",
+    "purchase":"Make Payment",
+    "inactive_meb":"Your membership is inactive. To activate membership you need to buy it.",
+    "su_payed":"Membership is successsfully purchased.\n Your membership last for a year."
+
     
 
 

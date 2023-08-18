@@ -1,7 +1,9 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace eBiblioteka.Core
 {
-    public class User:BaseEntity
+    public class User : BaseEntity
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
@@ -13,6 +15,17 @@ namespace eBiblioteka.Core
         public string? Biography { get; set; }
         public DateTime BirthDate { get; set; }
         public bool isActive { get; set; } = true;
+
+        public DateTime? PurchaseDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        //[NotMapped]
+        //public bool IsActiveMembership => PurchaseDate != null && ExpirationDate != null && ExpirationDate < DateTime.Now;
+
+        public bool IsActiveMembership { get; set; }
+
+
 
         public int? ProfilePhotoId { get; set; }
         public Photo? ProfilePhoto { get; set; }

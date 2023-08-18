@@ -11,7 +11,9 @@
         public DateTime BirthDate { get; set; }
         public bool isActive { get; set; }
 
-
+        public DateTime? PurchaseDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+        public bool IsActiveMembership { get; set; }
 
         public int? ProfilePhotoId { get; set; }
         public PhotoDto? ProfilePhoto { get; set; }

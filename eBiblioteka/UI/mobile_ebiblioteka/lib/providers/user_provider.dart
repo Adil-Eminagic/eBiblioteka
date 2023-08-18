@@ -41,20 +41,42 @@ class UserProvider extends BaseProvider<User> {
     var url = "${BaseProvider.baseUrl}$endpoint/ChangePassword";
 
     var uri = Uri.parse(url);
-    
+
     var jsonRequest = jsonEncode(object);
     var headers = createHeaders();
 
     Response response = await put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
-      //var data = jsonDecode(response.body); 
+      //var data = jsonDecode(response.body);
 
       //var result = data;
 
       // ne može se vraćati boy od responsa ako ga nema
     } else {
       throw new Exception("Unknown error");
+    }
+  }
+
+  Future payMembership(int id) async {
+    var url = "${BaseProvider.baseUrl}$endpoint/PayMembership?userId=$id";
+
+    var uri = Uri.parse(url);
+
+    var headers = createHeaders();
+
+    Response response = await put(uri, headers: headers, body: null);
+
+    if (isValidResponse(response)) {
+      // var data = jsonDecode(response.body);
+
+      // var result = data;
+
+      // return data;
+
+      // ne može se vraćati boy od responsa ako ga nema
+    } else {
+      throw Exception("Unknown error");
     }
   }
 }

@@ -1,5 +1,7 @@
-import 'package:mobile_ebiblioteka/pages/home_page.dart';
-import 'package:mobile_ebiblioteka/providers/language_provider.dart';
+
+import '../special_pages/payment_page.dart';
+import '../pages/home_page.dart';
+import '../providers/language_provider.dart';
 
 import '../providers/sign_provider.dart';
 import '../providers/user_provider.dart';
@@ -9,9 +11,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
+
+
 import 'signup_page.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   late UserProvider _userProvider = UserProvider();
   late LanguageProvider _languageProvider = LanguageProvider();
   bool isLoading = false;
+  bool isPayed = false;
 
   @override
   void didChangeDependencies() {
@@ -39,9 +47,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       // appBar: AppBar(
-         
+
       // ),
       body: Center(
         child: Padding(
@@ -54,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 25,
                 ),
                 const Text(
-                  'eBiblioteka',
+                  'eBiblioteka ',
                   style: TextStyle(
                       color: Colors.brown,
                       fontSize: 45,
@@ -117,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                         icon: const Icon(Icons.language),
                         label: Text(
                           AppLocalizations.of(context).language_name,
-                          style: TextStyle(fontSize: 19),
+                          style: const TextStyle(fontSize: 19),
                         )),
                   ],
                 ),
@@ -166,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                             isLoading = true;
                           });
 
-                          _emailController.text = "user1@gmail.com";
+                          _emailController.text = "user2@gmail.com";
                           _passwordController.text = "test";
                           var email = _emailController.text;
                           var password = _passwordController.text;
@@ -183,14 +192,34 @@ class _LoginPageState extends State<LoginPage> {
                             //   alertBox(context, 'Greška',
                             //       'Korisnicima zabranjen pristup desktop aplikaciji');
                             // } else {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context) {
-                              return const HomePage(); // const AuthorsPage();
-                            }));
-                            isLoading = false;
+                            if (Autentification
+                                    .tokenDecoded!['IsActiveMembership'] ==
+                                "True") {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) {
+                                return const HomePage(); // const AuthorsPage();
+                              }));
+                            } else {
+                              _paymentMethod(context);
+                             
+                                // Navigator.of(context).pushReplacement(
+                                //     MaterialPageRoute(builder: (context) {
+                                //   return const PaymentPage();
+                                // }));
+                                // setState(() {
+                                //   isLoading = false;
+                                // });
+                              }
+                           
+
+                            setState(() {
+                              isLoading = false;
+                            });
+// i think it is for spinning kit
                           } catch (e) {
                             print(e.toString());
                             showDialog(
+                              barrierDismissible: false,
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
                                       title: Text(
@@ -241,5 +270,39 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _paymentMethod(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,//make it modal dialog
+        builder: (BuildContext context) => AlertDialog(
+              title:  Text(AppLocalizations.of(context).mebership),
+              content:  Text(
+                  AppLocalizations.of(context).inactive_meb),
+              actions: [
+                TextButton(
+                    // style: ElevatedButton.styleFrom(
+                    //   primary:theme.colorScheme.primary
+                    // ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        isLoading = false;
+                      });
+                    },
+                    child: Text(AppLocalizations.of(context).cancel)),
+                ElevatedButton(
+                    
+                    onPressed: () {
+                    
+                        Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(builder: (context) {
+                                  return const PaymentPage();
+                                }));
+                    },
+                    child:  Text(AppLocalizations.of(context).pay))
+              ],
+            ));
   }
 }

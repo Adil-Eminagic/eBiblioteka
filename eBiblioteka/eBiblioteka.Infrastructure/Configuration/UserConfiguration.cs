@@ -1,4 +1,5 @@
 ﻿using eBiblioteka.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace eBiblioteka.Infrastructure
@@ -17,6 +18,8 @@ namespace eBiblioteka.Infrastructure
 
             builder.Property(e => e.Email)
                    .IsRequired();
+
+            builder.HasIndex(e => e.Email).IsUnique();
 
             builder.Property(e => e.PhoneNumber)
                    .IsRequired();
@@ -55,12 +58,25 @@ namespace eBiblioteka.Infrastructure
                 .HasForeignKey(e => e.GenderId)
                 .IsRequired();
 
-           
+
             builder.Property(e => e.Biography)
                    .IsRequired(false);
 
             builder.Property(e => e.BirthDate)
                    .IsRequired();
+
+            builder.Property(e => e.PurchaseDate)
+                   .IsRequired(false);
+
+            builder.Property(e => e.ExpirationDate)
+                   .IsRequired(false);
+
+            builder.Property(e => e.IsActiveMembership)
+                .HasColumnName("IsActiveMembership")
+            .HasComputedColumnSql("CAST(CASE WHEN PurchaseDate IS NOT NULL AND ExpirationDate IS NOT NULL AND ExpirationDate >= GETDATE() THEN 1 ELSE 0 END AS BIT)")
+               .IsRequired();
+
+
         }
     }
 }

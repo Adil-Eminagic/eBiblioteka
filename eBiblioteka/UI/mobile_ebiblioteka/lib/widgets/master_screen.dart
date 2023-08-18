@@ -13,6 +13,8 @@ import '../utils/util.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../utils/util_widgets.dart';
+
 
 class MasterScreenWidget extends StatefulWidget {
   final Widget? child;
@@ -154,12 +156,38 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             leading: const Icon(Icons.logout),
             title:  Text(AppLocalizations.of(context).log_out),
             onTap: () {
-              Autentification.token = '';
+             showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                          title:  Text(AppLocalizations.of(context).log_out),
+                          content:
+                               Text(AppLocalizations.of(context).logout_mess),
+                          actions: [
+                            TextButton(
+                                onPressed: (() {
+                                  Navigator.pop(context);
+                                }),
+                                child: Text(AppLocalizations.of(context).cancel)),
+                            TextButton(
+                                onPressed: () async {
+                                  try {
+                                    Autentification.token = '';
 
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginPage()),
-                  (route) => false); // briše čitav stack ruta
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => const LoginPage()),
+                                        (route) =>
+                                            false); 
+
+                                  } catch (e) {
+                                    alertBoxMoveBack(
+                                        context, AppLocalizations.of(context).error, e.toString());
+                                  }
+                                },
+                                child: const Text('Ok')),
+                          ],
+                        ));
             },
           ),
           //

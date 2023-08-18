@@ -7,4 +7,6 @@ public static class ClaimNames
     public static readonly string LastName = "LastName";
     public static readonly string Email = "Email";
     public static readonly string Role = "Role";
+    public static readonly string IsActiveMembership = "IsActiveMembership";
+
 }

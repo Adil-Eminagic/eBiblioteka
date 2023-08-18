@@ -50,6 +50,7 @@ namespace eBiblioteka.Application
             services.AddScoped<IValidator<NotificationUpsertDto>, NotificationValidator>();
             services.AddScoped<IValidator<BookFileUpsertDto>, BookFileValidator>();
             services.AddScoped<IValidator<RecommendResultUpsertDto>,RecommendResultValidator>();
+            services.AddScoped<IValidator<UserPayMembershipDto>, UserPayMembershipValidator>();
 
         }
     }

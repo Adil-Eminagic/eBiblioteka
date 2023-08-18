@@ -1,9 +1,11 @@
 import 'dart:io';
 
-import 'package:mobile_ebiblioteka/pages/login_page.dart';
-import 'package:mobile_ebiblioteka/providers/language_provider.dart';
-import 'package:mobile_ebiblioteka/providers/recommend_result_provider.dart';
-import 'package:mobile_ebiblioteka/providers/userbook_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'pages/login_page.dart';
+import 'providers/language_provider.dart';
+import 'providers/recommend_result_provider.dart';
+import 'providers/userbook_provider.dart';
 import 'providers/bookfile_provider.dart';
 import 'providers/quotes_provider.dart';
 import 'providers/rating_provider.dart';
@@ -29,8 +31,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: '.env');
+
   HttpOverrides.global = MyHttpOverrides();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => SignProvider()),
@@ -65,16 +70,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<LanguageProvider>();
     return MaterialApp(
       title: 'eBibliotek mobile',
       theme: ThemeData(
-          primarySwatch: Colors.brown,
-          primaryColor: Colors.brown,
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.brown)),
+        primarySwatch: Colors.brown,
+        primaryColor: Colors.brown,
+        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown)
+      ),
       supportedLocales: L10n.all,
       locale: Locale(appState.lang),
       localizationsDelegates: const [

@@ -111,7 +111,13 @@
     "rate_new":"Nova ocjena",
     "rate_mod":"Uredi ocjenu",
     "rate_add_su":"Uspješno dodavanje ocjene",
-    "rate_mod_su":"Uspješno modifikovanje ocjene"
+    "rate_mod_su":"Uspješno modifikovanje ocjene",
+    "mebership":"Članarina",
+    "pay":"Platite",
+    "payment":"Plaćanje",
+    "purchase":"Izvršite plaćanje",
+    "inactive_meb":"Članarnina nije aktivna. Izvršite uplatu članarine kako biste je aktivirali.",
+    "su_payed":"Uspješno plaćanje članarne.\nVaša čalanarina vrijedi nardenih godinu dana"
     
 
 

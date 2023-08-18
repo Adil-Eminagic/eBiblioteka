@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:http/io_client.dart';
 
 import '../models/search_result.dart';
 import '../utils/util.dart';
