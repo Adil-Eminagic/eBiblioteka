@@ -27,11 +27,6 @@ namespace eBiblioteka.Infrastructure
             return await DbSet.Include(c=>c.Role).AsNoTracking().FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
         }
 
-        //public async override Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        //{
-        //    return await DbSet.Include(c=>c.ProfilePhoto).FirstOrDefaultAsync(c=>c.Id==id,cancellationToken);
-        //}
-
 
         public override async Task<PagedList<User>> GetPagedAsync(UsersSearchObject searchObject, CancellationToken cancellationToken = default)
         {
@@ -45,6 +40,15 @@ namespace eBiblioteka.Infrastructure
         public List<User> UsersWithReadHistory()
         {
             return DbSet.Include(c => c.OpenedBooks).Where(s=>s.RoleId==3).ToList();
+        }
+
+        public async override Task<ReportInfo<User>> GetCountAsync(UsersSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.Include(c => c.Role).Include(c => c.Gender).Where(c => searchObject.FullName == null || c.FirstName.ToLower().Contains(searchObject.FullName.ToLower())
+            || c.LastName.ToLower().Contains(searchObject.FullName.ToLower())).
+            Where(c => searchObject.RoleName == null || searchObject.RoleName == c.Role.Value)
+            .Where(c => searchObject.isActive == null || c.isActive == searchObject.isActive)
+            .ToReportInfoAsync(searchObject, cancellationToken);
         }
     }
 }

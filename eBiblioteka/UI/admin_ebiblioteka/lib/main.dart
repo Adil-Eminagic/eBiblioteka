@@ -9,6 +9,7 @@ import 'l10n/l10n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'providers/bookfile_provider.dart';
+import 'providers/notification_provider.dart';
 import 'providers/quotes_provider.dart';
 
 import 'pages/login_page.dart';
@@ -26,6 +27,8 @@ import 'providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
+
+import 'providers/userquiz_provider.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -47,7 +50,9 @@ void main() {
       ChangeNotifierProvider(create: ((context) => AnswerProvider())),
       ChangeNotifierProvider(create: ((context) => BookFileProvider())),
       ChangeNotifierProvider(create: ((context) => RecommendResultProvider())),
-      ChangeNotifierProvider(create: ((context) => LanguageProvider()))
+      ChangeNotifierProvider(create: ((context) => LanguageProvider())),
+      ChangeNotifierProvider(create: ((context) => NotificationProvider())),
+      ChangeNotifierProvider(create: ((context) => UserQuizProvider()))
     ],
     child: const MyApp(),
   ));
@@ -62,7 +67,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _scafoldKey = GlobalKey<ScaffoldMessengerState>();
-  //late LanguageProvider _languageProvider = LanguageProvider();
 
   @override
   void initState() {
@@ -91,39 +95,3 @@ var appState = context.watch<LanguageProvider>();
     );
   }
 }
-
-// class MyApp extends StatelessWidget {
-//   MyApp({super.key});
-
-//   final _scafoldKey = GlobalKey<ScaffoldMessengerState>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       scaffoldMessengerKey: _scafoldKey,
-//       title: 'eBiblioteka Admin',
-//       theme: ThemeData(
-//       primarySwatch: Colors.brown,
-//       ),
-//       supportedLocales: L10n.all,
-//       locale:  Locale(Language.lang),
-//       localizationsDelegates: const [
-//         AppLocalizations.delegate,
-//         GlobalMaterialLocalizations.delegate,
-//         GlobalWidgetsLocalizations.delegate,
-//         GlobalCupertinoLocalizations.delegate,
-//       ],
-//       localeResolutionCallback: (locale, supportedLocales) {
-//          for (var supportedLocale in supportedLocales) {
-//           if (supportedLocale.languageCode == locale!.languageCode &&
-//               supportedLocale.countryCode == locale.countryCode) {
-//             return supportedLocale;
-//           }
-//         }
-//         return supportedLocales.first;
-//       },
-//       home: const LoginPage(),
-//     );
-//   }
-// }
-

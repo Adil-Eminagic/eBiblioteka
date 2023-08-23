@@ -20,7 +20,7 @@
     "author": "Autor",
     "back": "Nazad",
     "log_out": "Odjava",
-    "active": "Activne",
+    "active": "Aktivne",
     "inactive": "Neaktivne",
     "name": "Ime",
     "gender": "Spol",
@@ -34,7 +34,7 @@
     "country": "Država",
     "biography": "Biografija",
     "save": "Sačuvaj",
-    "mfield": "Obacezno polje",
+    "mfield": "Obavezno polje",
     "su_mod_profie": "Uspješna modifikacija profila.",
     "choose_image": "Odaberite sliku",
     "change_image": "Promjentite sliku",
@@ -158,7 +158,39 @@
     "bookgenre_del_su":"Uspješno brisanje žanra knjige",
     "bookgenre_del_title":"Brisanje žanra knjige",
     "bookgenre_del_mes":"Da li želite obrisati žanra knjige?",
-    "bookgenre_del_lbl":"Obriši žanr knjige"
+    "bookgenre_del_lbl":"Obriši žanr knjige",
+    "su_trained":"Uspješno trenirana preporuka.",
+    "forbid_users":"Korisnicima zabranjen pristup desktop aplikaciji",
+    "cur_email":"Trenutni email",
+    "new_email":"Novi email",
+    "changing_email":"Promjena emial-a",
+    "su_cha_email":"Uspejšna promjena emial-a",
+    "su_mod_password":"Uspješna promjena lozinke",
+    "pass_no_matc":"Nova lozinka i potvrda lozinke se ne podudaraju.",
+    "pass_confirm":"Potvrda nove lozinke",
+    "new_password":"Nova lozinka",
+    "changign_password":"Promjena lozinke",
+    "report":"Izvještaj",
+    "overall":"Ukupno",
+    "one_star":"Jedna zvjezdica",
+    "five_stars":"Pet zvjezdica",
+    "active_m":"Aktivni",
+    "inactive_m":"Neaktivni",
+    "active_n":"Aktivna",
+    "inactive_n":"Neaktivna",
+    "trues":"Tačnih",
+    "falses":"Netačnih",
+    "notifications":"Obavijesti",
+    "is_read":"Pročitane",
+    "is_unread":"Nepročitane",
+    "date":"Datum",
+    "notif_del_title":"Brisanje obavijesti",
+    "notif_del_mes":"Da li želite obrisati obavijests?",
+    "notif_del_lbl":"Obriši obavijest",
+    "notif_del_su":"Uspješno brisanje obavijesti"
+    
+
+
 
 
 

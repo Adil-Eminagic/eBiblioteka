@@ -292,7 +292,31 @@ namespace eBiblioteka.Infrastructure
                      Id = 2,
                      CreatedAt = _dateTime,
                      ModifiedAt = null,
-                 }
+                 },
+                 new()
+                 {
+                     Data = document,
+                     Name = "Romeo i Julija.pdf",
+                     Id = 3,
+                     CreatedAt = _dateTime,
+                     ModifiedAt = null,
+                 },
+                  new()
+                  {
+                      Data = document,
+                      Name = "Hamlet.pdf",
+                      Id = 4,
+                      CreatedAt = _dateTime,
+                      ModifiedAt = null,
+                  },
+                   new()
+                   {
+                       Data = document,
+                       Name = "Ružno pače.pdf",
+                       Id = 5,
+                       CreatedAt = _dateTime,
+                       ModifiedAt = null,
+                   }
 
             );
         }
@@ -495,6 +519,15 @@ namespace eBiblioteka.Infrastructure
                          Content = "Sve je moguće, sve je na dohvat ruke- samo se čovjek ne smije predati",
                          Points = 3,
                          QuizId = 2
+                     },
+                     new()
+                     {
+                         Id=7,
+                         CreatedAt = _dateTime,
+                         ModifiedAt= null,
+                         Content="Koliko je zemlja stara",
+                         Points=4,
+                         QuizId=3
                      }
 
                   );
@@ -1058,6 +1091,7 @@ namespace eBiblioteka.Infrastructure
                      PublishingYear = 1597,
                      OpeningCount = 0,
                      AuthorID = 3,
+                     BookFileId = 3
                  },
                  new()
                  {
@@ -1068,6 +1102,7 @@ namespace eBiblioteka.Infrastructure
                      PublishingYear = 1602,
                      OpeningCount = 5,
                      AuthorID = 3,
+                     BookFileId= 4
                  },
                  new()
                  {
@@ -1078,6 +1113,7 @@ namespace eBiblioteka.Infrastructure
                      PublishingYear = 1843,
                      OpeningCount = 0,
                      AuthorID = 4,
+                     BookFileId=5
                  },
                   new()
                   {

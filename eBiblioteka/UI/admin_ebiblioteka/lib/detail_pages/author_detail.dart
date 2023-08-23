@@ -88,67 +88,67 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         children: [
-                          widget.author == null
-                              ? Container()
-                              : TextButton(
-                                  onPressed: () async {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                              title: Text(
-                                                  AppLocalizations.of(context)
-                                                      .del_author_title),
-                                              content: Text(
-                                                  AppLocalizations.of(context)
-                                                      .del_author_mes),
-                                              actions: [
-                                                TextButton(
-                                                    onPressed: (() {
-                                                      Navigator.pop(context);
-                                                    }),
-                                                    child: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .cancel)),
-                                                TextButton(
-                                                    onPressed: () async {
-                                                      try {
-                                                        await _authorProvider
-                                                            .remove(widget
-                                                                    .author
-                                                                    ?.id ??
-                                                                0);
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(SnackBar(
-                                                                content: Text(
-                                                                    AppLocalizations.of(
-                                                                            context)
-                                                                        .su_del_author)));
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(
-                                                            context, 'reload');
-                                                      } catch (e) {
-                                                        alertBoxMoveBack(
-                                                            context,
-                                                            AppLocalizations.of(
-                                                                    context)
-                                                                .error,
-                                                            e.toString());
-                                                      }
-                                                    },
-                                                    child: const Text('Ok')),
-                                              ],
-                                            ));
-                                  },
-                                  child: Text(AppLocalizations.of(context)
-                                      .author_del_lbl)),
-                          widget.author == null
-                              ? Container()
-                              : const SizedBox(
-                                  width: 7,
-                                ),
+                          // widget.author == null
+                          //     ? Container()
+                          //     : TextButton(
+                          //         onPressed: () async {
+                          //           showDialog(
+                          //               context: context,
+                          //               builder: (BuildContext context) =>
+                          //                   AlertDialog(
+                          //                     title: Text(
+                          //                         AppLocalizations.of(context)
+                          //                             .del_author_title),
+                          //                     content: Text(
+                          //                         AppLocalizations.of(context)
+                          //                             .del_author_mes),
+                          //                     actions: [
+                          //                       TextButton(
+                          //                           onPressed: (() {
+                          //                             Navigator.pop(context);
+                          //                           }),
+                          //                           child: Text(
+                          //                               AppLocalizations.of(
+                          //                                       context)
+                          //                                   .cancel)),
+                          //                       TextButton(
+                          //                           onPressed: () async {
+                          //                             try {
+                          //                               await _authorProvider
+                          //                                   .remove(widget
+                          //                                           .author
+                          //                                           ?.id ??
+                          //                                       0);
+                          //                               ScaffoldMessenger.of(
+                          //                                       context)
+                          //                                   .showSnackBar(SnackBar(
+                          //                                       content: Text(
+                          //                                           AppLocalizations.of(
+                          //                                                   context)
+                          //                                               .su_del_author)));
+                          //                               Navigator.pop(context);
+                          //                               Navigator.pop(
+                          //                                   context, 'reload');
+                          //                             } catch (e) {
+                          //                               alertBoxMoveBack(
+                          //                                   context,
+                          //                                   AppLocalizations.of(
+                          //                                           context)
+                          //                                       .error,
+                          //                                   e.toString());
+                          //                             }
+                          //                           },
+                          //                           child: const Text('Ok')),
+                          //                     ],
+                          //                   ));
+                          //         },
+                          //         child: Text(AppLocalizations.of(context)
+                          //             .author_del_lbl)),
+                          // widget.author == null
+                          //     ? Container()
+                          //     : const SizedBox(
+                          //         width: 7,
+                          //       ),
                           ElevatedButton(
                               onPressed: () async {
                                 _formKey.currentState?.save();

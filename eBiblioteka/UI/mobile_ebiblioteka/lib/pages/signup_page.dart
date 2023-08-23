@@ -1,3 +1,5 @@
+import 'package:mobile_ebiblioteka/providers/notification_provider.dart';
+
 import '../providers/country_provider.dart';
 import '../providers/gender_provider.dart';
 import '../providers/sign_provider.dart';
@@ -14,7 +16,6 @@ import '../models/search_result.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
@@ -26,6 +27,7 @@ class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormBuilderState>();
   late GenderProvider _genderProvider = GenderProvider();
   late CountryProvider _countryProvider = CountryProvider();
+  late NotificationProvider _notificationProvider = NotificationProvider();
   late SignProvider _signProvider = SignProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Map<String, dynamic> _initialValue = {};
@@ -41,6 +43,7 @@ class _SignupPageState extends State<SignupPage> {
     _genderProvider = context.read<GenderProvider>();
     _countryProvider = context.read<CountryProvider>();
     _signProvider = context.read<SignProvider>();
+    _notificationProvider = context.read<NotificationProvider>();
 
     intiForm();
   }
@@ -53,7 +56,8 @@ class _SignupPageState extends State<SignupPage> {
         isLoading = false;
       });
     } catch (e) {
-      alertBoxMoveBack(context, AppLocalizations.of(context).error, e.toString());
+      alertBoxMoveBack(
+          context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -61,9 +65,15 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(AppLocalizations.of(context).sign_up),
-        centerTitle: true,
-        ),
+          title: Text(AppLocalizations.of(context).sign_up),
+          centerTitle: true,
+          leading: isLoading == true
+              ? Container()
+              : IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back))),
       body: isLoading
           ? const SpinKitRing(color: Colors.brown)
           : SingleChildScrollView(
@@ -76,11 +86,13 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(
                         height: 60,
                       ),
-                      rowMethod(_textField('firstName', AppLocalizations.of(context).error)),
+                      rowMethod(_textField(
+                          'firstName', AppLocalizations.of(context).name)),
                       const SizedBox(
                         height: 15,
                       ),
-                      rowMethod(_textField('lastName', AppLocalizations.of(context).lname)),
+                      rowMethod(_textField(
+                          'lastName', AppLocalizations.of(context).lname)),
                       const SizedBox(
                         height: 15,
                       ),
@@ -94,7 +106,8 @@ class _SignupPageState extends State<SignupPage> {
                               } else if (!RegExp(
                                       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                   .hasMatch(value)) {
-                                return AppLocalizations.of(context).invalid_email;
+                                return AppLocalizations.of(context)
+                                    .invalid_email;
                               } else {
                                 return null;
                               }
@@ -108,7 +121,8 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(
                         height: 15,
                       ),
-                      rowMethod(_textField('phoneNumber', AppLocalizations.of(context).telphone)),
+                      rowMethod(_textField('phoneNumber',
+                          AppLocalizations.of(context).telphone)),
                       const SizedBox(
                         height: 15,
                       ),
@@ -123,18 +137,20 @@ class _SignupPageState extends State<SignupPage> {
                                   !value.contains(RegExp(r'[A-Z]')) ||
                                   !value.contains(RegExp(r'[a-z]')) ||
                                   !value.contains(RegExp(r'[0-9]'))) {
-                                return AppLocalizations.of(context).reg_password;
+                                return AppLocalizations.of(context)
+                                    .reg_password;
                               } else {
                                 return null;
                               }
                             }),
-                            decoration:  InputDecoration(
-                              label: Text(AppLocalizations.of(context).password),
+                            decoration: InputDecoration(
+                              label:
+                                  Text(AppLocalizations.of(context).password),
                             ),
                           ),
                         ),
                       ),
-                       const SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       rowMethod(
@@ -149,10 +165,11 @@ class _SignupPageState extends State<SignupPage> {
                             }
                           },
                           decoration: InputDecoration(
-                              label: Text(AppLocalizations.of(context).birth_date)),
+                              label: Text(
+                                  AppLocalizations.of(context).birth_date)),
                         )),
                       ),
-                       const SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       rowMethod(
@@ -178,7 +195,6 @@ class _SignupPageState extends State<SignupPage> {
                                     ?.reset();
                               },
                             ),
-                           
                           ),
                           items: genderResult?.items
                                   .map((g) => DropdownMenuItem(
@@ -190,7 +206,7 @@ class _SignupPageState extends State<SignupPage> {
                               [],
                         )),
                       ),
-                       const SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       rowMethod(Expanded(
@@ -215,7 +231,6 @@ class _SignupPageState extends State<SignupPage> {
                                   ?.reset();
                             },
                           ),
-                         
                         ),
                         items: countryResult?.items
                                 .map((g) => DropdownMenuItem(
@@ -226,7 +241,9 @@ class _SignupPageState extends State<SignupPage> {
                                 .toList() ??
                             [],
                       ))),
-                      const SizedBox( height: 40,),
+                      const SizedBox(
+                        height: 40,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -244,14 +261,25 @@ class _SignupPageState extends State<SignupPage> {
                                     await _signProvider.signUp(request);
 
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                         SnackBar(
-                                            content:
-                                                Text(AppLocalizations.of(context).su_sign_up)));
+                                        SnackBar(
+                                            content: Text(
+                                                AppLocalizations.of(context)
+                                                    .su_sign_up)));
+                                    _notificationProvider
+                                        .sendRabbitNotification({
+                                          "title": "Registracija korinika",
+  "content": "Korisnik imena: ${request["fristName"]} ${request["lastName"]}",
+  "isRead": false,
+  "userId": 1
+                                        });
 
                                     Navigator.pop(context);
                                   } else {}
                                 } catch (e) {
-                                  alertBox(context, AppLocalizations.of(context).error, e.toString());
+                                  alertBox(
+                                      context,
+                                      AppLocalizations.of(context).error,
+                                      e.toString());
                                 }
                               },
                               child: Text(AppLocalizations.of(context).sign_up))
@@ -265,7 +293,6 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
             ),
-            
     );
   }
 
@@ -286,5 +313,4 @@ class _SignupPageState extends State<SignupPage> {
       ),
     );
   }
-
 }

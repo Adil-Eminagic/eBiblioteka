@@ -5,6 +5,6 @@ namespace eBiblioteka.Application.Interfaces
 {
     public interface IRatingsService : IBaseService<int, RatingDto, RatingUpsertDto, RatingsSearchObject>
     {
-        Task<int> GetBookAverageRatingAsync(int bookId, CancellationToken cancellationToken = default);
+        Task<double> GetBookAverageRatingAsync(int bookId, CancellationToken cancellationToken = default);
     }
 }

@@ -110,7 +110,7 @@
     "question_answers":"Modify question's answers",
     "quiestion_rule":"Remark: For a question to be active it must have one\nand only one true answer and one or more false answers.",
     "question":"Question",
-    "questions":"Qiuestions",
+    "questions":"Questions",
     "question_add_su":"Question is successfully added",
     "question_mod_su":"Question is successfully updated",
     "question_del_su":"Question is successfully deleted",
@@ -158,7 +158,44 @@
     "bookgenre_del_su":"Book's genre is deleted",
     "bookgenre_del_title":"Deleting book's genre",
     "bookgenre_del_mes":"Do you want to delete this book's genre?",
-    "bookgenre_del_lbl":"Delete book's genre"
+    "bookgenre_del_lbl":"Delete book's genre",
+    "su_trained":"Recommednation is successfully trained.",
+    "forbid_users":"Customers are not allowd to use desktop application",
+    "cur_email":"Current email",
+    "new_email":"New email",
+    "changing_email":"Changing email",
+    "su_cha_email":"Email is successfully changed",
+    "su_mod_password":"Password is successfully changed",
+    "pass_no_matc":"New password and confirm password don't match.",
+    "pass_confirm":"Confirm password",
+    "new_password":"New password",
+    "changign_password":"Changing password",
+    "report":"Report",
+    "overall":"Overall",
+    "one_star":"One star",
+    "five_stars":"Five stars",
+    "active_m":"Active",
+    "inactive_m":"Inactive",
+    "active_n":"Active",
+    "inactive_n":"Inactive",
+    "trues":"True",
+    "falses":"False",
+    "notifications":"Notifications",
+    "is_read":"Read",
+    "is_unread":"Unread",
+    "date":"Date",
+    "notif_del_title":"Deleting notification",
+    "notif_del_mes":"Do you want to delete this notification",
+    "notif_del_lbl":"Delete notification",
+    "notif_del_su":"Notification is successfully deleted"
+
+
+
+
+    
+
+
+
 
 
 

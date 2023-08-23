@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:mobile_ebiblioteka/pages/quizresult_list.dart';
 import 'package:mobile_ebiblioteka/special_pages/start_quiz.dart';
 import 'package:mobile_ebiblioteka/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,6 @@ late QuizProvider _quizProvider = QuizProvider();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _quizProvider = context.read<QuizProvider>();
     initData();
@@ -58,7 +58,19 @@ late QuizProvider _quizProvider = QuizProvider();
             height: 15,
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
+            padding: const EdgeInsets.fromLTRB(43,0,43,0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(onPressed: (() {
+                  Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const QuizResultListPage()));
+                }), child: Text(AppLocalizations.of(context).results))
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(50, 10, 50, 50),
             child: Row(
               children: [
                 Expanded(
@@ -116,9 +128,6 @@ late QuizProvider _quizProvider = QuizProvider();
                                     ),
                                   ),
                                 );
-                                // if (refresh == 'reload') {
-                                //   initData();
-                                // }
                               }),
                             ),
                             const Divider(

@@ -1,6 +1,7 @@
 import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_ebiblioteka/providers/bookfile_provider.dart';
+import 'package:mobile_ebiblioteka/providers/notification_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../models/recommend_result.dart';
@@ -20,13 +21,14 @@ class _PdfShowPageState extends State<PdfShowPage> {
   // late RecommendResultProvider _recommendResultProvider =
   //     RecommendResultProvider();
   // RecommendResult? recommendResult;
+  late NotificationProvider _notificationProvider = NotificationProvider();
 
   @override
   void initState() {
     super.initState();
     // _bookFileProvider = context.read<BookFileProvider>();
     // _recommendResultProvider = context.read<RecommendResultProvider>();
-
+    _notificationProvider = context.read<NotificationProvider>();
     initForm();
   }
 
@@ -50,7 +52,23 @@ class _PdfShowPageState extends State<PdfShowPage> {
           title: const Text('Show'),
         ),
         body: Center(
-          child: Placeholder(),
+          child: ElevatedButton(
+            onPressed: (() async {
+              try {
+  var res = await _notificationProvider.sendRabbitNotification({
+    "title": "asfdfsg",
+    "content": "string",
+    "isRead": true,
+    "userId": 1
+  });
+  print(res);
+} on Exception catch (e) {
+      alertBox(context, 'error', e.toString());
+ 
+}
+            }),
+            child: Text('Send notif'),
+          ),
         ));
   }
 }

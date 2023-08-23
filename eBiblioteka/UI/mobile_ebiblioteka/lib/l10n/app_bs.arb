@@ -117,7 +117,26 @@
     "payment":"Plaćanje",
     "purchase":"Izvršite plaćanje",
     "inactive_meb":"Članarnina nije aktivna. Izvršite uplatu članarine kako biste je aktivirali.",
-    "su_payed":"Uspješno plaćanje članarne.\nVaša čalanarina vrijedi nardenih godinu dana"
+    "su_payed":"Uspješno plaćanje članarne.\nVaša čalanarina vrijedi nardenih godinu dana",
+    "forbid_users":"Superadminu i adminima zabranjen pristup mobilnu aplikaciji",
+    "cur_email":"Trenutni email",
+    "changing_email":"Promjena emial-a",
+    "su_cha_email":"Uspejšna promjena emial-a",
+    "su_mod_password":"Uspješna promjena lozinke",
+    "pass_no_matc":"Nova lozinka i potvrda lozinke se ne podudaraju.",
+    "pass_confirm":"Potvrda nove lozinke",
+    "changign_password":"Promjena lozinke",
+    "reading_hist":"Historija čitanja",
+    "your_result":"Vaš rezultat",
+    "results":"Rezultati",
+    "result_text":"Osvojili ste",
+    "result_text_2":", što je",
+    "su_add_quizres":"Uspješno dodan rezultat kviza",
+    "quiz_results":"Rezultati kvizova",
+    "result_del_su":"Uspješno brisanje rezultata kiza",
+    "result_del_title":"Brisanje rezultata kiza",
+    "result_del_mes":"Da li želite obrisati rezultata kiza?"
+    
     
 
 

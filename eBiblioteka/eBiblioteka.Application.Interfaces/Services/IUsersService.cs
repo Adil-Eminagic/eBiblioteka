@@ -11,8 +11,6 @@ namespace eBiblioteka.Application.Interfaces
         Task<UserDto> ChangeEmailAsync(int userId, JsonPatchDocument jsonPatch, CancellationToken cancellationToken= default);
         Task ChangePasswordAsync(UserChangePasswordDto dto, CancellationToken cancellationToken=default);
         List<UserHisoryDto> UsersWithReadHistory();
-        //Task<UserDto> DeactivateAsync(int userId, CancellationToken cancellationToken=default);
-        //Task<UserDto> ActivateAsync(int userId, CancellationToken cancellationToken = default);
         Task PayMembershipAsync(int userId, CancellationToken cancellationToken = default);
 
 

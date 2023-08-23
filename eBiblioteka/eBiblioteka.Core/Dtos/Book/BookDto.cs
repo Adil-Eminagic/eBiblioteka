@@ -6,7 +6,7 @@
         public string? ShortDescription { get; set; } 
         public int? PublishingYear { get; set; }
         public int OpeningCount { get; set; }
-        public int? AverageRate { get; set; }
+        public decimal? AverageRate { get; set; }
         public bool isActive { get; set; }
 
 

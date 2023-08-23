@@ -223,7 +223,7 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return AppLocalizations.of(context).mfield;
-                      //}
+                      
                     } else if (int.tryParse(value) == null) {
                       return AppLocalizations.of(context).numeric_field;
                     }
@@ -241,30 +241,6 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
               ? Container()
               : Row(
                   children: [
-                    // Column(
-                    //   children: [
-                    //     Switch(
-                    //       value: widget.question!.isActive!,
-                    //       activeColor: Colors.brown,
-                    //       onChanged: (bool value) {},
-                    //     ),
-                    //     widget.question!.isActive! == true
-                    //         ? const Text('Aktvno pitanje')
-                    //         : const Text('Nekativno pitanje'),
-                    //     const SizedBox(
-                    //       height: 10,
-                    //     ),
-                    //     widget.question!.isActive! == false
-                    //         ? const Text(
-                    //             'Minimalno 2 dva odgovora,\njedan i samo jedan tačan\ni jedan ili više netačnih odgovora.',
-                    //             style: TextStyle(color: Colors.red),
-                    //           )
-                    //         : Container()
-                    //   ],
-                    // ),
-                    // const SizedBox(
-                    //   width: 40,
-                    // ),
                     ElevatedButton(
                         onPressed: () async {
                           var refresh = await Navigator.of(context)
@@ -272,10 +248,6 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                                   builder: (context) => AnswersListPage(
                                         questionId: widget.question!.id!,
                                       )));
-
-                          // if (refresh == 'reload2') {
-                          //   inittt();
-                          // }
                         },
                         child: Text(
                             AppLocalizations.of(context).question_answers)),

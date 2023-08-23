@@ -20,7 +20,7 @@ Book _$BookFromJson(Map<String, dynamic> json) => Book(
           ? null
           : Author.fromJson(json['author'] as Map<String, dynamic>),
       json['authorID'] as int?,
-      json['averageRate'] as int?,
+      (json['averageRate'] as num?)?.toDouble(),
       json['bookFileId'] as int?,
     )..isActive = json['isActive'] as bool?;
 

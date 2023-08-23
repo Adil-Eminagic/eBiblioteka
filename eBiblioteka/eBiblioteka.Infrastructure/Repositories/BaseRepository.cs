@@ -68,5 +68,10 @@ namespace eBiblioteka.Infrastructure
                 await DbSet.Where(e => e.Id.Equals(id)).ExecuteDeleteAsync(cancellationToken);
             }
         }
+
+        public virtual async Task<ReportInfo<TEntity>> GetCountAsync(TSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+           return await DbSet.ToReportInfoAsync(searchObject, cancellationToken);
+        }
     }
 }

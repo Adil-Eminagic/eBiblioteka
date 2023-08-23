@@ -12,7 +12,6 @@ import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class BookGenresPage extends StatefulWidget {
   const BookGenresPage({Key? key, this.book}) : super(key: key);
   final Book? book;
@@ -25,6 +24,7 @@ class _BookGenresPageState extends State<BookGenresPage> {
   late BookGenreProvider _bookGenreProvider = BookGenreProvider();
   late BookProvider _bookProvider = BookProvider();
 
+  TextEditingController _nameController = TextEditingController();
   SearchResult<BookGenre>? result;
   Book? bookSend;
   bool isLoading = true;
@@ -41,7 +41,7 @@ class _BookGenresPageState extends State<BookGenresPage> {
   Future<void> initTable() async {
     try {
       var data = await _bookGenreProvider
-          .getPaged(filter: {'bookId': widget.book?.id});
+          .getPaged(filter: {'bookId': widget.book?.id,"genreName":_nameController.text, "pageSize":1000000});
       bookSend = await _bookProvider.getById(widget.book!.id!);
 
       setState(() {
@@ -56,10 +56,13 @@ class _BookGenresPageState extends State<BookGenresPage> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title: "${AppLocalizations.of(context).bookgenre_title} ${widget.book?.title}",
+        title:
+            "${AppLocalizations.of(context).bookgenre_title} ${widget.book?.title}",
         child: Column(children: [
           _buildSearch(),
-          (isLoading || result == null || result!.items.isEmpty )? Container() : _buildDataTable(),
+          (isLoading || result == null || result!.items.isEmpty)
+              ? Container()
+              : _buildDataTable(),
         ]));
   }
 
@@ -67,7 +70,7 @@ class _BookGenresPageState extends State<BookGenresPage> {
     return Expanded(
       child: SingleChildScrollView(
         child: DataTable(
-          columns:  [
+          columns: [
             DataColumn(label: Text(AppLocalizations.of(context).genre)),
             DataColumn(label: Text(AppLocalizations.of(context).book)),
           ],
@@ -103,6 +106,38 @@ class _BookGenresPageState extends State<BookGenresPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Expanded(
+            child: TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                  label: Text(AppLocalizations.of(context).name_2)),
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+         
+          ElevatedButton(
+              onPressed: () async {
+                try {
+                  var data = await _bookGenreProvider.getPaged(filter: {
+                    "genreName": _nameController.text,
+                    "pageSize": 1000000,
+                    "bookId": widget.book!.id
+                  });
+
+                  setState(() {
+                    result = data;
+                  });
+                } on Exception catch (e) {
+                  alertBox(context, AppLocalizations.of(context).error,
+                      e.toString());
+                }
+              },
+              child: Text(AppLocalizations.of(context).search)),
+               const SizedBox(
+            width: 20,
+          ),
           ElevatedButton(
               onPressed: () async {
                 var refresh = await Navigator.of(context).push(

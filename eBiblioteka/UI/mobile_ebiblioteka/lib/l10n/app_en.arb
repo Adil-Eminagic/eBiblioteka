@@ -117,7 +117,27 @@
     "payment":"Payment",
     "purchase":"Make Payment",
     "inactive_meb":"Your membership is inactive. To activate membership you need to buy it.",
-    "su_payed":"Membership is successsfully purchased.\n Your membership last for a year."
+    "su_payed":"Membership is successsfully purchased.\n Your membership last for a year.",
+    "forbid_users":"Superadmin and admin are not allowd to use mobile application",
+    "cur_email":"Current email",
+    "changing_email":"Changing email",
+    "su_cha_email":"Email is successfully changed",
+    "su_mod_password":"Password is successfully changed",
+    "pass_no_matc":"New password and confirm password don't match.",
+    "pass_confirm":"Confirm password",
+    "changign_password":"Changing password",
+    "reading_hist":"Reading history",
+    "your_result":"Your result",
+    "results":"Results",
+    "result_text":"You have won",
+    "result_text_2":", which is",
+    "su_add_quizres":"Successfully added quiz result",
+    "quiz_results":"Quizzes' results",
+    "result_del_su":"Quiz reslut is successfully deleted",
+    "result_del_title":"Deleting quiz result",
+    "result_del_mes":"Do you want to delete quiz result?"
+
+
 
     
 

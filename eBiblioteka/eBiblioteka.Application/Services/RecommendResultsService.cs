@@ -19,7 +19,7 @@ namespace eBiblioteka.Application
         private readonly IBooksRepository _booksRepository;
         private readonly IUsersRepository _usersRepository;
 
-        public RecommendResultsService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<RecommendResultUpsertDto> validator, IPhotosService photosService, IRecommendResultsRepository currentRepository, IBooksRepository booksRepository, IUsersRepository usersRepository) 
+        public RecommendResultsService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<RecommendResultUpsertDto> validator, IPhotosService photosService, IRecommendResultsRepository currentRepository, IBooksRepository booksRepository, IUsersRepository usersRepository)
         {
             Mapper = mapper;
             UnitOfWork = (UnitOfWork)unitOfWork;
@@ -150,32 +150,6 @@ namespace eBiblioteka.Application
 
             return Mapper.Map<List<RecommendResultDto>>(recommendList);
         }
-
-        public  List<RecommendResultDto> TrainBooks()
-        {
-            var books =  _booksRepository.GetAll();
-
-            List<RecommendResult> recommendList = new List<RecommendResult>();
-
-            foreach (var book in books)
-            {
-                var recommendedBooks = Recommend(book.Id);
-
-                var resultRecoomend = new RecommendResult()
-                {
-                    BookId = book.Id,
-                    FirstCobookId = recommendedBooks[0].Id,
-                    SecondCobookId = recommendedBooks[1].Id,
-                    ThirdCobookId = recommendedBooks[2].Id
-                };
-                recommendList.Add(resultRecoomend);
-            }
-             CurrentRepository.UpdateRecommendation(recommendList);
-             UnitOfWork.SaveChanges();
-
-            return Mapper.Map<List<RecommendResultDto>>(recommendList);
-        }
-
 
     }
 

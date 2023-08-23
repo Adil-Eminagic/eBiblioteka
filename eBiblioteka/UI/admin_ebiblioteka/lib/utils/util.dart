@@ -8,7 +8,6 @@ class Autentification {
   static String? token;
   static Map? tokenDecoded;
   static User? loggedUser;
-  //static String? password;
 }
 
 class Language {

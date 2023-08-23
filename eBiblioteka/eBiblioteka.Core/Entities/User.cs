@@ -19,13 +19,7 @@ namespace eBiblioteka.Core
         public DateTime? PurchaseDate { get; set; }
         public DateTime? ExpirationDate { get; set; }
 
-        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        //[NotMapped]
-        //public bool IsActiveMembership => PurchaseDate != null && ExpirationDate != null && ExpirationDate < DateTime.Now;
-
         public bool IsActiveMembership { get; set; }
-
-
 
         public int? ProfilePhotoId { get; set; }
         public Photo? ProfilePhoto { get; set; }
@@ -42,6 +36,8 @@ namespace eBiblioteka.Core
         public ICollection<UserBook> OpenedBooks { get; set; } = null!;
         public ICollection<Rating> RateBook { get; set; } = null!;
         public ICollection<Notification> Notifications { get; set; }= null!;
+        public ICollection<UserQuiz> Quizzes { get; set; } = null!;
+
 
     }
 }

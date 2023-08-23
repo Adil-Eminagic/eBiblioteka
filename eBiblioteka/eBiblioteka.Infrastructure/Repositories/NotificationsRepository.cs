@@ -16,10 +16,19 @@ namespace eBiblioteka.Infrastructure
             return await DbSet
                 .Where(c=> searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
                 .Where(c=> searchObject.isRead==null || c.isRead==searchObject.isRead)
-                .Where(c=> searchObject.UserId==c.UserId || searchObject.UserId ==null)    
+                .Where(c=> searchObject.UserId==c.UserId || searchObject.UserId ==null)
+                .OrderByDescending(c=>c.Id)
             .ToPagedListAsync(searchObject, cancellationToken);
         }
 
-       
+        public async override Task<ReportInfo<Notification>> GetCountAsync(NotificationsSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            return await DbSet
+                 .Where(c => searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
+                 .Where(c => searchObject.isRead == null || c.isRead == searchObject.isRead)
+                 .Where(c => searchObject.UserId == c.UserId || searchObject.UserId == null)
+             .ToReportInfoAsync(searchObject, cancellationToken);
+        }
+
     }
 }

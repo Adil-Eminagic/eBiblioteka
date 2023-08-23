@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 
 import '../pages/login_page.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class ChangeEmailPage extends StatefulWidget {
   const ChangeEmailPage({Key? key}) : super(key: key);
 
@@ -33,7 +36,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title: 'Promjena email-a',
+        title: AppLocalizations.of(context).changing_email,
         child: SingleChildScrollView(
           
             child: FormBuilder(
@@ -47,8 +50,8 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                           FormBuilderTextField(
                             name: 'currentEmail',
                             readOnly: true,
-                            decoration: const InputDecoration(
-                                label: Text('Trenutni email')),
+                            decoration:  InputDecoration(
+                                label: Text(AppLocalizations.of(context).cur_email)),
                           ),
                           const SizedBox(
                             height: 30,
@@ -56,18 +59,18 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                           FormBuilderTextField(
                             validator: ((value) {
                               if (value == null || value.isEmpty) {
-                                return "Morate unijeti vrijednost";
+                                return AppLocalizations.of(context).mvalue;
                               } else if (!RegExp(
                                       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                   .hasMatch(value)) {
-                                return "Nevalidan email";
+                                return AppLocalizations.of(context).invalid_email;
                               } else {
                                 return null;
                               }
                             }),
                             name: 'newEmail',
                             decoration:
-                                InputDecoration(label: Text('Novi email')),
+                                InputDecoration(label: Text(AppLocalizations.of(context).new_email)),
                           ),
                           const SizedBox(
                             height: 80,
@@ -84,9 +87,9 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                             .currentState?.value['newEmail']);
 
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
+                                         SnackBar(
                                             content: Text(
-                                                'Uspješna promjena emaila')));
+                                                AppLocalizations.of(context).su_cha_email)));
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
@@ -94,14 +97,14 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                         (route) => false);
                                   }
                                 } catch (e) {
-                                  alertBox(context, 'Greška', e.toString());
+                                  alertBox(context, AppLocalizations.of(context).error, e.toString());
                                 }
                                 // var res = _userProvider.changeEmail(
                                 //     Autentification.tokenDecoded?['Id'],
                                 //     Autentification.tokenDecoded?['Email']);
                                 // print(res);
                               }),
-                              child: const Text('Promijeni'))
+                              child:  Text(AppLocalizations.of(context).save))
                         ]),
                   ),
               

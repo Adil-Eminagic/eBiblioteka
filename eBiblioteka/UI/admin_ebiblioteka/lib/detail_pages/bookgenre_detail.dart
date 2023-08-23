@@ -35,7 +35,6 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {'genreId': widget.bookGenre?.genre?.id.toString()};
 
@@ -139,7 +138,6 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
                         : ElevatedButton(
                             onPressed: () async {
                               _formKey.currentState?.save();
-                              print(_formKey.currentState?.value);
 
                               try {
                                 if (_formKey.currentState!.validate()) {
@@ -203,7 +201,7 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
                     icon: const Icon(Icons.close),
                     onPressed: () {
                       _formKey.currentState!
-                          .fields['genreId'] //brisnje selekcije iz forme
+                          .fields['genreId'] 
                           ?.reset();
                     },
                   ),

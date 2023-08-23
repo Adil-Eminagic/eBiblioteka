@@ -12,5 +12,22 @@ namespace eBiblioteka.Application
         public NotificationsService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<NotificationUpsertDto> validator, IPhotosService photosService) : base(mapper, unitOfWork, validator)
         {
         }
+
+        public async Task ReadNotification(int notificationId, CancellationToken cancellationToken=default)
+        {
+            var notification= await CurrentRepository.GetByIdAsync(notificationId);
+
+            if (notification == null)
+                throw new Exception("Notification not found");
+
+            if (notification.isRead == true) throw new Exception("Cann't change read notification to read");
+
+            notification.isRead = true;
+
+             CurrentRepository.Update(notification);
+            await UnitOfWork.SaveChangesAsync();
+
+            
+        }
     }
 }

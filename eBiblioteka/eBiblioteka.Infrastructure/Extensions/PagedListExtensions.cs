@@ -36,5 +36,22 @@ namespace eBiblioteka.Infrastructure
 
             return pagedList;
         }
+
+        public static async Task<ReportInfo<T>> ToReportInfoAsync<T>(this IQueryable<T> queryable, BaseSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            var items = await queryable
+                .Skip((searchObject.PageNumber - 1) * searchObject.PageSize)
+                .Take(searchObject.PageSize)
+                .ToListAsync(cancellationToken);
+
+            var totalItemCount = await queryable.CountAsync(cancellationToken);
+
+            var reportInfo = new ReportInfo<T>();
+
+            reportInfo.TotalCount = totalItemCount;
+
+
+            return reportInfo;
+        }
     }
 }

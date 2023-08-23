@@ -27,6 +27,7 @@ namespace eBiblioteka.Application
             services.AddScoped<INotificationsService, NotificationsService>();
             services.AddScoped<IBookFilesService, BookFilesService>();
             services.AddScoped<IRecommendResultsService, RecommendResultsService>();
+            services.AddScoped<IUserQuizsService,  UserQuizsService>();
         }
 
         public static void AddValidators(this IServiceCollection services)
@@ -50,7 +51,7 @@ namespace eBiblioteka.Application
             services.AddScoped<IValidator<NotificationUpsertDto>, NotificationValidator>();
             services.AddScoped<IValidator<BookFileUpsertDto>, BookFileValidator>();
             services.AddScoped<IValidator<RecommendResultUpsertDto>,RecommendResultValidator>();
-            services.AddScoped<IValidator<UserPayMembershipDto>, UserPayMembershipValidator>();
+            services.AddScoped<IValidator<UserQuizUpsertDto>, UserQuizValidator>();
 
         }
     }

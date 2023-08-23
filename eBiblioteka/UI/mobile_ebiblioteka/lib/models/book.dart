@@ -13,7 +13,7 @@ class Book {
   int? openingCount;
   bool? isActive;
   int? coverPhotoId;
-  int? averageRate;
+  double? averageRate;
   Photo? coverPhoto;
   int? authorID;
   Author? author;

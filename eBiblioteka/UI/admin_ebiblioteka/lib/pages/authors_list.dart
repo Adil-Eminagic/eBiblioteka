@@ -1,9 +1,9 @@
-import 'package:admin_ebiblioteka/detail_pages/author_detail.dart';
-import 'package:admin_ebiblioteka/models/author.dart';
-import 'package:admin_ebiblioteka/models/search_result.dart';
-import 'package:admin_ebiblioteka/providers/author_provider.dart';
-import 'package:admin_ebiblioteka/providers/gender_provider.dart';
-import 'package:admin_ebiblioteka/widgets/master_screen.dart';
+import '../detail_pages/author_detail.dart';
+import '../models/author.dart';
+import '../models/search_result.dart';
+import '../providers/author_provider.dart';
+import '../providers/gender_provider.dart';
+import '../widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +31,6 @@ class _AuthorsPageState extends State<AuthorsPage> {
   TextEditingController _fullNameController = TextEditingController();
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _authorProvider = context.read<AuthorProvider>();
     _genderProvider = context.read<GenderProvider>();
@@ -88,6 +87,9 @@ class _AuthorsPageState extends State<AuthorsPage> {
                       )),
                     
           ]),
+         const SizedBox(
+            height: 20,
+          )
        ]
        ),
     );

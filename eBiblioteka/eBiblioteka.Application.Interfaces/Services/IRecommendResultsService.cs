@@ -10,7 +10,6 @@ namespace eBiblioteka.Application.Interfaces
         Task<PagedList<RecommendResultDto>> GetPagedAsync(BaseSearchObject searchObject, CancellationToken cancellationToken = default);
 
         Task<List<RecommendResultDto>> TrainBooksModelAsync(CancellationToken cancellationToken = default);
-        List<RecommendResultDto> TrainBooks();
 
 
     }

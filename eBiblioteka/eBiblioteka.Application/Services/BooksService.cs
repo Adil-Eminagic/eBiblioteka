@@ -4,11 +4,7 @@ using eBiblioteka.Core;
 using eBiblioteka.Application.Interfaces;
 using eBiblioteka.Infrastructure;
 using eBiblioteka.Infrastructure.Interfaces;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Trainers;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace eBiblioteka.Application
 {
@@ -26,22 +22,6 @@ namespace eBiblioteka.Application
             _usersRepository = usersRepository;
         }
 
-        //public async override Task<BookDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        //{
-        //    var entity = await CurrentRepository.GetByIdAsync(id, cancellationToken);
-        //    var dto = Mapper.Map<BookDto>(entity);
-        //    if (entity.UserRate.Count > 0)
-        //    {
-        //        int ave = 0;
-        //        foreach (var item in entity.UserRate)
-        //        {
-        //            ave += item.Stars;
-        //        }
-        //        dto.AverageRate = ave / entity.UserRate.Count;
-        //    }
-
-        //    return dto;
-        //}
 
         public override async Task<PagedList<BookDto>> GetPagedAsync(BooksSearchObject searchObject, CancellationToken cancellationToken = default)
         {
@@ -54,7 +34,7 @@ namespace eBiblioteka.Application
                 {
                     if (pagedList.Items[i].UserRate.Count > 0)
                     {
-                        int ave = 0;
+                        decimal ave = 0;
                         foreach (var z in pagedList.Items[i].UserRate)
                         {
                             ave += z.Stars;
@@ -67,12 +47,7 @@ namespace eBiblioteka.Application
             return dtos;
         }
 
-        public async Task<IEnumerable<BookDto>> GetByAuthorIdAsync(int authorId, CancellationToken cancellationToken)
-        {
-            var books = await CurrentRepository.GetByAuthorIdAsync(authorId, cancellationToken);
-            return Mapper.Map<IEnumerable<BookDto>>(books);
-        }
-
+      
         public async override Task<BookDto> AddAsync(BookUpsertDto dto, CancellationToken cancellationToken = default)
         {
             await ValidateAsync(dto, cancellationToken);
@@ -207,144 +182,5 @@ namespace eBiblioteka.Application
 
             return Mapper.Map<BookDto>(book);
         }
-
-
-
-
-        //static MLContext mlContext = null;
-        //static object isLocked= new object();
-        // static ITransformer model = null;
-
-
-        //public List<BookDto> Recommend(int id)
-        //{
-        //    lock (isLocked)
-        //    {
-        //        if (mlContext == null)
-        //        {
-        //            mlContext = new MLContext();
-
-        //            var tmpData =  _usersRepository.UsersWithReadHistory();
-
-        //            var data = new List<BookEntry>();
-
-        //            foreach (var x in tmpData)
-        //            {
-        //                if (x.OpenedBooks.Count > 1)
-        //                {
-        //                    var distinctItemId = x.OpenedBooks.Select(y => y.BookId).ToList();
-
-        //                    distinctItemId.ForEach(y =>
-        //                    {
-        //                        var relatedItems = x.OpenedBooks.Where(z => z.BookId != y);
-
-        //                        foreach (var z in relatedItems)
-        //                        {
-        //                            data.Add(new BookEntry()
-        //                            {
-        //                                BookID = (uint)y,
-        //                                CoOpenedBookID = (uint)z.BookId,
-        //                            });
-        //                        }
-        //                    });
-        //                }
-        //            }
-
-        //            var trainData= mlContext.Data.LoadFromEnumerable(data);
-
-        //            MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
-        //            options.MatrixColumnIndexColumnName = nameof(BookEntry.BookID);
-        //            options.MatrixRowIndexColumnName = nameof(BookEntry.CoOpenedBookID);
-        //            options.LabelColumnName = "Label";
-        //            options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
-        //            options.Alpha = 0.01;
-        //            options.Lambda = 0.025;
-        //            // For better results use the following parameters
-        //            options.NumberOfIterations = 100;
-        //            options.C = 0.00001;
-
-        //            var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
-
-        //            model = est.Fit(trainData);
-        //        }
-        //    }
-
-        //    var books = CurrentRepository.GetExceptById(id);
-
-        //    var predictionResult = new List<Tuple<Book, float>>();
-
-        //    foreach (var book in books)
-        //    {
-
-        //        var predictionengine = mlContext.Model.CreatePredictionEngine<BookEntry, CoBook_prediction>(model);
-        //        var prediction = predictionengine.Predict(
-        //                                 new BookEntry()
-        //                                 {
-        //                                     BookID = (uint)id,
-        //                                     CoOpenedBookID = (uint)book.Id
-        //                                 });
-
-
-        //        predictionResult.Add(new Tuple<Book, float>(book, prediction.Score));
-        //    }
-
-
-        //    var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(3).ToList();
-
-        //    return Mapper.Map<List<BookDto>>(finalResult);
-
-        //}
-
-        //public async Task<List<object>> TrainBooksModel( CancellationToken cancellationToken=default)
-        //{
-        //    var bookResult= await CurrentRepository.GetPagedAsync(new BooksSearchObject() {PageSize=100000 }, cancellationToken);
-        //    var books = bookResult.Items.ToList();
-
-        //    List<object> recommendList = new List<object>();
-
-        //    foreach (var book in books)
-        //    {
-        //        var recommendedBooks = Recommend(book.Id);
-
-        //        var resultRecoomend = new RecommendedBooks()
-        //        {
-        //            bookId = book.Id,
-        //            firstCobookId = recommendedBooks[0].Id,
-        //            secondCobookId= recommendedBooks[1].Id,
-        //            thirdCobookId= recommendedBooks[2].Id
-        //        };
-        //        recommendList.Add(resultRecoomend);
-        //    }
-
-
-        //    return  recommendList;
-        //}
-
-
     }
-
-    //public class CoBook_prediction
-    //{
-    //    public float Score { get; set; }
-    //}
-
-    //public class BookEntry
-    //{
-    //    [KeyType(count: 27)]
-    //    public uint BookID { get; set; }
-
-    //    [KeyType(count: 27)]
-    //    public uint CoOpenedBookID { get; set; }
-
-    //   public float Label { get; set; }
-    //}
-
-    //public class RecommendedBooks
-    //{
-    //    public int bookId { get; set; }
-    //    public int firstCobookId { get; set; }
-    //    public int secondCobookId { get; set; }
-    //    public int thirdCobookId { get; set; }
-
-    //}
 }

@@ -52,22 +52,7 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
-        //[Authorize]
-        //[HttpGet("GetPaged")]
-        //public virtual async Task<IActionResult> GetPaged([FromQuery] BaseSearchObject searchObject, CancellationToken cancellationToken = default)
-        //{
-        //    try
-        //    {
-        //        var dto = await _recommendResultsService.GetPagedAsync(searchObject, cancellationToken);
-        //        return Ok(dto);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Logger.LogError(e, "Problem when getting paged resources for page number {0}, with page size {1}", searchObject.PageNumber, searchObject.PageSize);
-        //        return BadRequest(e.Message + " " + e?.InnerException);
-
-        //    }
-        //}
+        
 
         [Authorize]
         [HttpPost("TrainModelAsync")]
@@ -91,27 +76,6 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPost("TrainModel")]
-        public virtual IActionResult Post()
-        {
-            try
-            {
-                var dto =  _recommendResultsService.TrainBooks();
-                return Ok(dto);
-            }
-            catch (ValidationException e)
-            {
-                Logger.LogError(e, "Problem when updating resource");
-                return ValidationResult(e.Errors);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, "Problem when posting resource");
-                return BadRequest(e.Message + " " + e?.InnerException);
-
-            }
-        }
 
         protected IActionResult ValidationResult(List<ValidationError> errors)
         {

@@ -25,6 +25,7 @@ namespace eBiblioteka.Infrastructure
             services.AddScoped<INotificationsRepository, NotificationsRepository>();
             services.AddScoped<IBookFilesRepository, BookFilesRepository>();
             services.AddScoped<IRecommendResultsRepository, RecommendResultsRepository>();
+            services.AddScoped<IUserQuizsRepository, UserQuizsRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

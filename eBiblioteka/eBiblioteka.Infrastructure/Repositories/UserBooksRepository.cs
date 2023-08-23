@@ -17,5 +17,12 @@ namespace eBiblioteka.Infrastructure
            Where(c => searchObject.BookId == null || searchObject.BookId == c.BookId).
             ToPagedListAsync(searchObject, cancellationToken);
         }
+
+        public async override Task<ReportInfo<UserBook>> GetCountAsync(UserBooksSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.Where(c => searchObject.UserId == null || c.UserId == searchObject.UserId).
+            Where(c => searchObject.BookId == null || searchObject.BookId == c.BookId).
+             ToReportInfoAsync(searchObject, cancellationToken);
+        }
     }
 }

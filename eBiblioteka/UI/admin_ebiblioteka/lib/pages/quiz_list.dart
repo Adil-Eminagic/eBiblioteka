@@ -21,14 +21,13 @@ class QuizzesListPage extends StatefulWidget {
 class _QuizzesListPageState extends State<QuizzesListPage> {
   late QuizProvider _quizProvider = QuizProvider();
 
-  TextEditingController _titleController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   bool isLoading = true;
 
   SearchResult<Quiz>? result;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _quizProvider = context.read<QuizProvider>();
     initData();

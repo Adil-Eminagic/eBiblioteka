@@ -17,6 +17,10 @@ namespace eBiblioteka.Infrastructure
                .ToPagedListAsync(searchObject, cancellationToken);
         }
 
-       
+        public override async Task<ReportInfo<Genre>> GetCountAsync(GenresSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.Where(c => searchObject.Name == null || c.Name.ToLower().Contains(searchObject.Name.ToLower()))
+                .ToReportInfoAsync(searchObject, cancellationToken);
+        }
     }
 }

@@ -104,7 +104,6 @@ class _QuoteDetailPageState extends State<QuoteDetailPage> {
                     ElevatedButton(
                         onPressed: () async {
                           _formKey.currentState?.save();
-                          print(_formKey.currentState?.value);
 
                           try {
                             if (_formKey.currentState!.validate()) {

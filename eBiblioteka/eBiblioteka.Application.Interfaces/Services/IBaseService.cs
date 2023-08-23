@@ -20,5 +20,8 @@ namespace eBiblioteka.Application.Interfaces
 
         Task RemoveAsync(TDto dto, CancellationToken cancellationToken = default);
         Task RemoveByIdAsync(TPrimaryKey id, CancellationToken cancellationToken = default);
+
+        Task<ReportInfo<TDto>> GetCountAsync(TSearchObject searchObject, CancellationToken cancellationToken = default);
+        
     }
 }

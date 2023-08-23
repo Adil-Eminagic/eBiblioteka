@@ -41,8 +41,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   bool isLoading = false;
   String? photo;
-  // String? fileData;
-  // String? fileName;
 
   Book? bookSend;
   SearchResult<Author>? authorResult;
@@ -51,7 +49,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'title': widget.book?.title,
@@ -109,45 +106,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // widget.book == null
-                    //     ? Container()
-                    //     : TextButton(
-                    //         onPressed: () async {
-                    //           showDialog(
-                    //               context: context,
-                    //               builder: (BuildContext context) =>
-                    //                   AlertDialog(
-                    //                     title: const Text('Brisanje knjige'),
-                    //                     content: const Text(
-                    //                         'Da li želite obrisati knjigu'),
-                    //                     actions: [
-                    //                       TextButton(
-                    //                           onPressed: (() {
-                    //                             Navigator.pop(context);
-                    //                           }),
-                    //                           child: const Text('Poništi')),
-                    //                       TextButton(
-                    //                           onPressed: () async {
-                    //                             try {
-                    //                               await _bookProvider.remove(
-                    //                                   widget.book?.id ?? 0);
-                    //                               ScaffoldMessenger.of(context)
-                    //                                   .showSnackBar(const SnackBar(
-                    //                                       content: Text(
-                    //                                           'Uspješno brisanje knjige.')));
-                    //                               Navigator.pop(context);
-                    //                               Navigator.pop(
-                    //                                   context, 'reload');
-                    //                             } catch (e) {
-                    //                               alertBoxMoveBack(context,
-                    //                                   'Greška', e.toString());
-                    //                             }
-                    //                           },
-                    //                           child: const Text('Ok')),
-                    //                     ],
-                    //                   ));
-                    //         },
-                    //         child: const Text('Obriši knjigu')),
                     widget.book == null
                         ? Container()
                         : const SizedBox(
@@ -155,11 +113,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           ),
                     ElevatedButton(
                         onPressed: () async {
-                          // _formKey.currentState
-                          // ?.saveAndValidate(); //moramo spasiti vrijednosti forme kako bi se pohranile u currentstate
                           _formKey.currentState?.save();
-                          print(_formKey.currentState?.value);
-
                           try {
                             if (_formKey.currentState!.validate()) {
                               if (widget.book != null) {
@@ -356,7 +310,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
                  validator: (value) {
                   if (value == null) {
                     return AppLocalizations.of(context).mfield;
-                  } else {
+                  }
+                  else if (int.tryParse(value) == null) {
+                      return AppLocalizations.of(context).numeric_field;
+                    }
+                  else {
                     return null;
                   }
                 },

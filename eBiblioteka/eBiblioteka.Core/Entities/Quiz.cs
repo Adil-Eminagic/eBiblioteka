@@ -7,5 +7,6 @@ namespace eBiblioteka.Core
         public string? Description { get; set; }
 
         public ICollection<Question> Questions { get; set; }=null!;
+        public ICollection<UserQuiz> Users { get; set; } = null!;
     }
 }

@@ -20,6 +20,15 @@ namespace eBiblioteka.Infrastructure
             .ToPagedListAsync(searchObject, cancellationToken);
         }
 
-       
+        public async override Task<ReportInfo<Question>> GetCountAsync(QuestionsSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.Where(c => searchObject.QuizId == null || c.QuizId == searchObject.QuizId)
+                .Where(c => searchObject.Content == null || c.Content.ToLower().Contains(searchObject.Content.ToLower()))
+                .Where(c => searchObject.Points == null || c.Points == searchObject.Points)
+                .Include(c => c.Answers)
+            .ToReportInfoAsync(searchObject, cancellationToken);
+        }
+
+
     }
 }

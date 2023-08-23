@@ -12,7 +12,6 @@ import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class QuestionDeatilPage extends StatefulWidget {
   const QuestionDeatilPage({Key? key, this.quiz}) : super(key: key);
   final Quiz? quiz;
@@ -21,7 +20,8 @@ class QuestionDeatilPage extends StatefulWidget {
   State<QuestionDeatilPage> createState() => _QuestionDeatilPageState();
 }
 
-List<int> options = [1, 2, 3, 4, 5, 6];
+List<int> options = List.generate(1000000, (index) => index + 1);
+
 
 class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
   late QuestionProvider _questionProvider = QuestionProvider();
@@ -30,7 +30,7 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
   SearchResult<Question>? result;
   SearchResult<Answer>? answerResult;
 
-  int count = 0;
+  int count = 0; //navigation through questions
   bool isLoading = true;
   int points = 0;
   int currentOption = 0;
@@ -47,10 +47,11 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
 
   Future<void> initData() async {
     try {
-      result =
-          await _questionProvider.getPaged(filter: {'quizId': widget.quiz!.id});
-      answerResult = await _answerProvider
-          .getPaged(filter: {'questionId': result!.items[count].id});
+      result = await _questionProvider.getPaged(
+          filter: {'quizId': widget.quiz!.id}); //loading all questions for quiz
+      answerResult = await _answerProvider.getPaged(filter: {
+        'questionId': result!.items[count].id
+      }); //loading all answers for current question, starts with first because count is initally 0
 
       setState(() {
         isLoading = false;
@@ -64,7 +65,8 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${AppLocalizations.of(context).question_num} ${count + 1}'),
+        title:
+            Text('${AppLocalizations.of(context).question_num} ${count + 1}'),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -73,7 +75,8 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
                       title: Text(AppLocalizations.of(context).leave_quiz_tit),
-                      content: Text(AppLocalizations.of(context).leave_quiz_msg),
+                      content:
+                          Text(AppLocalizations.of(context).leave_quiz_msg),
                       actions: [
                         TextButton(
                             onPressed: (() {
@@ -82,10 +85,9 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                             child: Text(AppLocalizations.of(context).cancel)),
                         TextButton(
                             onPressed: () async {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-
+                              Navigator.pop(context); //escape alertbox
+                              Navigator.pop(context); //escape quizdetail page
+                              Navigator.pop(context); //escape startquizpage
                             },
                             child: const Text('Ok')),
                       ],
@@ -141,7 +143,9 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                   const Divider(
                     thickness: 3,
                   ),
-                  for (int i = 0; i < answerResult!.items.length; i++)
+                  for (int i = 0;
+                      i < answerResult!.items.length;
+                      i++) //printing all answers of certain question
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -149,7 +153,7 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                           ListTile(
                             title: Text(answerResult!.items[i].content ?? ''),
                             trailing: Radio<int>(
-                              value: options[i],
+                              value: options[i],//list of options, starts with 1, not 0, but i is 0 here which means frist element of optiosn which is one
                               groupValue: currentOption,
                               onChanged: (int? value) {
                                 setState(() {
@@ -168,47 +172,51 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      (count + 1) == result!.items.length
+                      (count + 1) == result!.items.length//if lenght is 3 lat element has index 2, so if count+1 == 3 it means it is last question of quiz and we cann't go on next question
                           ? ElevatedButton(
                               onPressed: (() {
                                 if (answerResult!
                                         .items[currentOption - 1].isTrue! ==
-                                    true) {
+                                    true) {//ifanswer is true add points of that question for overall points 
                                   points += result!.items[count].points!;
                                   print(points);
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => QuizResultPage(
+                                      builder: (context) => QuizResultPage(//and then go to result page
                                         totalPoint: widget.quiz!.totalPoints,
                                         wonPoints: points,
+                                        quizId: widget.quiz!.id,
                                       ),
                                     ),
                                   );
-                                } else if (currentOption == 0) {
+                                } else if (currentOption == 0) {//if user didn't select answer force him to do it
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                       SnackBar(
-                                          duration: Duration(seconds: 2),
-                                          content:
-                                              Text(AppLocalizations.of(context).manswer)));
+                                      SnackBar(
+                                          duration:const Duration(seconds: 2),
+                                          content: Text(
+                                              AppLocalizations.of(context)
+                                                  .manswer)));
                                 } else {
                                   print(points);
-                                  Navigator.of(context).push(
+                                  Navigator.of(context).push(//just in case
                                     MaterialPageRoute(
                                       builder: (context) => QuizResultPage(
                                         totalPoint: widget.quiz!.totalPoints,
                                         wonPoints: points,
+                                        quizId: widget.quiz!.id,
                                       ),
                                     ),
                                   );
                                 }
                               }),
-                              child: Text(AppLocalizations.of(context).finish_quiz))
-                          : ElevatedButton(
+                              child: Text(
+                                  AppLocalizations.of(context).finish_quiz))
+                          : ElevatedButton(//this is else, when curent+1!=lenght, when it isn't last question
                               onPressed: (() {
                                 if (currentOption != 0 &&
                                     answerResult!
                                             .items[currentOption - 1].isTrue! ==
-                                        true) {
+                                        true) { //if user selected answer, and if answer is true true answer and 
                                   points += result!.items[count].points!;
                                   print(points);
                                   setState(() {
@@ -219,10 +227,11 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                   initData();
                                 } else if (currentOption == 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                       SnackBar(
-                                          duration: Duration(seconds: 2),
-                                          content:
-                                              Text(AppLocalizations.of(context).manswer)));
+                                      SnackBar(
+                                          duration: const Duration(seconds: 2),
+                                          content: Text(
+                                              AppLocalizations.of(context)
+                                                  .manswer)));
                                 } else {
                                   print(points);
                                   setState(() {
@@ -233,7 +242,8 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                   initData();
                                 }
                               }),
-                              child: Text(AppLocalizations.of(context).next_question)),
+                              child: Text(
+                                  AppLocalizations.of(context).next_question)),
                       const SizedBox(
                         width: 25,
                       )

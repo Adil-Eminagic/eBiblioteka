@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile_ebiblioteka/providers/notification_provider.dart';
+import 'package:mobile_ebiblioteka/providers/userquiz_provider.dart';
 
 import 'pages/login_page.dart';
 import 'providers/language_provider.dart';
@@ -56,7 +58,9 @@ Future<void> main() async {
       ChangeNotifierProvider(create: ((context) => BookFileProvider())),
       ChangeNotifierProvider(create: ((context) => RecommendResultProvider())),
       ChangeNotifierProvider(create: ((context) => UserBookProvider())),
-      ChangeNotifierProvider(create: ((context) => LanguageProvider()))
+      ChangeNotifierProvider(create: ((context) => LanguageProvider())),
+      ChangeNotifierProvider(create: ((context) => NotificationProvider())),
+      ChangeNotifierProvider(create: ((context) => UserQuizProvider()))
     ],
     child: const MyApp(),
   ));
@@ -78,7 +82,6 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.brown,
         primaryColor: Colors.brown,
-        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown)
       ),
       supportedLocales: L10n.all,
       locale: Locale(appState.lang),
@@ -92,23 +95,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         primarySwatch: Colors.brown,
-//         primaryColor: Colors.brown,
-//         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.brown)
-//       ),
-//       home: const LoginPage(),
-//     );
-//   }
-// }
 
 class MyHttpOverrides extends HttpOverrides {
   @override

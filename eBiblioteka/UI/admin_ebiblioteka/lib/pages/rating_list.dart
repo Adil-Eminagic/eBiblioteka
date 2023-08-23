@@ -74,7 +74,7 @@ class _RatingListPageState extends State<RatingListPage> {
                         var data = await _ratingProvider.getPaged(filter: {
                           "bookId": widget.bookId,
                           "userName": _userConroller
-                              .text, //!=''?_userConroller.text : null
+                              .text,
                           "pageSize": 1000000
                         });
 

@@ -11,7 +11,7 @@ class RatingProvider extends BaseProvider<Rating> {
     return Rating.fromJson(data);
   }
 
-  Future<int> getAverageBookRate(int bookId) async {
+  Future<double> getAverageBookRate(int bookId) async {
     var url = "${BaseProvider.baseUrl}$endpoint/BookAverageRate/$bookId";
 
     var uri = Uri.parse(url);
@@ -23,6 +23,6 @@ class RatingProvider extends BaseProvider<Rating> {
       headers: headers,
     );
 
-    return int.parse(response.body);
+    return double.parse(response.body);
   }
 }

@@ -46,6 +46,13 @@ namespace eBiblioteka.Application
                 }
             }
 
+            if (searchObject.isActive != null)
+            {
+                dtos.Items = dtos.Items.Where(s => s.isActive == searchObject.isActive).ToList();
+                dtos.TotalCount = dtos.Items.Count;
+
+            }
+
             return dtos;
             
         }

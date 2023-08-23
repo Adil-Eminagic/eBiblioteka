@@ -17,15 +17,13 @@ namespace eBiblioteka.Application
         private readonly ICryptoService _cryptoService;
         private readonly IPhotosService _photosService;
         private readonly IValidator<UserChangePasswordDto> _passwordValidator;
-        private readonly IValidator<UserPayMembershipDto> _paymentValidator;
 
 
-        public UsersService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<UserUpsertDto> validator, ICryptoService cryptoService, IPhotosService photosService, IValidator<UserChangePasswordDto> passwordValidator, IValidator<UserPayMembershipDto> paymentValidator) : base(mapper, unitOfWork, validator)
+        public UsersService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<UserUpsertDto> validator, ICryptoService cryptoService, IPhotosService photosService, IValidator<UserChangePasswordDto> passwordValidator) : base(mapper, unitOfWork, validator)
         {
             _cryptoService = cryptoService;
             _photosService = photosService;
             _passwordValidator = passwordValidator;
-            _paymentValidator = paymentValidator;
         }
         public async Task<UserSensitiveDto?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
@@ -134,49 +132,9 @@ namespace eBiblioteka.Application
             return Mapper.Map<List<UserHisoryDto>>(users);
         }
 
-        //public async Task<UserDto> DeactivateAsync(int userId, CancellationToken cancellationToken = default)
-        //{
-
-        //    var user = await CurrentRepository.GetByIdAsync(userId, cancellationToken);
-
-        //    if (user == null)
-        //        throw new UserNotFoundException();
-
-        //    if (user.isActive == false)
-        //        throw new Exception("Ne mozete deaktivirati usera koji je već nektivan");
-
-        //    user.isActive = false;
-
-        //    CurrentRepository.Update(user);
-        //    await UnitOfWork.SaveChangesAsync();
-
-        //    return Mapper.Map<UserDto>(user);
-
-
-        //}
-
-        //public async Task<UserDto> ActivateAsync(int userId, CancellationToken cancellationToken = default)
-        //{
-        //    var user = await CurrentRepository.GetByIdAsync(userId, cancellationToken);
-
-        //    if (user == null)
-        //        throw new UserNotFoundException();
-
-        //    if (user.isActive == true)
-        //        throw new Exception("Ne mozete aktivirati usera koji je aktivan");
-
-        //    user.isActive = true;
-
-        //    CurrentRepository.Update(user);
-        //    await UnitOfWork.SaveChangesAsync();
-
-        //    return Mapper.Map<UserDto>(user);
-        //}
 
         public async Task PayMembershipAsync(int userId, CancellationToken cancellationToken = default)
         {
-           // await _paymentValidator.ValidateAsync(dto, cancellationToken); //nisi bio dodao validator u registry
-
             var user = await CurrentRepository.GetByIdAsync(userId, cancellationToken);
 
             if (user == null)

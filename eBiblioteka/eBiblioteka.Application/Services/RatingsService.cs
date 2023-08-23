@@ -14,7 +14,7 @@ namespace eBiblioteka.Application
         }
 
         
-        public async Task<int> GetBookAverageRatingAsync(int bookId, CancellationToken cancellationToken = default)
+        public async Task<double> GetBookAverageRatingAsync(int bookId, CancellationToken cancellationToken = default)
         {
 
             try
@@ -29,10 +29,7 @@ namespace eBiblioteka.Application
             }
         }
 
-        //public override async Task<RatingDto> AddAsync(RatingUpsertDto dto, CancellationToken cancellationToken = default)
-        //{
-        //   var entities= await CurrentRepository.GetPagedAsync(new RatingsSearchObject() { BookId=dto.BookId, UserId= dto.UserId}, cancellationToken);
-        //}
+       
 
         public override async Task<RatingDto> AddAsync(RatingUpsertDto dto, CancellationToken cancellationToken = default)
         {

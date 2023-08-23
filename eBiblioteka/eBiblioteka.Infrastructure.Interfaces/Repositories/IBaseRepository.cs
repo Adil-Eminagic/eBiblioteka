@@ -17,5 +17,7 @@ namespace eBiblioteka.Infrastructure.Interfaces
         void Remove(TEntity entity);
         Task RemoveByIdAsync(TPrimaryKey id, bool isSoft = true, CancellationToken cancellationToken = default);
 
+        Task<ReportInfo<TEntity>> GetCountAsync(TSearchObject searchObject, CancellationToken cancellationToken = default);
+
     }
 }

@@ -26,7 +26,6 @@ import '../providers/user_provider.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class ProfileSettings extends StatefulWidget {
   const ProfileSettings({Key? key, this.user}) : super(key: key);
   final User? user;
@@ -79,7 +78,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     countryResult = await _countryProvider.getPaged();
     genderResult = await _genderProvider.getPaged();
     roleResult = await _roleProvider.getPaged();
-    if (widget.user != null &&  widget.user!.profilePhotoId != null &&  widget.user!.profilePhotoId! > 0) {
+    if (widget.user != null &&
+        widget.user!.profilePhotoId != null &&
+        widget.user!.profilePhotoId! > 0) {
       Photo p = await _photoProvider.getById(widget.user!.profilePhotoId!);
       photo = p.data;
     }
@@ -130,9 +131,10 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   var res = await _userProvider.update(request);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                       SnackBar(
+                                      SnackBar(
                                           content: Text(
-                                              AppLocalizations.of(context).su_mod_profie)));
+                                              AppLocalizations.of(context)
+                                                  .su_mod_profie)));
 
                                   // Autentification.loggedUser =
                                   //     await _userProvider.getById(widget.user!.id!);
@@ -140,10 +142,13 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   Navigator.pop(context, 'getUser');
                                 }
                               } on Exception catch (e) {
-                                alertBox(context, AppLocalizations.of(context).error, e.toString());
+                                alertBox(
+                                    context,
+                                    AppLocalizations.of(context).error,
+                                    e.toString());
                               }
                             },
-                            child:  Text(
+                            child: Text(
                               AppLocalizations.of(context).save,
                               style: const TextStyle(fontSize: 17),
                             )),
@@ -184,7 +189,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       photo == null
                           ? ElevatedButton(
                               onPressed: getimage,
-                              child:  Text(AppLocalizations.of(context).choose_image))
+                              child: Text(
+                                  AppLocalizations.of(context).choose_image))
                           : Container()
                     ],
                   ),
@@ -212,12 +218,14 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 return null;
               }
             },
-            decoration: InputDecoration(label: Text(AppLocalizations.of(context).birth_date)),
+            decoration: InputDecoration(
+                label: Text(AppLocalizations.of(context).birth_date)),
           ))),
           const SizedBox(
             height: 15,
           ),
-          rowMethod(textField('phoneNumber', AppLocalizations.of(context).telphone)),
+          rowMethod(
+              textField('phoneNumber', AppLocalizations.of(context).telphone)),
           const SizedBox(
             height: 15,
           ),
@@ -252,7 +260,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: ((context) => const ChangeEmailPage())));
                     }),
-                    child:  Text(
+                    child: Text(
                       AppLocalizations.of(context).new_email,
                       style: const TextStyle(fontSize: 17),
                     ),
@@ -266,7 +274,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             builder: ((context) =>
                                 const ChangePasswordPage())));
                       }),
-                      child:  Text(AppLocalizations.of(context).new_password,
+                      child: Text(AppLocalizations.of(context).new_password,
                           style: const TextStyle(fontSize: 17))),
                 ],
               ))
@@ -295,7 +303,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       ?.reset();
                 },
               ),
-             
             ),
             items: genderResult?.items
                     .map((g) => DropdownMenuItem(
@@ -329,7 +336,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       ?.reset();
                 },
               ),
-            
             ),
             items: countryResult?.items
                     .map((g) => DropdownMenuItem(
@@ -377,7 +383,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   child: FormBuilderTextField(
                 name: 'biography',
                 maxLines: 5,
-                decoration: InputDecoration(label: Text(AppLocalizations.of(context).biography)),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).biography)),
               )),
             ],
           ),
@@ -388,8 +395,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       ),
     );
   }
-
-  
 
   Expanded textField(String name, String label) {
     return Expanded(
@@ -410,16 +415,20 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   String? _base64Image;
 
   Future getimage() async {
-    var result = await FilePicker.platform
-        .pickFiles(type: FileType.image); //sam prepoznaj platformu u kjoj radi
-    if (result != null && result.files.single.path != null) {
-      _image = File(
-          result.files.single.path!); //jer smo sa if provjerili pa je sigurn !
-      _base64Image = base64Encode(_image!.readAsBytesSync());
+    try {
+      var result = await FilePicker.platform.pickFiles(
+          type: FileType.image); //sam prepoznaj platformu u kjoj radi
+      if (result != null && result.files.single.path != null) {
+        _image = File(result
+            .files.single.path!); //jer smo sa if provjerili pa je sigurn !
+        _base64Image = base64Encode(_image!.readAsBytesSync());
 
-      setState(() {
-        photo = _base64Image; //opet !
-      });
+        setState(() {
+          photo = _base64Image; //opet !
+        });
+      }
+    } on Exception catch (e) {
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 }

@@ -1,24 +1,18 @@
-
 import '../special_pages/payment_page.dart';
 import '../pages/home_page.dart';
 import '../providers/language_provider.dart';
 
 import '../providers/sign_provider.dart';
-import '../providers/user_provider.dart';
 import '../utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-
-
+import '../utils/util_widgets.dart';
 import 'signup_page.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   late SignProvider _signProvider = SignProvider();
-  late UserProvider _userProvider = UserProvider();
   late LanguageProvider _languageProvider = LanguageProvider();
   bool isLoading = false;
   bool isPayed = false;
@@ -41,17 +34,12 @@ class _LoginPageState extends State<LoginPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _signProvider = context.read<SignProvider>();
-    _userProvider = context.read<UserProvider>();
     _languageProvider = context.read<LanguageProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
     return Scaffold(
-      // appBar: AppBar(
-
-      // ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
@@ -130,22 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                         )),
                   ],
                 ),
-               
-                //     child: DropdownButton(
-                //   items: const [
-                //     DropdownMenuItem(value: "bs", child: Text("Bosanski")),
-                //     DropdownMenuItem(value: "en", child: Text("English")),
-                //   ],
-                //   value: _dropdownValue,
-                //   onChanged: ((value) async {
-                //     if (value is String) {
-                //        await _languageProvider.lang(value);
-                //       setState(() {
-                //         _dropdownValue = value;
 
-                //       });
-                //     }
-                //   }),
                 // )),
                 const SizedBox(
                   height: 25,
@@ -159,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 25,
                 ),
                 TextField(
+                  obscureText: true,
                   controller: _passwordController,
                   decoration: InputDecoration(
                       label: Text(AppLocalizations.of(context).password),
@@ -175,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                             isLoading = true;
                           });
 
-                          _emailController.text = "user2@gmail.com";
+                          _emailController.text = "user3@gmail.com";
                           _passwordController.text = "test";
                           var email = _emailController.text;
                           var password = _passwordController.text;
@@ -188,38 +162,34 @@ class _LoginPageState extends State<LoginPage> {
                             Autentification.tokenDecoded =
                                 JwtDecoder.decode(token);
 
-                            // if (Autentification.tokenDecoded?['Role'] == 'User') {
-                            //   alertBox(context, 'Greška',
-                            //       'Korisnicima zabranjen pristup desktop aplikaciji');
-                            // } else {
-                            if (Autentification
-                                    .tokenDecoded!['IsActiveMembership'] ==
-                                "True") {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) {
-                                return const HomePage(); // const AuthorsPage();
-                              }));
+                            if (Autentification.tokenDecoded?['Role'] !=
+                                'User') {
+                              alertBox(context, AppLocalizations.of(context).error,
+                                  AppLocalizations.of(context).forbid_users);
+                              setState(() {
+                                isLoading = false;
+                              });
                             } else {
-                              _paymentMethod(context);
-                             
-                                // Navigator.of(context).pushReplacement(
-                                //     MaterialPageRoute(builder: (context) {
-                                //   return const PaymentPage();
-                                // }));
-                                // setState(() {
-                                //   isLoading = false;
-                                // });
+                              if (Autentification
+                                      .tokenDecoded!['IsActiveMembership'] ==
+                                  "True") {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(builder: (context) {
+                                  return const HomePage(); 
+                                }));
+                              } else {
+                                _paymentMethod(context);
                               }
-                           
 
-                            setState(() {
-                              isLoading = false;
-                            });
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
 // i think it is for spinning kit
                           } catch (e) {
                             print(e.toString());
                             showDialog(
-                              barrierDismissible: false,
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
                                       title: Text(
@@ -275,16 +245,12 @@ class _LoginPageState extends State<LoginPage> {
   void _paymentMethod(BuildContext context) {
     showDialog(
         context: context,
-        barrierDismissible: false,//make it modal dialog
+        barrierDismissible: false, //make it modal dialog
         builder: (BuildContext context) => AlertDialog(
-              title:  Text(AppLocalizations.of(context).mebership),
-              content:  Text(
-                  AppLocalizations.of(context).inactive_meb),
+              title: Text(AppLocalizations.of(context).mebership),
+              content: Text(AppLocalizations.of(context).inactive_meb),
               actions: [
                 TextButton(
-                    // style: ElevatedButton.styleFrom(
-                    //   primary:theme.colorScheme.primary
-                    // ),
                     onPressed: () {
                       Navigator.pop(context);
                       setState(() {
@@ -293,15 +259,13 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: Text(AppLocalizations.of(context).cancel)),
                 ElevatedButton(
-                    
                     onPressed: () {
-                    
-                        Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(builder: (context) {
-                                  return const PaymentPage();
-                                }));
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return const PaymentPage();
+                      }));
                     },
-                    child:  Text(AppLocalizations.of(context).pay))
+                    child: Text(AppLocalizations.of(context).pay))
               ],
             ));
   }

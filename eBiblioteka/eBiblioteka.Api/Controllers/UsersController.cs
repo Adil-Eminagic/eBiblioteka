@@ -46,40 +46,6 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
-        //[Authorize]
-        //[HttpPut("Deactivate")]
-        //public async Task<IActionResult> Deactivate([FromQuery] int userId, CancellationToken cancellationToken = default)
-        //{
-        //    try
-        //    {
-        //        var dto= await Service.DeactivateAsync(userId, cancellationToken);
-        //        return Ok(dto);
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        Logger.LogError(e, "Problem when updating password");
-        //        return BadRequest( e.Message + ", " + e?.InnerException);
-        //    }
-        //}
-
-        //[Authorize]
-        //[HttpPut("Activate")]
-        //public async Task<IActionResult> Activate([FromQuery] int userId, CancellationToken cancellationToken = default)
-        //{
-        //    try
-        //    {
-        //        var dto= await Service.ActivateAsync(userId, cancellationToken);
-        //        return Ok(dto);
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        Logger.LogError(e, "Problem when updating password");
-        //        return BadRequest(e.Message + ", " + e?.InnerException);
-        //    }
-        //}
-
         [Authorize]
         [HttpPut("PayMembership")]
         public async Task<IActionResult> PayMembership([FromQuery] int userId, CancellationToken cancellationToken = default)

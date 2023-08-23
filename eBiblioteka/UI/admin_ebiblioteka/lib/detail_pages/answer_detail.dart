@@ -27,7 +27,6 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'content': widget.answer?.content,

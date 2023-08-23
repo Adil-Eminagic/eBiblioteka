@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_ebiblioteka/pages/profil_setting.dart';
 import 'package:mobile_ebiblioteka/pages/quiz_page.dart';
+import 'package:mobile_ebiblioteka/pages/readning_history.dart';
 import 'package:mobile_ebiblioteka/special_pages/pdf_show.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
@@ -143,6 +144,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ),
           ),
           drawerItem(context, AppLocalizations.of(context).home, const HomePage(), Icons.home),
+          drawerItem(context, AppLocalizations.of(context).reading_hist, const ReadingHistoryPage(), Icons.history),
+
           drawerItem(context, AppLocalizations.of(context).quizes, const QuizzesListPage(), Icons.quiz),
 
           drawerItem(

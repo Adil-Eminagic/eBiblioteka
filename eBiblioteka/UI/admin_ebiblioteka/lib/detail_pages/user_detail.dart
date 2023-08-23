@@ -110,48 +110,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // widget.user == null
-                      //     ? Container()
-                      //     : TextButton(
-                      //         onPressed: () async {
-                      //           showDialog(
-                      //               context: context,
-                      //               builder: (BuildContext context) =>
-                      //                   AlertDialog(
-                      //                     title:
-                      //                         const Text('Brisanje korisnika'),
-                      //                     content: const Text(
-                      //                         'Da li želite obrisati korisnika'),
-                      //                     actions: [
-                      //                       TextButton(
-                      //                           onPressed: (() {
-                      //                             Navigator.pop(context);
-                      //                           }),
-                      //                           child: const Text('Poništi')),
-                      //                       TextButton(
-                      //                           onPressed: () async {
-                      //                             try {
-                      //                               await _userProvider.remove(
-                      //                                   widget.user?.id ?? 0);
-                      //                               ScaffoldMessenger.of(
-                      //                                       context)
-                      //                                   .showSnackBar(
-                      //                                       const SnackBar(
-                      //                                           content: Text(
-                      //                                               'Uspješno brisanje korisnika')));
-                      //                               Navigator.pop(context);
-                      //                               Navigator.pop(
-                      //                                   context, 'reload');
-                      //                             } catch (e) {
-                      //                               alertBoxMoveBack(context,
-                      //                                   'Greška', e.toString());
-                      //                             }
-                      //                           },
-                      //                           child: const Text('Ok')),
-                      //                     ],
-                      //                   ));
-                      //         },
-                      //         child: const Text('Obriši korisnika')),
                       widget.user == null
                           ? Container()
                           : const SizedBox(
@@ -159,10 +117,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                             ),
                       ElevatedButton(
                           onPressed: () async {
-                            // _formKey.currentState
-                            // ?.saveAndValidate(); //moramo spasiti vrijednosti forme kako bi se pohranile u currentstate
                             _formKey.currentState?.save();
-                            print(_formKey.currentState?.value);
 
                             try {
                               if (_formKey.currentState!.validate()) {
@@ -173,9 +128,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                   request['id'] = widget.user?.id;
                                   request['birthDate'] = DateEncode(_formKey
                                       .currentState?.value['birthDate']);
-                                  // request['lastTimeSignIn'] = DateEncode(
-                                  //     _formKey.currentState
-                                  //         ?.value['lastTimeSignIn']);
                                   if (_base64Image != null) {
                                     request['profilePhoto'] = _base64Image;
                                   }
@@ -196,9 +148,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
 
                                   request['birthDate'] = DateEncode(_formKey
                                       .currentState?.value['birthDate']);
-                                  // request['lastTimeSignIn'] = DateEncode(
-                                  //     _formKey.currentState
-                                  //         ?.value['lastTimeSignIn']);// ovo ne radi, samo polja koja se koriste u fieldovima
+                               
                                   if (request['passsword'] == '') {
                                     request['passsword'] = null;
                                   }

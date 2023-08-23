@@ -61,7 +61,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   Book? bookSend;
   Author? bookAuthor;
-  int? rating;
+  double? rating;
 
   SearchResult<BookGenre>? bookGenreResult;
 

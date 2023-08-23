@@ -1,7 +1,11 @@
+import 'package:provider/provider.dart';
+
 import '../utils/util.dart';
 import '../widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../pages/login_page.dart';
 import '../providers/user_provider.dart';
@@ -17,25 +21,22 @@ class ChangePasswordPage extends StatefulWidget {
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
   late UserProvider _userProvider = UserProvider();
   final _formKey = GlobalKey<FormBuilderState>();
-  Map<String, dynamic> _initialValue = {};
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _userProvider = context.read<UserProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'Promjena lozinke',
+      title: AppLocalizations.of(context).changign_password,
       child: SingleChildScrollView(
         child: Center(
           child: FormBuilder(
             key: _formKey,
-            initialValue: _initialValue,
             child: Container(
-              //constraints: const BoxConstraints(maxHeight: 600, maxWidth: 700),
               width: 700,
               height: 600,
               margin: const EdgeInsetsDirectional.fromSTEB(0, 70, 0, 30),
@@ -49,18 +50,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         FormBuilderTextField(
                           validator: ((value) {
                             if (value == null || value.isEmpty) {
-                              return "Morate unijeti vrijednost";
-                            } else if (value.length < 8 ||
-                                !value.contains(RegExp(r'[A-Z]')) ||
-                                !value.contains(RegExp(r'[a-z]')) ||
-                                !value.contains(RegExp(r'[0-9]'))) {
-                              return "Lozinka mora sadržati najmanje 8 karatera, velika i mala slova";
+                              return AppLocalizations.of(context).mvalue;
                             } else {
                               return null;
                             }
                           }),
                           name: 'password',
-                          decoration: InputDecoration(label: Text('Lozinka')),
+                          decoration: InputDecoration(
+                              label:
+                                  Text(AppLocalizations.of(context).password)),
                         ),
                         const SizedBox(
                           height: 30,
@@ -68,19 +66,20 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         FormBuilderTextField(
                           validator: ((value) {
                             if (value == null || value.isEmpty) {
-                              return "Morate unijeti vrijednost";
+                              return AppLocalizations.of(context).mvalue;
                             } else if (value.length < 8 ||
                                 !value.contains(RegExp(r'[A-Z]')) ||
                                 !value.contains(RegExp(r'[a-z]')) ||
                                 !value.contains(RegExp(r'[0-9]'))) {
-                              return "Lozinka mora sadržati najmanje 8 karatera, velika i mala slova";
+                              return AppLocalizations.of(context).reg_password;
                             } else {
                               return null;
                             }
                           }),
                           name: 'newPassword',
-                          decoration:
-                              InputDecoration(label: Text('Nova lozinka')),
+                          decoration: InputDecoration(
+                              label: Text(
+                                  AppLocalizations.of(context).new_password)),
                         ),
                         const SizedBox(
                           height: 30,
@@ -88,17 +87,18 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         FormBuilderTextField(
                           validator: ((value) {
                             if (value == null || value.isEmpty) {
-                              return "Morate unijeti vrijednost";
+                              return AppLocalizations.of(context).mvalue;
                             } else if (value !=
                                 _formKey.currentState?.value['newPassword']) {
-                              return "Nova lozinka i potvrda lozinke se ne podudaraju.";
+                              return AppLocalizations.of(context).pass_no_matc;
                             } else {
                               return null;
                             }
                           }),
                           name: 'confirmPassword',
-                          decoration: const InputDecoration(
-                              label: Text('Potvrda nove lozinke')),
+                          decoration: InputDecoration(
+                              label: Text(
+                                  AppLocalizations.of(context).pass_confirm)),
                         ),
                         const SizedBox(
                           height: 80,
@@ -110,15 +110,19 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 if (_formKey.currentState!.validate()) {
                                   var res = await _userProvider.changePassword({
                                     'id': Autentification.tokenDecoded?['Id'],
-                                    'password': _formKey.currentState?.value['password'],
-                                    'newPassword':_formKey.currentState?.value['newPassword'],
-                                    'confirmNewPassword': _formKey.currentState?.value['confirmPassword']
+                                    'password': _formKey
+                                        .currentState?.value['password'],
+                                    'newPassword': _formKey
+                                        .currentState?.value['newPassword'],
+                                    'confirmNewPassword': _formKey
+                                        .currentState?.value['confirmPassword']
                                   });
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                           content: Text(
-                                              'Uspješna promjena lozinke')));
+                                              AppLocalizations.of(context)
+                                                  .su_mod_password)));
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
@@ -126,14 +130,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       (route) => false);
                                 }
                               } catch (e) {
-                                alertBox(context, 'Greška', e.toString());
+                                alertBox(
+                                    context,
+                                    AppLocalizations.of(context).error,
+                                    e.toString());
                               }
-                              // var res = _userProvider.changeEmail(
-                              //     Autentification.tokenDecoded?['Id'],
-                              //     Autentification.tokenDecoded?['Email']);
-                              // print(res);
                             }),
-                            child: const Text('Promijeni'))
+                            child: Text(AppLocalizations.of(context).save))
                       ]),
                 ),
               ),

@@ -237,7 +237,6 @@ class _SearchGenreState extends State<SearchGenre> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _bookGenreProvider = context.read<BookGenreProvider>();
     _genreProvider = context.read<GenreProvider>();

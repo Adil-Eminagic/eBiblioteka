@@ -28,6 +28,7 @@ namespace eBiblioteka.Infrastructure
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<BookFile> BookFiles { get; set; }
         public DbSet<RecommendResult> RecommendResults { get; set; }
+        public DbSet<UserQuiz> UserQuizzes { get; set; }
 
 
 

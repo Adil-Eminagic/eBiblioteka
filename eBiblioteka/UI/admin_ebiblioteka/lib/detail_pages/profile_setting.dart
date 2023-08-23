@@ -47,7 +47,6 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
   SearchResult<Country>? countryResult;
   SearchResult<Gender>? genderResult;
   SearchResult<Role>? roleResult;
-  //User? user;
   String? photo;
   bool isLoading = true;
 
@@ -109,10 +108,8 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                         ? Container()
                         : ElevatedButton(
                             onPressed: () async {
-                              // _formKey.currentState
-                              // ?.saveAndValidate(); //moramo spasiti vrijednosti forme kako bi se pohranile u currentstate
+                            
                               _formKey.currentState?.save();
-                              print(_formKey.currentState?.value);
 
                               try {
                                 if (_formKey.currentState!.validate()) {
@@ -136,10 +133,9 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                                               AppLocalizations.of(context)
                                                   .su_mod_profie)));
 
-                                  // Autentification.loggedUser =
-                                  //     await _userProvider.getById(widget.user!.id!);
+                               
 
-                                  Navigator.pop(context, 'getUser');
+                                  Navigator.pop(context, 'getUser');//to refresh data
                                   Navigator.pop(context);
                                 }
                               } on Exception catch (e) {
@@ -280,7 +276,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                             builder: ((context) =>
                                 const ChangePasswordPage())));
                       }),
-                      child: Text(AppLocalizations.of(context).change_email)),
+                      child: Text(AppLocalizations.of(context).change_password)),
                 ],
               ))
             ],
@@ -305,7 +301,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                   icon: const Icon(Icons.close),
                   onPressed: () {
                     _formKey.currentState!
-                        .fields['genderId'] //brisnje selekcije iz forme
+                        .fields['genderId'] 
                         ?.reset();
                   },
                 ),

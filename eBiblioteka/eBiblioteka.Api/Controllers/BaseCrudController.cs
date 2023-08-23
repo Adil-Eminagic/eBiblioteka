@@ -134,5 +134,22 @@ namespace eBiblioteka.Api.Controllers
                 })
             });
         }
+
+        [Authorize]
+        [HttpGet("GetCount")]
+        public virtual async Task<IActionResult> GetCount([FromQuery] TSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var dto = await Service.GetCountAsync(searchObject, cancellationToken);
+                return Ok(dto);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Problem when getting paged resources for page number {0}, with page size {1}", searchObject.PageNumber, searchObject.PageSize);
+                return BadRequest(e.Message + " " + e?.InnerException);
+
+            }
+        }
     }
 }

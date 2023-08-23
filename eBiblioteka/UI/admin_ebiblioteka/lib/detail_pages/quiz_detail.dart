@@ -55,56 +55,7 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                         children: [
                           widget.quiz == null
                               ? Container()
-                              : TextButton(
-                                  onPressed: () async {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                              title:
-                                                   Text(AppLocalizations.of(context).quiz_del_title),
-                                              content: Text(
-                                                  AppLocalizations.of(context).quiz_del_mes),
-                                              actions: [
-                                                TextButton(
-                                                    onPressed: (() {
-                                                      Navigator.pop(context);
-                                                    }),
-                                                    child:
-                                                         Text(AppLocalizations.of(context).cancel)),
-                                                TextButton(
-                                                    onPressed: () async {
-                                                      try {
-                                                        await _quizProvider
-                                                            .remove(widget
-                                                                    .quiz?.id ??
-                                                                0);
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                 SnackBar(
-                                                                    content: Text(
-                                                                        AppLocalizations.of(context).quiz_del_su)));
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(
-                                                            context, 'reload');
-                                                      } catch (e) {
-                                                        alertBoxMoveBack(
-                                                            context,
-                                                            AppLocalizations.of(context).error,
-                                                            e.toString());
-                                                      }
-                                                    },
-                                                    child: const Text('Ok')),
-                                              ],
-                                            ));
-                                  },
-                                  child: Text(AppLocalizations.of(context).quiz_del_lbl)),
-                          widget.quiz == null
-                              ? Container()
-                              : const SizedBox(
-                                  width: 7,
-                                ),
+                              :
                           ElevatedButton(
                               onPressed: () async {
                                 _formKey.currentState?.save();
@@ -214,30 +165,6 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
               ? Container()
               : Row(
                   children: [
-                    //  Column(
-                    //         children: [
-                    //           Switch(
-                    //             value: widget.quiz!.isActive!,
-                    //             activeColor: Colors.brown,
-                    //             onChanged: (bool value) {},
-                    //           ),
-                    //           widget.quiz!.isActive! == true
-                    //               ? const Text('Aktvan kviz')
-                    //               : const Text('Nekativan kviz'),
-                    //           const SizedBox(
-                    //             height: 10,
-                    //           ),
-                    //           widget.quiz!.isActive! == false
-                    //               ? const Text(
-                    //                   'Minimalno jedno pitanje i svako pitanje mora biti aktivno',
-                    //                   style: TextStyle(color: Colors.red),
-                    //                 )
-                    //               : Container()
-                    //         ],
-                    //       ),
-                    //        const SizedBox(
-                    //         width: 40,
-                    //       ),
                     ElevatedButton(
                         onPressed: () async {
                           var refresh = await Navigator.of(context)
@@ -245,10 +172,6 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                   builder: (context) => QuestionsListPage(
                                         quizId: widget.quiz!.id!,
                                       )));
-
-                          // if (refresh == 'reload2') {
-                          //   inittt();
-                          // }
                         },
                         child: Text(AppLocalizations.of(context).quiz_questions)),
                   ],

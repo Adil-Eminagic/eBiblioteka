@@ -1,6 +1,6 @@
+import 'package:admin_ebiblioteka/pages/reporting_page.dart';
 import 'package:admin_ebiblioteka/providers/language_provider.dart';
 
-import '../pages/book_list.dart';
 import '../providers/sign_provider.dart';
 import '../utils/util.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,15 +24,12 @@ class _LoginPageState extends State<LoginPage> {
 
   late SignProvider _signProvider = SignProvider();
   late LanguageProvider _languageProvider = LanguageProvider();
-  //late UserProvider _userProvider = UserProvider();
   bool isLoading = false;
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _signProvider = context.read<SignProvider>();
-    //_userProvider = context.read<UserProvider>();
     _languageProvider = context.read<LanguageProvider>();
   }
 
@@ -47,10 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                          //title: Text('nesto'),
-
                           content:
-                              // Image(image: 'assets/uk.png'),
                               Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -131,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextField(
                     controller: _passwordController,
+                    obscureText: true,
                     decoration:  InputDecoration(
                         label: Text(AppLocalizations.of(context).password), icon: const Icon(Icons.password)),
                   ),
@@ -138,19 +134,17 @@ class _LoginPageState extends State<LoginPage> {
                     height: 55,
                   ),
                   isLoading
-                      ? Container(
+                      ? const SizedBox(
                           width: 25,
                           height: 25,
-                          child: const SpinKitRing(color: Colors.brown),
-                        ) //const Text('Učitavanje', style:  TextStyle(fontWeight: ),)
+                          child:  SpinKitRing(color: Colors.brown),
+                        ) 
                       : ElevatedButton(
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
                             });
 
-                            _emailController.text = "site.admin@gmail.com";
-                            _passwordController.text = "test";
                             var email = _emailController.text;
                             var password = _passwordController.text;
 
@@ -161,20 +155,36 @@ class _LoginPageState extends State<LoginPage> {
                               Autentification.token = token;
                               Autentification.tokenDecoded =
                                   JwtDecoder.decode(token);
-                              // int number= int.parse(Autentification.tokenDecoded!['Id']);
-                              // Autentification.loggedUser = await _userProvider
-                              //     .getById(number);
-                              print(Autentification.tokenDecoded);
-                              // if (Autentification.tokenDecoded?['Role'] == 'User') {
-                              //   alertBox(context, 'Greška',
-                              //       'Korisnicima zabranjen pristup desktop aplikaciji');
-                              // } else {
+                           
+                              if (Autentification.tokenDecoded?['Role'] == 'User') {
+                                    showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title:  Text(AppLocalizations.of(context).error),
+                                        content:  Text(
+                                         AppLocalizations.of(context).forbid_users,
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                              },
+                                              child: const Text('Ok'))
+                                        ],
+                                      ));
+                            
+                              } else {
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(builder: (context) {
-                                return const BooksPage();
+                                return const ReportingPage();
                               }));
                               isLoading = false;
-                              //}
+                              }
                             } on Exception catch (e) {
                               showDialog(
                                   context: context,
@@ -193,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   isLoading = false;
                                                 });
                                               },
-                                              child: Text('Ok'))
+                                              child: const Text('Ok'))
                                         ],
                                       ));
                             }
@@ -202,25 +212,6 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 15,
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     const Text(
-                  //       'Nemate nalog',
-                  //       // style: TextStyle(
-                  //       //   decoration: TextDecoration.underline,
-                  //       // ),
-                  //     ),
-                  //     TextButton(
-                  //         onPressed: () {
-                  //           Navigator.of(context).push(MaterialPageRoute(
-                  //               builder: (context) => const SignupPage()));
-                  //         },
-                  //         child: Text(AppLocalizations.of(context).language)
-                  //         //const Text('Registrujte se, ${}'),
-                  //         ),
-                  //   ],
-                  // )
                 ],
               ),
             ),

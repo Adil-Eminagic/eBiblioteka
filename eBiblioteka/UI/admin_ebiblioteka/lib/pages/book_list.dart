@@ -32,7 +32,6 @@ class _BooksPageState extends State<BooksPage> {
  final TextEditingController _titleController = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _bookProvider = context.read<BookProvider>();
     _recommendResultProvider = context.read<RecommendResultProvider>();
@@ -113,7 +112,6 @@ class _BooksPageState extends State<BooksPage> {
            const DataColumn(label:  Text("Id")),
             DataColumn(label: Text(AppLocalizations.of(context).title)),
             DataColumn(label: Text(AppLocalizations.of(context).wrote)),
-            //DataColumn(label: Text("Žanr")),
             DataColumn(label: Text(AppLocalizations.of(context).author)),
           ],
           rows: result?.items
@@ -180,6 +178,8 @@ class _BooksPageState extends State<BooksPage> {
               onPressed: () async {
                 try {
                     var data = await _recommendResultProvider.trainData();
+                    ScaffoldMessenger.of(context).showSnackBar(
+             SnackBar(content: Text(AppLocalizations.of(context).su_trained)));
 
                 } on Exception catch (e) {
                   alertBox(context, AppLocalizations.of(context).error, e.toString());

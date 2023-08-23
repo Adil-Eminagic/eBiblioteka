@@ -1,0 +1,59 @@
+version: '3'
+services:
+  rabbitMQ:
+   image: rabbitmq:3-management
+   hostname: 'rmq_host'
+   container_name: 'rabbitmq_container'
+   ports:
+    - 8050:15672
+    - 5672:5672
+   networks: 
+    - elibarynet2023
+
+  elibary_sql:
+    container_name: app_db
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SQL_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - 1405:1433
+    expose:
+      - 1433
+    networks:
+      - elibarynet2023
+
+  elibary_api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      - ConnectionStrings:Main=Server=elibary_sql, 1433;Database=200200;User=sa;Password=Word5678?;ConnectRetryCount=0; TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 7034:7034
+    networks:
+      - elibarynet2023
+    links:
+      - elibary_sql
+    depends_on:
+      - elibary_sql
+
+  main_api:
+    restart: unless-stopped
+    build:
+      context: ../Main
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 7005:7005
+    networks:
+      - elibarynet2023
+    
+    
+  
+networks:
+  elibarynet2023:
+    driver: bridge

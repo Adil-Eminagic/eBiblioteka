@@ -8,7 +8,6 @@ class QuoteProvider extends BaseProvider<Quote>{
 
 @override
   Quote fromJson(data) {
-    // TODO: implement fromJson
     return Quote.fromJson(data);
   }
 

@@ -115,5 +115,11 @@ namespace eBiblioteka.Application
                 await ValidateAsync(dto, cancellationToken);
             }
         }
+
+        public virtual async Task<ReportInfo<TDto>> GetCountAsync(TSearchObject searchObject, CancellationToken cancellationToken = default)
+        {
+            var reportInfo = await CurrentRepository.GetCountAsync(searchObject, cancellationToken);
+            return Mapper.Map<ReportInfo<TDto>>(reportInfo);
+        }
     }
 }

@@ -1,7 +1,9 @@
 import 'package:admin_ebiblioteka/pages/book_list.dart';
 import 'package:admin_ebiblioteka/pages/genre_list.dart';
 import 'package:admin_ebiblioteka/detail_pages/profile_setting.dart';
+import 'package:admin_ebiblioteka/pages/notification_list.dart';
 import 'package:admin_ebiblioteka/pages/quiz_list.dart';
+import 'package:admin_ebiblioteka/pages/reporting_page.dart';
 import 'package:admin_ebiblioteka/pages/users_list.dart';
 import 'package:admin_ebiblioteka/providers/language_provider.dart';
 import 'package:admin_ebiblioteka/providers/user_provider.dart';
@@ -34,7 +36,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _userProvider = context.read<UserProvider>();
     _languageProvider = context.read<LanguageProvider>();
@@ -186,6 +187,10 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ? Container()
             : ListView(
                 children: [
+                    drawerItem(context, AppLocalizations.of(context).report,
+                      const ReportingPage()),
+                  drawerItem(context, AppLocalizations.of(context).notifications, const NotificationsListPage()),
+
                   drawerItem(context, AppLocalizations.of(context).books,
                       const BooksPage()),
                   drawerItem(context, AppLocalizations.of(context).authors,
@@ -196,7 +201,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       const UsersPage(
                         roleUser: "User",
                       )),
-                  drawerItem(
+                 user!.roleId!=1 ? Container() : drawerItem(
                       context,
                       AppLocalizations.of(context).admins,
                       const UsersPage(

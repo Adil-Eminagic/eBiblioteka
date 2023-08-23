@@ -24,7 +24,6 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'id': widget.genre?.id.toString(),
@@ -109,7 +108,6 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
                     ElevatedButton(
                         onPressed: () async {
                           _formKey.currentState?.save();
-                          print(_formKey.currentState?.value);
 
                           try {
                             if (_formKey.currentState!.validate()) {
