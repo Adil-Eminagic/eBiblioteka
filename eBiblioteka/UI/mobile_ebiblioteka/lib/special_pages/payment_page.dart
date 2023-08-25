@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:mobile_ebiblioteka/providers/user_provider.dart';
 import 'package:mobile_ebiblioteka/utils/util.dart';
@@ -55,8 +54,8 @@ class _PaymentPageState extends State<PaymentPage> {
                           MaterialPageRoute(
                             builder: (BuildContext context) => UsePaypal(
                                 sandboxMode: true,
-                                clientId: dotenv.env["CLIENT_ID"]!,
-                                secretKey: dotenv.env["SECRET"]!,
+                                clientId: 'AZkL37Viqql10TlDRH-phzZyRO-5CzaQ_tX4gidYXEbRF-sJS2S0nZ60q-CtSPG3sgR4d7mYKyV99Oh4',
+                                secretKey: 'EIDWu9u9z122pgdaN9JOsLelVZsdZb5k0knNWHVh_xt_6EFJRpuL6CnmFibS51s3-QcZ1PiEqaBkAqSW',
                                 returnURL: "https://samplesite.com/return",
                                 cancelURL: "https://samplesite.com/cancel",
                                 transactions: const [
