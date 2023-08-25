@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=${SQL_PASSWORD}
+      - SA_PASSWORD=Word5678?
       - MSSQL_PID=Developer
     ports:
       - 1405:1433
