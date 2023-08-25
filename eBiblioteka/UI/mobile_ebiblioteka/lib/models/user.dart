@@ -24,6 +24,7 @@ class User {
   Role? role;
   int? profilePhotoId;
   Photo? profilePhoto;
+  bool isActive;
 
   User(
       this.id,
@@ -41,8 +42,8 @@ class User {
       this.role,
       this.roleId,
       this.profilePhoto,
-      this.profilePhotoId
-      );
+      this.profilePhotoId,
+      this.isActive);
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

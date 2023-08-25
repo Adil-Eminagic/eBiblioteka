@@ -10,7 +10,6 @@ import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class AnswersListPage extends StatefulWidget {
   const AnswersListPage({Key? key, this.questionId}) : super(key: key);
   final int? questionId;
@@ -44,10 +43,12 @@ class _AnswesrListPageState extends State<AnswersListPage> {
             _dropdownValue == 0 ? null : (_dropdownValue == 1 ? false : true),
       });
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -60,6 +61,9 @@ class _AnswesrListPageState extends State<AnswersListPage> {
       child: Column(children: [
         _buildSearch(),
         isLoading ? Container() : _buildDataTable(),
+         isLoading == false && result != null && result!.pageCount > 1 ?  const SizedBox(
+          height: 20,
+        ) : Container(),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           if (isLoading == false && result != null && result!.pageCount > 1)
             for (int i = 0; i < result!.pageCount; i++)
@@ -75,11 +79,14 @@ class _AnswesrListPageState extends State<AnswersListPage> {
                         'pageNumber': i + 1
                       });
 
-                      setState(() {
-                        result = data;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          result = data;
+                        });
+                      }
                     } on Exception catch (e) {
-                      alertBox(context, AppLocalizations.of(context).error, e.toString());
+                      alertBox(context, AppLocalizations.of(context).error,
+                          e.toString());
                     }
                   },
                   child: CircleAvatar(
@@ -104,7 +111,7 @@ class _AnswesrListPageState extends State<AnswersListPage> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(80, 0, 80, 0),
           child: DataTable(
-            columns:  [
+            columns: [
               DataColumn(label: Text(AppLocalizations.of(context).content)),
               DataColumn(label: Text(AppLocalizations.of(context).is_true)),
             ],
@@ -146,7 +153,8 @@ class _AnswesrListPageState extends State<AnswersListPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: _contentConroller,
-                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).name_2)),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).name_2)),
               ),
             ),
           ),
@@ -155,17 +163,25 @@ class _AnswesrListPageState extends State<AnswersListPage> {
           ),
           Expanded(
               child: DropdownButton(
-            items:  [
-              DropdownMenuItem(value: 0, child: Text(AppLocalizations.of(context).all)),
-              DropdownMenuItem(value: 1, child: Text(AppLocalizations.of(context).false_val)),
-              DropdownMenuItem(value: 2, child: Text(AppLocalizations.of(context).true_val)),
+            items: [
+              DropdownMenuItem(
+                  value: 0, child: Text(AppLocalizations.of(context).all)),
+              DropdownMenuItem(
+                  value: 1,
+                  child: Text(AppLocalizations.of(context).false_val)),
+              DropdownMenuItem(
+                  value: 2, child: Text(AppLocalizations.of(context).true_val)),
             ],
             value: _dropdownValue,
             onChanged: ((value) {
               if (value is int) {
-                setState(() {
-                  _dropdownValue = value;
-                });
+                if (mounted) {
+                  if (mounted) {
+                    setState(() {
+                      _dropdownValue = value;
+                    });
+                  }
+                }
               }
             }),
           )),
@@ -183,11 +199,14 @@ class _AnswesrListPageState extends State<AnswersListPage> {
                         : (_dropdownValue == 1 ? false : true),
                   });
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
-                  alertBox(context, AppLocalizations.of(context).error, e.toString());
+                  alertBox(context, AppLocalizations.of(context).error,
+                      e.toString());
                 }
               },
               child: Text(AppLocalizations.of(context).search)),

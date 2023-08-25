@@ -43,10 +43,12 @@ class _UsersPageState extends State<UsersPage> {
         'isActive': _dropdownValue == 1 ? true : false
       });
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -55,12 +57,17 @@ class _UsersPageState extends State<UsersPage> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title: widget.roleUser == 'User' ? AppLocalizations.of(context).users : AppLocalizations.of(context).admins,
+        title: widget.roleUser == 'User'
+            ? AppLocalizations.of(context).users
+            : AppLocalizations.of(context).admins,
         child: Column(children: [
           _buildSearch(),
           isLoading
               ? const SpinKitRing(color: Colors.brown)
               : _buildDataTable(),
+                isLoading == false && result != null && result!.pageCount > 1 ?  const SizedBox(
+          height: 20,
+        ) : Container(),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (isLoading == false && result != null && result!.pageCount > 1)
               for (int i = 0; i < result!.pageCount; i++)
@@ -76,11 +83,14 @@ class _UsersPageState extends State<UsersPage> {
                           'pageNumber': i + 1
                         });
 
-                        setState(() {
-                          result = data;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            result = data;
+                          });
+                        }
                       } on Exception catch (e) {
-                        alertBox(context, AppLocalizations.of(context).error, e.toString());
+                        alertBox(context, AppLocalizations.of(context).error,
+                            e.toString());
                       }
                     },
                     child: CircleAvatar(
@@ -95,6 +105,9 @@ class _UsersPageState extends State<UsersPage> {
                                   : Colors.brown),
                         ))),
           ]),
+          const SizedBox(
+          height: 20,
+        )
         ]));
   }
 
@@ -172,9 +185,11 @@ class _UsersPageState extends State<UsersPage> {
                   value: _dropdownValue,
                   onChanged: ((value) {
                     if (value is int) {
-                      setState(() {
-                        _dropdownValue = value;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          _dropdownValue = value;
+                        });
+                      }
                     }
                   }))),
           const SizedBox(
@@ -190,9 +205,11 @@ class _UsersPageState extends State<UsersPage> {
                     'isActive': _dropdownValue == 1 ? true : false
                   });
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
                   alertBox(context, AppLocalizations.of(context).error,
                       e.toString());

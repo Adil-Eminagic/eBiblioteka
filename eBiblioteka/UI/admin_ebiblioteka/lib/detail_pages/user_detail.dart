@@ -41,10 +41,10 @@ class _UserDetailPageState extends State<UserDetailPage> {
 
   SearchResult<Country>? countryResult;
   SearchResult<Gender>? genderResult;
-  SearchResult<Role>? roleResult;
   String? photo;
   bool isLoading = true;
   bool? isActive;
+  TextEditingController roleController = TextEditingController();
 
   @override
   void initState() {
@@ -61,10 +61,9 @@ class _UserDetailPageState extends State<UserDetailPage> {
       'countryId': widget.user?.countryId.toString(),
       'roleId': widget.user?.roleId.toString(),
     };
-
+    roleController.text = widget.roleUser == "User" ? "User" : "Admin";
     _genderProvider = context.read<GenderProvider>();
     _countryProvider = context.read<CountryProvider>();
-    _roleProvider = context.read<RoleProvider>();
     _userProvider = context.read<UserProvider>();
 
     if (widget.user != null) {
@@ -81,11 +80,12 @@ class _UserDetailPageState extends State<UserDetailPage> {
     try {
       countryResult = await _countryProvider.getPaged();
       genderResult = await _genderProvider.getPaged();
-      roleResult = await _roleProvider.getPaged();
 
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -97,95 +97,105 @@ class _UserDetailPageState extends State<UserDetailPage> {
         title: widget.user != null
             ? "${widget.user!.roleId == 3 ? AppLocalizations.of(context).user : AppLocalizations.of(context).admin} id: ${(widget.user?.id.toString() ?? '')}"
             : "${AppLocalizations.of(context).new_lbl} ${widget.roleUser == "User" ? AppLocalizations.of(context).user_lower : AppLocalizations.of(context).admin_lower}",
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-            child: Column(
-              children: [
-                isLoading
-                    ? const SpinKitRing(color: Colors.brown)
-                    : _buildForm(),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+        child: isLoading == true
+            ? const Center(child: SpinKitRing(color: Colors.brown))
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
+                  child: Column(
                     children: [
-                      widget.user == null
-                          ? Container()
-                          : const SizedBox(
-                              width: 7,
-                            ),
-                      ElevatedButton(
-                          onPressed: () async {
-                            _formKey.currentState?.save();
+                      _buildForm(),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            widget.user == null
+                                ? Container()
+                                : const SizedBox(
+                                    width: 7,
+                                  ),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  _formKey.currentState?.save();
 
-                            try {
-                              if (_formKey.currentState!.validate()) {
-                                if (widget.user != null) {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
+                                  try {
+                                    if (_formKey.currentState!.validate()) {
+                                      if (widget.user != null) {
+                                        Map<String, dynamic> request = Map.of(
+                                            _formKey.currentState!.value);
 
-                                  request['id'] = widget.user?.id;
-                                  request['birthDate'] = DateEncode(_formKey
-                                      .currentState?.value['birthDate']);
-                                  if (_base64Image != null) {
-                                    request['profilePhoto'] = _base64Image;
+                                        request['id'] = widget.user?.id;
+                                        request['birthDate'] = DateEncode(
+                                            _formKey.currentState
+                                                ?.value['birthDate']);
+                                        if (_base64Image != null) {
+                                          request['profilePhoto'] =
+                                              _base64Image;
+                                        }
+
+                                        request['roleId'] = widget.user!.roleId;
+
+                                        request['isActive'] = isActive;
+                                        var res =
+                                            await _userProvider.update(request);
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    AppLocalizations.of(context)
+                                                        .user_mod_su)));
+
+                                        Navigator.pop(context, 'reload');
+                                      } else {
+                                        Map<String, dynamic> request = Map.of(
+                                            _formKey.currentState!.value);
+
+                                        request['birthDate'] = DateEncode(
+                                            _formKey.currentState
+                                                ?.value['birthDate']);
+
+                                        if (request['passsword'] == '') {
+                                          request['passsword'] = null;
+                                        }
+                                        if (_base64Image != null) {
+                                          request['profilePhoto'] =
+                                              _base64Image;
+                                        }
+                                        request['isActive'] = true;
+
+                                        request['roleId'] =
+                                            widget.roleUser == "User" ? 3 : 2;
+
+                                        await _userProvider.insert(request);
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    AppLocalizations.of(context)
+                                                        .user_add_su)));
+
+                                        Navigator.pop(context, 'reload');
+                                      }
+                                    }
+                                  } on Exception catch (e) {
+                                    alertBox(
+                                        context,
+                                        AppLocalizations.of(context).error,
+                                        e.toString());
                                   }
-
-                                  request['isActive'] = isActive;
-                                  var res = await _userProvider.update(request);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              AppLocalizations.of(context)
-                                                  .user_mod_su)));
-
-                                  Navigator.pop(context, 'reload');
-                                } else {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
-
-                                  request['birthDate'] = DateEncode(_formKey
-                                      .currentState?.value['birthDate']);
-                               
-                                  if (request['passsword'] == '') {
-                                    request['passsword'] = null;
-                                  }
-                                  if (_base64Image != null) {
-                                    request['profilePhoto'] = _base64Image;
-                                  }
-                                  request['isActive'] = true;
-
-                                  await _userProvider.insert(request);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              AppLocalizations.of(context)
-                                                  .user_add_su)));
-
-                                  Navigator.pop(context, 'reload');
-                                }
-                              }
-                            } on Exception catch (e) {
-                              alertBox(
-                                  context,
-                                  AppLocalizations.of(context).error,
-                                  e.toString());
-                            }
-                          },
-                          child: Text(
-                            AppLocalizations.of(context).save,
-                            style: const TextStyle(fontSize: 15),
-                          )),
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context).save,
+                                  style: const TextStyle(fontSize: 15),
+                                )),
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
-          ),
-        ));
+                ),
+              ));
   }
 
   FormBuilder _buildForm() {
@@ -200,7 +210,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   children: [
                     Text(
                       AppLocalizations.of(context).activity,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                     const SizedBox(
                       width: 40,
@@ -211,9 +221,11 @@ class _UserDetailPageState extends State<UserDetailPage> {
                       activeColor: Colors.brown,
                       onChanged: (bool value) {
                         // This is called when the user toggles the switch.
-                        setState(() {
-                          isActive = value;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            isActive = value;
+                          });
+                        }
                       },
                     )
                   ],
@@ -282,39 +294,16 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 width: 80,
               ),
               Expanded(
-                  child: FormBuilderDropdown<String>(
-                name: 'roleId',
-                validator: (value) {
-                  if (value == null) {
-                    return AppLocalizations.of(context).mfield;
-                  } else {
-                    return null;
-                  }
-                },
+                  child: TextField(
+                    controller: roleController,
+                    readOnly: true,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).role,
-                  suffix: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      _formKey.currentState!
-                          .fields['roleId'] //brisnje selekcije iz forme
-                          ?.reset();
-                    },
-                  ),
-                ),
-                items: roleResult?.items
-                        .map((g) => DropdownMenuItem(
-                              alignment: AlignmentDirectional.center,
-                              value: g.id.toString(),
-                              child: Text(g.value ?? ''),
-                            ))
-                        .toList() ??
-                    [],
-              )),
+                    label: Text(AppLocalizations.of(context).role)),
+              ))
             ],
           ),
           const SizedBox(
-            height: 15,
+            height: 25,
           ),
           Row(
             children: [
@@ -445,7 +434,8 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   child: FormBuilderTextField(
                 name: 'biography',
                 maxLines: 3,
-                decoration: InputDecoration(label: Text(AppLocalizations.of(context).biography)),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).biography)),
               )),
             ],
           ),
@@ -483,9 +473,11 @@ class _UserDetailPageState extends State<UserDetailPage> {
           result.files.single.path!); //jer smo sa if provjerili pa je sigurn !
       _base64Image = base64Encode(_image!.readAsBytesSync());
 
-      setState(() {
-        photo = _base64Image; //opet !
-      });
+      if (mounted) {
+        setState(() {
+          photo = _base64Image; //opet !
+        });
+      }
     }
   }
 }

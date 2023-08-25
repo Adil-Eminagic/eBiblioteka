@@ -11,6 +11,9 @@ namespace eBiblioteka.Application.Interfaces
 
         Task<List<RecommendResultDto>> TrainBooksModelAsync(CancellationToken cancellationToken = default);
 
+        Task DeleteAllRecommendation(CancellationToken cancellationToken = default);
+        
+
 
     }
 }

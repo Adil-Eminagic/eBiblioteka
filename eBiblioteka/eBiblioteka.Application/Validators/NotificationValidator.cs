@@ -9,7 +9,7 @@ namespace eBiblioteka.Application
         public NotificationValidator()
         {
             RuleFor(u => u.Title).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty);
-            RuleFor(u => u.isRead).NotNull().WithErrorCode(ErrorCodes.NotNull);
+            RuleFor(u => u.IsRead).NotNull().WithErrorCode(ErrorCodes.NotNull);
             RuleFor(c => c.UserId).NotNull().WithErrorCode(ErrorCodes.NotNull);
 
         }

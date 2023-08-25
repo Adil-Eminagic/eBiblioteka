@@ -22,7 +22,6 @@ class QuestionDeatilPage extends StatefulWidget {
 
 List<int> options = List.generate(1000000, (index) => index + 1);
 
-
 class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
   late QuestionProvider _questionProvider = QuestionProvider();
   late AnswerProvider _answerProvider = AnswerProvider();
@@ -53,9 +52,11 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
         'questionId': result!.items[count].id
       }); //loading all answers for current question, starts with first because count is initally 0
 
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -110,35 +111,7 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  // Row(
-                  //   children: [
-                  //     count > 0
-                  //         ? IconButton(
-                  //             onPressed: (() {
-                  //               setState(() {
-                  //                 count -= 1;
-                  //                 isLoading = true;
-                  //                 currentOption = 0;
-                  //               });
-                  //               initData();
-                  //             }),
-                  //             icon: Icon(Icons.arrow_back))
-                  //         : Container(),
-                  //     Expanded(child: Container()),
-                  //     (count + 1) < result!.items.length
-                  //         ? IconButton(
-                  //             onPressed: (() {
-                  //               setState(() {
-                  //                 count += 1;
-                  //                 currentOption = 0;
-                  //                 isLoading = true;
-                  //               });
-                  //               initData();
-                  //             }),
-                  //             icon: Icon(Icons.arrow_forward))
-                  //         : Container()
-                  //   ],
-                  // ),
+                 
                   const SizedBox(height: 10),
                   const Divider(
                     thickness: 3,
@@ -153,12 +126,17 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                           ListTile(
                             title: Text(answerResult!.items[i].content ?? ''),
                             trailing: Radio<int>(
-                              value: options[i],//list of options, starts with 1, not 0, but i is 0 here which means frist element of optiosn which is one
+                              value: options[
+                                  i], //list of options, starts with 1, not 0, but i is 0 here which means frist element of optiosn which is one
                               groupValue: currentOption,
                               onChanged: (int? value) {
-                                setState(() {
-                                  currentOption = value!;
-                                });
+                                if (mounted) {
+                                  if (mounted) {
+                                    setState(() {
+                                      currentOption = value!;
+                                    });
+                                  }
+                                }
                               },
                             ),
                           ),
@@ -172,33 +150,37 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      (count + 1) == result!.items.length//if lenght is 3 lat element has index 2, so if count+1 == 3 it means it is last question of quiz and we cann't go on next question
+                      (count + 1) ==
+                              result!.items
+                                  .length //if lenght is 3 lat element has index 2, so if count+1 == 3 it means it is last question of quiz and we cann't go on next question
                           ? ElevatedButton(
                               onPressed: (() {
                                 if (answerResult!
                                         .items[currentOption - 1].isTrue! ==
-                                    true) {//ifanswer is true add points of that question for overall points 
+                                    true) {
+                                  //ifanswer is true add points of that question for overall points
                                   points += result!.items[count].points!;
-                                  print(points);
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => QuizResultPage(//and then go to result page
+                                      builder: (context) => QuizResultPage(
+                                        //and then go to result page
                                         totalPoint: widget.quiz!.totalPoints,
                                         wonPoints: points,
                                         quizId: widget.quiz!.id,
                                       ),
                                     ),
                                   );
-                                } else if (currentOption == 0) {//if user didn't select answer force him to do it
+                                } else if (currentOption == 0) {
+                                  //if user didn't select answer force him to do it
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                          duration:const Duration(seconds: 2),
+                                          duration: const Duration(seconds: 2),
                                           content: Text(
                                               AppLocalizations.of(context)
                                                   .manswer)));
                                 } else {
-                                  print(points);
-                                  Navigator.of(context).push(//just in case
+                                  Navigator.of(context).push(
+                                    //just in case
                                     MaterialPageRoute(
                                       builder: (context) => QuizResultPage(
                                         totalPoint: widget.quiz!.totalPoints,
@@ -211,19 +193,22 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                               }),
                               child: Text(
                                   AppLocalizations.of(context).finish_quiz))
-                          : ElevatedButton(//this is else, when curent+1!=lenght, when it isn't last question
+                          : ElevatedButton(
+                              //this is else, when curent+1!=lenght, when it isn't last question
                               onPressed: (() {
                                 if (currentOption != 0 &&
                                     answerResult!
                                             .items[currentOption - 1].isTrue! ==
-                                        true) { //if user selected answer, and if answer is true true answer and 
+                                        true) {
+                                  //if user selected answer, and if answer is true true answer and
                                   points += result!.items[count].points!;
-                                  print(points);
-                                  setState(() {
-                                    count += 1;
-                                    currentOption = 0;
-                                    isLoading = true;
-                                  });
+                                  if (mounted) {
+                                    setState(() {
+                                      count += 1;
+                                      currentOption = 0;
+                                      isLoading = true;
+                                    });
+                                  }
                                   initData();
                                 } else if (currentOption == 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -233,12 +218,13 @@ class _QuestionDeatilPageState extends State<QuestionDeatilPage> {
                                               AppLocalizations.of(context)
                                                   .manswer)));
                                 } else {
-                                  print(points);
-                                  setState(() {
-                                    count += 1;
-                                    currentOption = 0;
-                                    isLoading = true;
-                                  });
+                                  if (mounted) {
+                                    setState(() {
+                                      count += 1;
+                                      currentOption = 0;
+                                      isLoading = true;
+                                    });
+                                  }
                                   initData();
                                 }
                               }),

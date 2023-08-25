@@ -24,7 +24,7 @@
     "inactive": "Neaktivne",
     "name": "Ime",
     "gender": "Spol",
-    "birth_date": "Datum rođenja",
+    "birth_year": "Godina rođenja",
     "role": "Uloga",
     "no_quizzes": "Nema dodanih kvizova",
     "lname": "Prezime",
@@ -67,9 +67,9 @@
     "su_mod_author": "Uspješna modifikacija autora",
     "su_del_author":"Uspješno brisanje autora",
     "del_author_title":"Brisanje autora",
-    "del_author_mes":"Da li želite obrisati autora?",
+    "del_author_mes":"Da li želite obrisati autora?\nAko obrišete ovog autora preporuka će biti\nobrisana(ako postoji), pa će te morati ponovo trenirati preporuku.\nTakođer i sve knjige ovog autora će butu obrisane ",
     "author_del_lbl":"Obriši autora",
-    "mortal_date":"Datum smrti",
+    "mortal_year":"Godina smrti",
     "user_add_su":"Uspješno dodavanje korisnika",
     "user_mod_su":"Uspješna modifikacija korisnika",
     "user_del_su":"Uspješno brisanje korisnika",
@@ -187,7 +187,18 @@
     "notif_del_title":"Brisanje obavijesti",
     "notif_del_mes":"Da li želite obrisati obavijests?",
     "notif_del_lbl":"Obriši obavijest",
-    "notif_del_su":"Uspješno brisanje obavijesti"
+    "notif_del_su":"Uspješno brisanje obavijesti",
+    "book_del_title":"Brisanje knjige",
+    "book_del_mes":"Da li želite obrisati knjige?\nAko obrišete ovu knjigu preporuka će biti\nobrisana(ako postoji), pa će te morati ponovo trenirati preporuku",
+    "book_del_lbl":"Obriši knjigu",
+    "book_su_del":"Uspješno brisanje knjige",
+    "recommend_su_del":"Preporuka je uspješno obrisana",
+    "notif_id":"Obavijest Id: ",
+    "dec_account":"Ne možete se prijaviti jer je vaš profil deaktiviran",
+    "invalid_points":"Broj bodova mora biti između 1 i 10",
+    "birth_date":"Datum rođenja"
+    
+
     
 
 

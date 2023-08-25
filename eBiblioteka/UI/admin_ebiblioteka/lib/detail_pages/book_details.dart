@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:admin_ebiblioteka/models/recommend_result.dart';
 import 'package:admin_ebiblioteka/pages/quote_list.dart';
 import 'package:admin_ebiblioteka/pages/rating_list.dart';
+import 'package:admin_ebiblioteka/providers/recommend_result_provider.dart';
 
 import '../models/author.dart';
 import '../models/book.dart';
@@ -38,6 +40,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
   late AuthorProvider _authorProvider = AuthorProvider();
   late BookProvider _bookProvider = BookProvider();
   late BookGenreProvider _bookGenreProvider = BookGenreProvider();
+  late RecommendResultProvider _recommendResultProvider =
+      RecommendResultProvider();
 
   bool isLoading = false;
   String? photo;
@@ -45,7 +49,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
   Book? bookSend;
   SearchResult<Author>? authorResult;
   SearchResult<BookGenre>? bookGenreResult;
-  bool? isActive;
 
   @override
   void initState() {
@@ -56,12 +59,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
       'publishingYear': widget.book?.publishingYear.toString(), // mora biti
       'authorId': widget.book?.authorID.toString(),
     };
-    if (widget.book != null) {
-      isActive = widget.book!.isActive!;
-    }
+
     _authorProvider = context.read<AuthorProvider>();
     _bookProvider = context.read<BookProvider>();
     _bookGenreProvider = context.read<BookGenreProvider>();
+    _recommendResultProvider = context.read<RecommendResultProvider>();
 
     if (widget.book != null && widget.book?.coverPhoto != null) {
       photo = widget.book?.coverPhoto?.data ?? '';
@@ -78,12 +80,13 @@ class _BookDetailPageState extends State<BookDetailPage> {
         bookGenreResult = await _bookGenreProvider
             .getPaged(filter: {'bookId': widget.book?.id});
         if (bookGenreResult!.items.isNotEmpty) {
-          print(bookGenreResult?.items[0].genre?.name);
         }
       }
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -95,125 +98,186 @@ class _BookDetailPageState extends State<BookDetailPage> {
       title: widget.book != null
           ? "${AppLocalizations.of(context).book_id} ${(widget.book?.id.toString() ?? '')}"
           : AppLocalizations.of(context).new_book,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-          child: Column(
-            children: [
-              isLoading ? const SpinKitRing(color: Colors.brown) : _buildForm(),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      child: isLoading == true
+          ? const Center(child: SpinKitRing(color: Colors.brown))
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
+                child: Column(
                   children: [
-                    widget.book == null
-                        ? Container()
-                        : const SizedBox(
-                            width: 7,
-                          ),
-                    ElevatedButton(
-                        onPressed: () async {
-                          _formKey.currentState?.save();
-                          try {
-                            if (_formKey.currentState!.validate()) {
-                              if (widget.book != null) {
-                                Map<String, dynamic> request =
-                                    Map.of(_formKey.currentState!.value);
+                    _buildForm(),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          widget.book == null
+                              ? Container()
+                              : TextButton(
+                                  onPressed: () async {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                              title: Text(
+                                                  AppLocalizations.of(context)
+                                                      .title),
+                                              content: Text(
+                                                  AppLocalizations.of(context)
+                                                      .book_del_mes),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: (() {
+                                                      Navigator.pop(context);
+                                                    }),
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .cancel)),
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      try {
+                                                        await _bookProvider
+                                                            .remove(widget
+                                                                    .book?.id ??
+                                                                0);
 
-                                request['id'] = widget.book
-                                    ?.id; // zbog ovoga nije radilo, treba id
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(SnackBar(
+                                                                content: Text(AppLocalizations.of(
+                                                                            context)
+                                                                        .book_su_del +
+                                                                    ', ' +
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .recommend_su_del)));
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(
+                                                            context, 'reload');
+                                                      } catch (e) {
+                                                        alertBoxMoveBack(
+                                                            context,
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .error,
+                                                            e.toString());
+                                                      }
+                                                    },
+                                                    child: const Text('Ok')),
+                                              ],
+                                            ));
+                                  },
+                                  child: Text(AppLocalizations.of(context)
+                                      .book_del_lbl)),
+                          widget.book == null
+                              ? Container()
+                              : const SizedBox(
+                                  width: 7,
+                                ),
+                          ElevatedButton(
+                              onPressed: () async {
+                                _formKey.currentState?.save();
+                                try {
+                                  if (_formKey.currentState!.validate()) {
+                                    if (widget.book != null) {
+                                      Map<String, dynamic> request =
+                                          Map.of(_formKey.currentState!.value);
 
-                                if (_base64Document != null) {
-                                  Map<String, dynamic> document = {
-                                    'name': _documentName,
-                                    'data': _base64Document
-                                  };
-                                  request['document'] = document;
+                                      request['id'] = widget.book
+                                          ?.id; // zbog ovoga nije radilo, treba id
+
+                                      if (_base64Document != null) {
+                                        Map<String, dynamic> document = {
+                                          'name': _documentName,
+                                          'data': _base64Document
+                                        };
+                                        request['document'] = document;
+                                      }
+
+                                      var publishingYear = int.parse(_formKey
+                                          .currentState!
+                                          .value['publishingYear']);
+                                      request['publishingYear'] =
+                                          publishingYear;
+
+
+                                      var openingCount =
+                                          widget.book?.openingCount as int;
+                                      request['openingCount'] = 0;
+
+                                      request['openingCount'] =
+                                          widget.book?.openingCount!;
+
+                                      if (_base64Image != null) {
+                                        request['image'] = _base64Image;
+                                      }
+
+                                      var res =
+                                          await _bookProvider.update(request);
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  AppLocalizations.of(context)
+                                                      .su_mod_book)));
+
+                                      Navigator.pop(context, 'reload');
+                                    } else {
+                                      Map<String, dynamic> request =
+                                          Map.of(_formKey.currentState!.value);
+
+                                      var publishingYear = int.parse(_formKey
+                                          .currentState!
+                                          .value['publishingYear']);
+                                      request['publishingYear'] =
+                                          publishingYear;
+
+                                      request['openingCount'] = 0;
+
+                                      if (_base64Document != null) {
+                                        Map<String, dynamic> document = {
+                                          'name': _documentName,
+                                          'data': _base64Document
+                                        };
+                                        request['document'] = document;
+                                      }
+
+                                      request['openingCount'] = 0;
+
+                                      if (_base64Image != null) {
+                                        request['image'] = _base64Image;
+                                      }
+
+                                      await _bookProvider.insert(request);
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  AppLocalizations.of(context)
+                                                      .su_add_book)));
+
+                                      Navigator.pop(context, 'reload');
+                                    }
+                                  }
+                                } on Exception catch (e) {
+                                  alertBox(
+                                      context,
+                                      AppLocalizations.of(context).error,
+                                      e.toString());
                                 }
-
-                                var publishingYear = int.parse(_formKey
-                                    .currentState!.value['publishingYear']);
-                                request['publishingYear'] = publishingYear;
-
-                                print(request['publishingYear']);
-
-                                var openingCount =
-                                    widget.book?.openingCount as int;
-                                request['openingCount'] = 0;
-
-                                request['openingCount'] =
-                                    widget.book?.openingCount!;
-
-                                if (_base64Image != null) {
-                                  request['image'] = _base64Image;
-                                }
-
-                                request['isActive'] = isActive;
-
-                                var res = await _bookProvider.update(request);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .su_mod_book)));
-
-                                Navigator.pop(context, 'reload');
-                              } else {
-                                Map<String, dynamic> request =
-                                    Map.of(_formKey.currentState!.value);
-
-                                var publishingYear = int.parse(_formKey
-                                    .currentState!.value['publishingYear']);
-                                request['publishingYear'] = publishingYear;
-
-                                request['openingCount'] = 0;
-
-                                if (_base64Document != null) {
-                                  Map<String, dynamic> document = {
-                                    'name': _documentName,
-                                    'data': _base64Document
-                                  };
-                                  request['document'] = document;
-                                }
-
-                                request['openingCount'] =
-                                    widget.book?.openingCount!;
-
-                                request['isActive'] = true;
-                                if (_base64Image != null) {
-                                  request['image'] = _base64Image;
-                                }
-
-                                await _bookProvider.insert(request);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .su_add_book)));
-
-                                Navigator.pop(context, 'reload');
-                              }
-                            }
-                          } on Exception catch (e) {
-                            alertBox(
-                                context,
-                                AppLocalizations.of(context).error,
-                                e.toString());
-                          }
-                        },
-                        child: Text(
-                          AppLocalizations.of(context).save,
-                          style: TextStyle(fontSize: 15),
-                        )),
+                              },
+                              child: Text(
+                                AppLocalizations.of(context).save,
+                                style: TextStyle(fontSize: 15),
+                              )),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 
@@ -232,33 +296,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 50),
                   child: Column(
                     children: [
-                      widget.book == null
-                          ? Container()
-                          : Row(
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context).activity,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                                const SizedBox(
-                                  width: 40,
-                                ),
-                                Switch(
-                                  // This bool value toggles the switch.
-                                  value: isActive!,
-                                  activeColor: Colors.brown,
-                                  onChanged: (bool value) {
-                                    // This is called when the user toggles the switch.
-                                    setState(() {
-                                      isActive = value;
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                      const SizedBox(
-                        height: 30,
-                      ),
                       (photo == null)
                           ? Container()
                           : Container(
@@ -307,14 +344,12 @@ class _BookDetailPageState extends State<BookDetailPage> {
               Expanded(
                   child: FormBuilderTextField(
                 name: 'publishingYear',
-                 validator: (value) {
+                validator: (value) {
                   if (value == null) {
                     return AppLocalizations.of(context).mfield;
-                  }
-                  else if (int.tryParse(value) == null) {
-                      return AppLocalizations.of(context).numeric_field;
-                    }
-                  else {
+                  } else if (int.tryParse(value) == null) {
+                    return AppLocalizations.of(context).numeric_field;
+                  } else {
                     return null;
                   }
                 },
@@ -369,7 +404,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                           Text(
+                          Text(
                             AppLocalizations.of(context).genres,
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
@@ -379,7 +414,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           ),
                           if (bookGenreResult == null ||
                               bookGenreResult!.items.isEmpty)
-                             Text(AppLocalizations.of(context).no_genres)
+                            Text(AppLocalizations.of(context).no_genres)
                           else
                             Row(
                               children: bookGenreResult?.items
@@ -422,11 +457,12 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                                   book: bookSend,
                                                 )));
 
-                                    if (refresh == 'reload2') {
+                                    if (refresh == 'reload2') {// to reload genres when new is added or delete of book
                                       initForm();
                                     }
                                   },
-                                  child:  Text(AppLocalizations.of(context).mod_b_genres)),
+                                  child: Text(AppLocalizations.of(context)
+                                      .mod_b_genres)),
                               const SizedBox(
                                 width: 20,
                               ),
@@ -443,7 +479,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                       initForm();
                                     }
                                   }),
-                                  child: Text(AppLocalizations.of(context).mod_b_quotes)),
+                                  child: Text(AppLocalizations.of(context)
+                                      .mod_b_quotes)),
                               const SizedBox(
                                 width: 20,
                               ),
@@ -460,7 +497,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                       initForm();
                                     }
                                   }),
-                                  child: Text(AppLocalizations.of(context).mod_b_rates)),
+                                  child: Text(AppLocalizations.of(context)
+                                      .mod_b_rates)),
                             ],
                           )
                         ],
@@ -471,17 +509,20 @@ class _BookDetailPageState extends State<BookDetailPage> {
                         children: [
                           widget.book?.bookFileId == null
                               ? (_base64Document == null
-                                  ?  Text(AppLocalizations.of(context).no_doc)
-                                  :  Text(AppLocalizations.of(context).chosen_doc))
+                                  ? Text(AppLocalizations.of(context).no_doc)
+                                  : Text(
+                                      AppLocalizations.of(context).chosen_doc))
                               : Text(AppLocalizations.of(context).added_doc),
                           const SizedBox(
                             height: 20,
                           ),
                           ElevatedButton(
                               onPressed: getFile,
-                              child: widget.book?.bookFileId != null
-                                  ? Text(AppLocalizations.of(context).change_doc)
-                                  : Text(AppLocalizations.of(context).choose_doc)),
+                              child: (_base64Document != null || widget.book?.bookFileId != null)
+                                  ? Text(
+                                      AppLocalizations.of(context).change_doc)
+                                  : Text(
+                                      AppLocalizations.of(context).choose_doc)),
                         ],
                       ),
                     ),
@@ -512,7 +553,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   File? _image; //dart.io
   String? _base64Image;
-  File? _document;
   String? _documentName;
   String? _base64Document;
 
@@ -524,9 +564,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
           result.files.single.path!); //jer smo sa if provjerili pa je sigurn !
       _base64Image = base64Encode(_image!.readAsBytesSync());
 
-      setState(() {
-        photo = _base64Image; //opet !
-      });
+      if (mounted) {
+        setState(() {
+          photo = _base64Image; //opet !
+        });
+      }
     }
   }
 
@@ -539,19 +581,19 @@ class _BookDetailPageState extends State<BookDetailPage> {
       if (file.toString().substring(
               file.toString().length - 4, file.toString().length - 1) ==
           "pdf") {
-        setState(() {
-          _base64Document = base64Encode(file.readAsBytesSync());
-          _documentName = "${widget.book?.title}.pdf";
-        });
+        if (mounted) {
+          setState(() {
+            _base64Document = base64Encode(file.readAsBytesSync());
+            _documentName = "${widget.book?.title}.pdf";
+          });
+        }
 
         ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text(AppLocalizations.of(context).su_ch_doc)));
+            SnackBar(content: Text(AppLocalizations.of(context).su_ch_doc)));
       } else {
-        _document = null;
-        ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-            content: Text(
-          AppLocalizations.of(context).doc_rule,
-        )));
+        _base64Document = null;
+        alertBox(context, AppLocalizations.of(context).error,
+            AppLocalizations.of(context).doc_rule);
       }
     }
   }

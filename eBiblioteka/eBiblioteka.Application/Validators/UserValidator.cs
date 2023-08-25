@@ -13,7 +13,7 @@ namespace eBiblioteka.Application
             RuleFor(u => u.Email).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty)
                                  .EmailAddress().WithErrorCode(ErrorCodes.InvalidValue);
             RuleFor(u => u.RoleId).NotNull().WithErrorCode(ErrorCodes.NotNull);
-            RuleFor(u => u.isActive).NotNull().WithErrorCode(ErrorCodes.NotNull);
+            RuleFor(u => u.IsActive).NotNull().WithErrorCode(ErrorCodes.NotNull);
 
 
             RuleFor(u => u.Password)

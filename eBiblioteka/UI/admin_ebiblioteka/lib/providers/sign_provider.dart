@@ -9,7 +9,7 @@ class SignProvider extends ChangeNotifier {
 
   SignProvider() {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://localhost:7034/");
+        defaultValue: "http://localhost:7034/");
   }
 
   Future<dynamic> signIn(String em, String ps) async {
@@ -32,7 +32,7 @@ class SignProvider extends ChangeNotifier {
 
       return result;
     } else {
-      throw new Exception("Unknown error");
+      throw  Exception("Unknown error");
     }
   }
 
@@ -53,7 +53,7 @@ class SignProvider extends ChangeNotifier {
     if (isValidResponse(response)) {
       
     } else {
-      throw new Exception("Unknown error");
+      throw  Exception("Unknown error");
     }
   }
 }
@@ -64,7 +64,6 @@ bool isValidResponse(Response response) {
   } else if (response.statusCode == 401) {
     throw Exception("Unauthorized");
   } else {
-    print(response.body);
     throw Exception(
         "Something bad happened please try again,\n${response.body}");
   }

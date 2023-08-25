@@ -9,7 +9,7 @@
         public DateTime? LastSignInAt { get; set; }
         public string? Biography { get; set; }
         public DateTime BirthDate { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
 
         public DateTime? PurchaseDate { get; set; }
         public DateTime? ExpirationDate { get; set; }

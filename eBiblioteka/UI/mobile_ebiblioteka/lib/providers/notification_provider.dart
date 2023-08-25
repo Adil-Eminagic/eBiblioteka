@@ -11,7 +11,7 @@ class NotificationProvider extends BaseProvider<Notif> {
   final String _mainEndpoint = "api/Notification/SendNotification";
 
   NotificationProvider() : super('Notifications'){
-    _mainBaseUrl = const String.fromEnvironment("mainBaseUrl", defaultValue: "https://10.0.2.2:7005/");
+    _mainBaseUrl = const String.fromEnvironment("mainBaseUrl", defaultValue: "http://10.0.2.2:7005/");
   }
 
   @override

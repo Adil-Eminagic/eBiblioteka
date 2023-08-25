@@ -44,7 +44,81 @@ namespace eBiblioteka.Infrastructure
             SeedBookFiles(modelBuilder);
             SeedRatings(modelBuilder);
             SeedUserBooks(modelBuilder);
+            SeedNotifications(modelBuilder);
+            SeedUserQuiz(modelBuilder);
 
+        }
+
+        private void SeedUserQuiz(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserQuiz>().HasData(
+              new()
+              {
+                  Id = 1,
+                  CreatedAt = _dateTime,
+                  ModifiedAt = null,
+                 UserId=5,
+                 QuizId=1,
+                 Percentage=80
+
+              },
+              new()
+              {
+                  Id = 2,
+                  CreatedAt = _dateTime,
+                  ModifiedAt = null,
+                  UserId = 5,
+                  QuizId = 2,
+                  Percentage = 50
+
+              },
+              new()
+              {
+                  Id = 3,
+                  CreatedAt = _dateTime,
+                  ModifiedAt = null,
+                  UserId = 3,
+                  QuizId = 1,
+                  Percentage = 100
+
+              },
+              new()
+              {
+                  Id = 4,
+                  CreatedAt = _dateTime,
+                  ModifiedAt = null,
+                  UserId = 3,
+                  QuizId = 2,
+                  Percentage = 0
+
+              });
+        }
+
+        private void SeedNotifications(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Notification>().HasData(
+               new()
+               {
+                   Id = 1,
+                   CreatedAt = _dateTime,
+                   ModifiedAt = null,
+                   Title="Dobrodošli",
+                   Content = "Dobro došli u aplikaciju eBiblioteka desktop",
+                   IsRead=false,
+                   UserId=1,
+                   
+               },
+               new()
+               {
+                   Id = 2,
+                   CreatedAt = _dateTime,
+                   ModifiedAt = null,
+                   Title="Vaša uloga",
+                   Content = "Vi ste superadmin u ovoj aplikaciji",
+                   IsRead=false,
+                   UserId = 1
+                   
+               });
         }
 
         private void SeedUserBooks(ModelBuilder modelBuilder)
@@ -874,8 +948,8 @@ namespace eBiblioteka.Infrastructure
                     ModifiedAt = null,
                     FullName = "Meša Selimović",
                     GenderId = 1,
-                    BirthDate = new DateTime(1910, 4, 26),
-                    MortalDate = new DateTime(1982, 7, 11),
+                    BirthYear=1910,
+                    MortalYear=1982,
                     CountryId = 1,
 
 
@@ -887,8 +961,8 @@ namespace eBiblioteka.Infrastructure
                      ModifiedAt = null,
                      FullName = "Ivo Andrić",
                      GenderId = 1,
-                     BirthDate = new DateTime(1892, 10, 10),
-                     MortalDate = new DateTime(1975, 3, 13),
+                     BirthYear=1982,
+                     MortalYear=1975,
                      CountryId = 1
                  },
                 new()
@@ -898,8 +972,8 @@ namespace eBiblioteka.Infrastructure
                     ModifiedAt = null,
                     FullName = "Wiliam Shakspeare",
                     GenderId = 1,
-                    BirthDate = new DateTime(1564, 4, 1),
-                    MortalDate = new DateTime(1616, 4, 23),
+                    BirthYear=1564,
+                    MortalYear=1616,
                     CountryId = 7,
                 },
                 new()
@@ -909,8 +983,8 @@ namespace eBiblioteka.Infrastructure
                     ModifiedAt = null,
                     FullName = "Hans Christian Andersen",
                     GenderId = 1,
-                    BirthDate = new DateTime(1805, 4, 2),
-                    MortalDate = new DateTime(1875, 8, 4),
+                    BirthYear=1805,
+                    MortalYear=1875,
                     CountryId = 8,
                 },
                 new()
@@ -920,8 +994,8 @@ namespace eBiblioteka.Infrastructure
                     ModifiedAt = null,
                     FullName = "Voltaire",
                     GenderId = 1,
-                    BirthDate = new DateTime(1805, 4, 2),
-                    MortalDate = new DateTime(1875, 8, 4),
+                    BirthYear=1694,
+                    MortalYear=1778,
                     CountryId = 9,
                 },
                 new()
@@ -930,8 +1004,8 @@ namespace eBiblioteka.Infrastructure
                     CreatedAt = _dateTime,
                     ModifiedAt = null,
                     FullName = "Henrik Ibsen",
-                    BirthDate = new DateTime(1828, 3, 20),
-                    MortalDate = new DateTime(1906, 5, 23),
+                    BirthYear=1828,
+                    MortalYear=1906,
                     GenderId = 1,
                     CountryId = 10
                 }
@@ -1213,7 +1287,6 @@ namespace eBiblioteka.Infrastructure
                        Title = "Omerpaša Latas",
                        PublishingYear = 1968,
                        OpeningCount = 0,
-                       //CoverPhotoId = 1,
                        AuthorID = 2,
                    },
                    new()

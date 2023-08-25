@@ -13,12 +13,5 @@ namespace eBiblioteka.Application
         {
 
         }
-
-        public async Task<IEnumerable<QuoteDto>> GetByBookAsync(int bookId, CancellationToken cancellationToken = default)
-        {
-            var quotes = await CurrentRepository.GetByBookIdAsync(bookId, cancellationToken);
-
-            return Mapper.Map<IEnumerable<QuoteDto>>(quotes);
-        }
     }
 }

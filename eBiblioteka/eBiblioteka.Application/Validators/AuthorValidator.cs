@@ -10,7 +10,7 @@ namespace eBiblioteka.Application
         {
             RuleFor(u => u.FullName).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty);
             RuleFor(u => u.GenderId).NotNull().WithErrorCode(ErrorCodes.NotNull);
-            RuleFor(u=>u.BirthDate).NotNull().WithErrorCode(ErrorCodes.NotNull);
+            RuleFor(u=>u.BirthYear).NotNull().WithErrorCode(ErrorCodes.NotNull);
 
             RuleFor(c => c.CountryId).NotNull().WithErrorCode(ErrorCodes.NotNull);
 

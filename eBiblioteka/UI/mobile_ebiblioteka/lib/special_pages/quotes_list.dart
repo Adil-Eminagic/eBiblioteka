@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mobile_ebiblioteka/models/quote.dart';
@@ -7,7 +6,6 @@ import 'package:mobile_ebiblioteka/providers/quotes_provider.dart';
 import 'package:mobile_ebiblioteka/utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class QuoteListPage extends StatefulWidget {
   const QuoteListPage({Key? key, this.bookId}) : super(key: key);
@@ -26,18 +24,19 @@ class _QuoteListPageState extends State<QuoteListPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initData();
   }
 
   Future<void> initData() async {
     try {
-      result = await _quoteProvider.getPaged(filter: {'bookId': widget.bookId});
+      result = await _quoteProvider.getPaged(filter: {'bookId': widget.bookId, 'pageSize':100000});
 
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -47,7 +46,7 @@ class _QuoteListPageState extends State<QuoteListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(AppLocalizations.of(context).quotes),
+        title: Text(AppLocalizations.of(context).quotes),
         centerTitle: true,
       ),
       body: isLoading
@@ -68,10 +67,11 @@ class _QuoteListPageState extends State<QuoteListPage> {
                       ],
                     )
                 else
-                   Padding(
-                     padding: const EdgeInsets.all(20.0),
-                     child: Text(AppLocalizations.of(context).no_quotes, style: const TextStyle(fontSize: 20)),
-                   )
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(AppLocalizations.of(context).no_quotes,
+                        style: const TextStyle(fontSize: 20)),
+                  )
               ],
             ),
     );

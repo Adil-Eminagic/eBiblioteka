@@ -53,9 +53,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       int number = int.parse(Autentification.tokenDecoded!['Id']);
       user = await _userProvider.getById(number);
 
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -75,6 +77,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 if (!ModalRoute.of(context)!.isFirst) {
                   Navigator.pop(context,
                       'reload2'); // provjerava da li je prva ruta da se izbjegne prazana rpoute stack
+                      // reload2 is to reload genres when new is added or delete of book
                 }
               }),
               icon: const Icon(
@@ -142,15 +145,16 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                          title:  Text(AppLocalizations.of(context).log_out),
+                          title: Text(AppLocalizations.of(context).log_out),
                           content:
-                               Text(AppLocalizations.of(context).logout_mess),
+                              Text(AppLocalizations.of(context).logout_mess),
                           actions: [
                             TextButton(
                                 onPressed: (() {
                                   Navigator.pop(context);
                                 }),
-                                child: Text(AppLocalizations.of(context).cancel)),
+                                child:
+                                    Text(AppLocalizations.of(context).cancel)),
                             TextButton(
                                 onPressed: () async {
                                   try {
@@ -160,12 +164,12 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (_) => const LoginPage()),
-                                        (route) =>
-                                            false); 
-
+                                        (route) => false);
                                   } catch (e) {
                                     alertBoxMoveBack(
-                                        context, AppLocalizations.of(context).error, e.toString());
+                                        context,
+                                        AppLocalizations.of(context).error,
+                                        e.toString());
                                   }
                                 },
                                 child: const Text('Ok')),
@@ -187,10 +191,14 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ? Container()
             : ListView(
                 children: [
-                    drawerItem(context, AppLocalizations.of(context).report,
+                  drawerItem(context, AppLocalizations.of(context).report,
                       const ReportingPage()),
-                  drawerItem(context, AppLocalizations.of(context).notifications, const NotificationsListPage()),
-
+                 user!.roleId != 1
+                      ? Container()
+                      : drawerItem(
+                      context,
+                      AppLocalizations.of(context).notifications,
+                      const NotificationsListPage()),
                   drawerItem(context, AppLocalizations.of(context).books,
                       const BooksPage()),
                   drawerItem(context, AppLocalizations.of(context).authors,
@@ -201,12 +209,14 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       const UsersPage(
                         roleUser: "User",
                       )),
-                 user!.roleId!=1 ? Container() : drawerItem(
-                      context,
-                      AppLocalizations.of(context).admins,
-                      const UsersPage(
-                        roleUser: "Admin",
-                      )),
+                  user!.roleId != 1
+                      ? Container()
+                      : drawerItem(
+                          context,
+                          AppLocalizations.of(context).admins,
+                          const UsersPage(
+                            roleUser: "Admin",
+                          )),
                   drawerItem(context, AppLocalizations.of(context).genres,
                       const GenresPage()),
                   drawerItem(context, AppLocalizations.of(context).quizes,

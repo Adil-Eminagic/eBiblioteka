@@ -135,7 +135,16 @@
     "quiz_results":"Quizzes' results",
     "result_del_su":"Quiz reslut is successfully deleted",
     "result_del_title":"Deleting quiz result",
-    "result_del_mes":"Do you want to delete quiz result?"
+    "result_del_mes":"Do you want to delete quiz result?",
+    "dec_account":"You cann't log in because your account is deactivated",
+    "no_open_rate":"You cann't modify others ratings, only yours",
+    "no_read_hist":"No read books",
+    "error_pay":"Error with payment",
+    "cancel_payment":"Payment is canceled",
+    "no_quiz_reuslts":"No quiz results"
+    
+
+
 
 
 

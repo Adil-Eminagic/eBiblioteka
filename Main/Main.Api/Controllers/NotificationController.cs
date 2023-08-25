@@ -26,8 +26,7 @@ namespace Main.Api.Controllers
 
 
 
-            //var factory = new ConnectionFactory { HostName = "rmq_host", Port = 5672 };
-            var factory = new ConnectionFactory { HostName = "localhost" };
+            var factory = new ConnectionFactory { HostName = "rmq_host", Port = 5672 };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 

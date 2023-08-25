@@ -13,7 +13,7 @@ class RecommendResultProvider extends ChangeNotifier {
 
   RecommendResultProvider() {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://10.0.2.2:7034/");
+        defaultValue: "http://10.0.2.2:7034/");
   }
 
   Future<dynamic> getPaged(String em, String ps, {dynamic filter}) async {
@@ -94,7 +94,6 @@ bool isValidResponse(Response response) {
   } else if (response.statusCode == 401) {
     throw Exception("Unauthorized");
   } else {
-    print(response.body);
     throw Exception(
         "Something bad happened please try again,\n${response.body}");
   }

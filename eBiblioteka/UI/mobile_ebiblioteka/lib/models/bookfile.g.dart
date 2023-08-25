@@ -2,8 +2,7 @@
 
 part of 'bookfile.dart';
 
-// **************************************************************************
-// JsonSerializableGenerator
+
 // **************************************************************************
 
 BookFile _$BookFileFromJson(Map<String, dynamic> json) => BookFile(

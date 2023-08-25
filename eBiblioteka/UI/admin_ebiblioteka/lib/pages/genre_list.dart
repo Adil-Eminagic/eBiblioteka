@@ -39,12 +39,14 @@ class _GenresPageState extends State<GenresPage> {
       var data =
           await _genreProvider.getPaged(filter: {"name": _nameController.text});
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -55,6 +57,11 @@ class _GenresPageState extends State<GenresPage> {
         child: Column(children: [
           _buildSearch(),
           isLoading ? Container() : _buildDataTable(),
+          isLoading == false && result != null && result!.pageCount > 1
+              ? const SizedBox(
+                  height: 20,
+                )
+              : Container(),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (isLoading == false && result != null && result!.pageCount > 1)
               for (int i = 0; i < result!.pageCount; i++)
@@ -66,9 +73,11 @@ class _GenresPageState extends State<GenresPage> {
                           'pageNumber': i + 1
                         });
 
-                        setState(() {
-                          result = data;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            result = data;
+                          });
+                        }
                       } on Exception catch (e) {
                         alertBox(context, AppLocalizations.of(context).error,
                             e.toString());
@@ -86,6 +95,9 @@ class _GenresPageState extends State<GenresPage> {
                                   : Colors.brown),
                         ))),
           ]),
+          const SizedBox(
+          height: 20,
+        )
         ]));
   }
 
@@ -128,7 +140,8 @@ class _GenresPageState extends State<GenresPage> {
           Expanded(
             child: TextField(
               controller: _nameController,
-              decoration: InputDecoration(label: Text(AppLocalizations.of(context).name_2)),
+              decoration: InputDecoration(
+                  label: Text(AppLocalizations.of(context).name_2)),
             ),
           ),
           const SizedBox(
@@ -140,11 +153,14 @@ class _GenresPageState extends State<GenresPage> {
                   var data = await _genreProvider
                       .getPaged(filter: {"name": _nameController.text});
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
-                  alertBox(context, AppLocalizations.of(context).error, e.toString());
+                  alertBox(context, AppLocalizations.of(context).error,
+                      e.toString());
                 }
               },
               child: Text(AppLocalizations.of(context).search)),

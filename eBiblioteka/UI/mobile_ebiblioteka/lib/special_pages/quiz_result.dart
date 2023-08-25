@@ -72,7 +72,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
           children: [
             Center(
               child: Text(
-               AppLocalizations.of(context).result_text + ' ${widget.wonPoints}/${widget.totalPoint}' + AppLocalizations.of(context).result_text_2 + '$result%',
+               AppLocalizations.of(context).result_text + ' ${widget.wonPoints}/${widget.totalPoint}' + AppLocalizations.of(context).result_text_2 + ' $result%',
                 style: const TextStyle(fontSize: 20),
               ),
             )

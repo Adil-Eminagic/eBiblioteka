@@ -5,8 +5,8 @@ namespace eBiblioteka.Core
     {
         public string FullName { get; set; } = null!;
         public string? Biography { get; set; }
-        public DateTime BirthDate { get; set; }
-        public DateTime? MortalDate { get; set; }
+        public int BirthYear { get; set; }
+        public int? MortalYear { get; set; }
 
         public int? PhotoId { get; set; }
         public Photo? Photo { get; set; }

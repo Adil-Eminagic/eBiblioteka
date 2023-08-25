@@ -24,10 +24,4 @@ Image imageFromBase64String(String base64Image) {
 }
 
 
-//TODOs
-//provjera u slučaju da korisnik ne dozvoli ulazak u slike
-// context.watch
-// scrollanje pagination(video)
-//staviti knjifge u listview. builder
-//provjeri da li je trycatch block u svakom na adminu
-//pokušati logovati errrore i prkazati ih na forntendu npr za password
+

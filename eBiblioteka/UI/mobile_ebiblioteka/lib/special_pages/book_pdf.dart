@@ -1,11 +1,13 @@
 import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_ebiblioteka/providers/base_provider.dart';
 import 'package:mobile_ebiblioteka/utils/util_widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/bookfile_provider.dart';
 import '../utils/util.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class BookPdfShow extends StatefulWidget {
   const BookPdfShow({Key? key, this.fileId}) : super(key: key);
@@ -35,11 +37,13 @@ class _BookPdfShowState extends State<BookPdfShow> {
 
       document = await PDFDocument.fromURL(url, headers: createPdfHeaders());
 
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -48,7 +52,7 @@ class _BookPdfShowState extends State<BookPdfShow> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text('Show'),
+        title: const Text('Pdf'),
       ),
       body: isLoading == false
           ? PDFViewer(

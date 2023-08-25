@@ -33,7 +33,7 @@ class UserProvider extends BaseProvider<User> {
 
       return result;
     } else {
-      throw new Exception("Unknown error");
+      throw  Exception("Unknown error");
     }
   }
 
@@ -48,13 +48,9 @@ class UserProvider extends BaseProvider<User> {
     Response response = await put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
-      //var data = jsonDecode(response.body);
-
-      //var result = data;
-
-      // ne može se vraćati boy od responsa ako ga nema
+     
     } else {
-      throw new Exception("Unknown error");
+      throw  Exception("Unknown error");
     }
   }
 
@@ -68,13 +64,8 @@ class UserProvider extends BaseProvider<User> {
     Response response = await put(uri, headers: headers, body: null);
 
     if (isValidResponse(response)) {
-      // var data = jsonDecode(response.body);
-
-      // var result = data;
-
-      // return data;
-
-      // ne može se vraćati boy od responsa ako ga nema
+      
+      // ne može se vraćati body od responsa ako ga nema
     } else {
       throw Exception("Unknown error");
     }

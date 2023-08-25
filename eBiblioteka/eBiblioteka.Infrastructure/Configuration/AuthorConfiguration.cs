@@ -11,11 +11,11 @@ namespace eBiblioteka.Infrastructure
 
             builder.Property(e => e.FullName)
                    .IsRequired();
-            builder.Property(e => e.BirthDate)
+            builder.Property(e => e.BirthYear)
                   .IsRequired();
             builder.Property(e => e.Biography)
                   .IsRequired(false);
-            builder.Property(e => e.MortalDate)
+            builder.Property(e => e.MortalYear)
                 .IsRequired(false);
            
 

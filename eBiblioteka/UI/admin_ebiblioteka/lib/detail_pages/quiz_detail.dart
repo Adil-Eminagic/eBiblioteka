@@ -55,7 +55,56 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                         children: [
                           widget.quiz == null
                               ? Container()
-                              :
+                              : TextButton(
+                                  onPressed: () async {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                              title:
+                                                   Text( AppLocalizations.of(context).quiz_del_title),
+                                              content:  Text(
+                                                   AppLocalizations.of(context).quiz_del_mes),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: (() {
+                                                      Navigator.pop(context);
+                                                    }),
+                                                    child:
+                                                       Text( AppLocalizations.of(context).cancel)),
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      try {
+                                                        await _quizProvider
+                                                            .remove(widget
+                                                                    .quiz?.id ??
+                                                                0);
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                 SnackBar(
+                                                                    content: Text(
+                                                                         AppLocalizations.of(context).quiz_del_su)));
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(
+                                                            context, 'reload');
+                                                      } catch (e) {
+                                                        alertBoxMoveBack(
+                                                            context,
+                                                             AppLocalizations.of(context).error,
+                                                            e.toString());
+                                                      }
+                                                    },
+                                                    child: const Text('Ok')),
+                                              ],
+                                            ));
+                                  },
+                                  child:  Text( AppLocalizations.of(context).quiz_del_lbl)),
+                          widget.quiz == null
+                              ? Container()
+                              : const SizedBox(
+                                  width: 7,
+                                ),
                           ElevatedButton(
                               onPressed: () async {
                                 _formKey.currentState?.save();
@@ -138,7 +187,7 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                   child: FormBuilderTextField(
                 name: 'title',
                 validator: (value) {
-                  if (value == null) {
+                  if (value == null || value.isEmpty) {
                     return AppLocalizations.of(context).mfield;
                   } else {
                     return null;

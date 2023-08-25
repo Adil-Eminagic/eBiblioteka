@@ -42,10 +42,12 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
         'points': _dropdownValue > 0 ? _dropdownValue : null
       });
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -58,6 +60,9 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
       child: Column(children: [
         _buildSearch(),
         isLoading ? Container() : _buildDataTable(),
+         isLoading == false && result != null && result!.pageCount > 1 ?  const SizedBox(
+          height: 20,
+        ) : Container(),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           if (isLoading == false && result != null && result!.pageCount > 1)
             for (int i = 0; i < result!.pageCount; i++)
@@ -71,9 +76,11 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
                         'pageNumber': i + 1
                       });
 
-                      setState(() {
-                        result = data;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          result = data;
+                        });
+                      }
                     } on Exception catch (e) {
                       alertBox(context, 'Greška', e.toString());
                     }
@@ -90,6 +97,9 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
                                 : Colors.brown),
                       ))),
         ]),
+        const SizedBox(
+          height: 20,
+        )
       ]),
     );
   }
@@ -169,9 +179,11 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
             value: _dropdownValue,
             onChanged: ((value) {
               if (value is int) {
-                setState(() {
-                  _dropdownValue = value;
-                });
+                if (mounted) {
+                  setState(() {
+                    _dropdownValue = value;
+                  });
+                }
               }
             }),
           )),
@@ -187,9 +199,11 @@ class _QuestionsListPageState extends State<QuestionsListPage> {
                     "points": _dropdownValue > 0 ? _dropdownValue : null
                   });
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
                   alertBox(context, 'Greška', e.toString());
                 }

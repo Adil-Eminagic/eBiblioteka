@@ -12,7 +12,6 @@ import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class QuizzesListPage extends StatefulWidget {
   const QuizzesListPage({Key? key}) : super(key: key);
 
@@ -21,8 +20,7 @@ class QuizzesListPage extends StatefulWidget {
 }
 
 class _QuizzesListPageState extends State<QuizzesListPage> {
-
-late QuizProvider _quizProvider = QuizProvider();
+  late QuizProvider _quizProvider = QuizProvider();
 
   TextEditingController _titleController = TextEditingController();
   bool isLoading = true;
@@ -38,11 +36,16 @@ late QuizProvider _quizProvider = QuizProvider();
 
   Future<void> initData() async {
     try {
-      result = await _quizProvider.getPaged(
-          filter: {'title': _titleController.text, 'pageSize': 100000,'isActive':true});
-      setState(() {
-        isLoading = false;
+      result = await _quizProvider.getPaged(filter: {
+        'title': _titleController.text,
+        'pageSize': 100000,
+        'isActive': true
       });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -58,14 +61,16 @@ late QuizProvider _quizProvider = QuizProvider();
             height: 15,
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(43,0,43,0),
+            padding: const EdgeInsets.fromLTRB(43, 0, 43, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (() {
-                  Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const QuizResultListPage()));
-                }), child: Text(AppLocalizations.of(context).results))
+                TextButton(
+                    onPressed: (() {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const QuizResultListPage()));
+                    }),
+                    child: Text(AppLocalizations.of(context).results))
               ],
             ),
           ),
@@ -76,7 +81,8 @@ late QuizProvider _quizProvider = QuizProvider();
                 Expanded(
                   child: TextField(
                     controller: _titleController,
-                    decoration:  InputDecoration(label: Text(AppLocalizations.of(context).title)),
+                    decoration: InputDecoration(
+                        label: Text(AppLocalizations.of(context).title)),
                   ),
                 ),
                 const SizedBox(
@@ -87,18 +93,21 @@ late QuizProvider _quizProvider = QuizProvider();
                       try {
                         var data = await _quizProvider.getPaged(filter: {
                           "title": _titleController.text,
-                          'isActive':true,
+                          'isActive': true,
                           "pageSize": 100000000
                         });
 
-                        setState(() {
-                          result = data;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            result = data;
+                          });
+                        }
                       } on Exception catch (e) {
-                        alertBox(context, AppLocalizations.of(context).error, e.toString());
+                        alertBox(context, AppLocalizations.of(context).error,
+                            e.toString());
                       }
                     },
-                    child:  Text(AppLocalizations.of(context).search)),
+                    child: Text(AppLocalizations.of(context).search)),
               ],
             ),
           ),
@@ -106,40 +115,45 @@ late QuizProvider _quizProvider = QuizProvider();
             height: 15,
           ),
           (result == null || result!.items.isEmpty)
-              ?  Expanded(
-                  child: Center(child: Text(AppLocalizations.of(context).no_quizzes)))
-              : (isLoading ? const SpinKitRing(color: Colors.brown) : Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
-                    child: ListView.builder(
-                      itemCount: result!.items.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              subtitle: Text(result!.items[index].description ?? ''),
-                              title: Text("${result!.items[index].title}"),
-                              leading: Text("${result!.items[index].id}"),
-                              onTap: (() async {
-                                var refresh = await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => StartQuizPage(
-                                      quiz: result!.items[index],
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                            const Divider(
-                              color: Colors.black,
-                              thickness: 0.5,
-                            )
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ))
+              ? Expanded(
+                  child: Center(
+                      child: Text(AppLocalizations.of(context).no_quizzes)))
+              : (isLoading
+                  ? const SpinKitRing(color: Colors.brown)
+                  : Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
+                        child: ListView.builder(
+                          itemCount: result!.items.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                ListTile(
+                                  subtitle: Text(
+                                      result!.items[index].description ?? ''),
+                                  title: Text("${result!.items[index].title}"),
+                                  leading: Text("${result!.items[index].id}"),
+                                  onTap: (() async {
+                                    var refresh =
+                                        await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => StartQuizPage(
+                                          quiz: result!.items[index],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                                const Divider(
+                                  color: Colors.black,
+                                  thickness: 0.5,
+                                )
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ))
         ],
       ),
     );

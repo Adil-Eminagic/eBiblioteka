@@ -14,7 +14,8 @@ namespace eBiblioteka.Infrastructure
 
             builder.Property(e => e.Content)
                    .IsRequired(false);
-            builder.Property(e => e.isRead)
+
+            builder.Property(e => e.IsRead)
                   .IsRequired();
            
             builder.HasOne(e => e.User)

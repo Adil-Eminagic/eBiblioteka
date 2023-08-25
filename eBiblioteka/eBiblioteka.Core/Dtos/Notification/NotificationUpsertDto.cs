@@ -5,7 +5,7 @@ namespace eBiblioteka.Core
     {
         public string Title { get; set; } = null!;
         public string? Content { get; set; }
-        public bool isRead { get; set; } = false;
+        public bool IsRead { get; set; } = false;
 
         public int UserId { get; set; }
     }

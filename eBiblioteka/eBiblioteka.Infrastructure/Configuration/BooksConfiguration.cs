@@ -12,8 +12,6 @@ namespace eBiblioteka.Infrastructure
             builder.Property(e => e.Title)
                    .IsRequired();
 
-            builder.Property(e => e.isActive)
-                 .IsRequired();
 
             builder.Property(e => e.ShortDescription)
                    .IsRequired(false);

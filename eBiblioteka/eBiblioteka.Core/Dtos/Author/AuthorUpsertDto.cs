@@ -5,10 +5,10 @@ namespace eBiblioteka.Core
     {
         public string FullName { get; set; } = null!;
         public string? Biography { get; set; }
-        public DateTime BirthDate { get; set; }
-        public DateTime? MortalDate { get; set; }
+        public int BirthYear { get; set; }
+        public int? MortalYear { get; set; }
 
-        public string? image { get; set; }
+        public string? Image { get; set; }
 
         public int CountryId { get; set; }
 

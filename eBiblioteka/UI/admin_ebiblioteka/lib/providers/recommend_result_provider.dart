@@ -13,7 +13,7 @@ class RecommendResultProvider extends ChangeNotifier {
 
   RecommendResultProvider() {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://localhost:7034/");
+        defaultValue: "http://localhost:7034/");
   }
 
   Future<dynamic> getPaged(String em, String ps, {dynamic filter}) async {
@@ -86,6 +86,22 @@ class RecommendResultProvider extends ChangeNotifier {
       throw Exception("Unknown error");
     }
   }
+
+  Future deleteData() async {
+    var url = "$_baseUrl$_endpoint/ClearRecommendation";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    Response response = await delete(
+      uri,
+      headers: headers,
+    );
+    if (isValidResponse(response)) {
+
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
 }
 
 bool isValidResponse(Response response) {
@@ -94,7 +110,6 @@ bool isValidResponse(Response response) {
   } else if (response.statusCode == 401) {
     throw Exception("Unauthorized");
   } else {
-    print(response.body);
     throw Exception(
         "Something bad happened please try again,\n${response.body}");
   }

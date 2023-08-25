@@ -51,7 +51,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'firstName': widget.user?.firstName,
@@ -85,9 +84,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       photo = p.data;
     }
 
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -109,10 +110,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                         ? Container()
                         : ElevatedButton(
                             onPressed: () async {
-                              // _formKey.currentState
-                              // ?.saveAndValidate(); //moramo spasiti vrijednosti forme kako bi se pohranile u currentstate
                               _formKey.currentState?.save();
-                              print(_formKey.currentState?.value);
 
                               try {
                                 if (_formKey.currentState!.validate()) {
@@ -128,6 +126,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                     request['profilePhoto'] = _base64Image;
                                   }
 
+                                    request['isActive'] = widget.user!.isActive;
+
+
                                   var res = await _userProvider.update(request);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -136,8 +137,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               AppLocalizations.of(context)
                                                   .su_mod_profie)));
 
-                                  // Autentification.loggedUser =
-                                  //     await _userProvider.getById(widget.user!.id!);
+                                
 
                                   Navigator.pop(context, 'getUser');
                                 }
@@ -332,7 +332,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 icon: const Icon(Icons.close),
                 onPressed: () {
                   _formKey.currentState!
-                      .fields['countryId'] //brisnje selekcije iz forme
+                      .fields['countryId'] 
                       ?.reset();
                 },
               ),
@@ -423,9 +423,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             .files.single.path!); //jer smo sa if provjerili pa je sigurn !
         _base64Image = base64Encode(_image!.readAsBytesSync());
 
-        setState(() {
-          photo = _base64Image; //opet !
-        });
+        if (mounted) {
+          setState(() {
+            photo = _base64Image; //opet !
+          });
+        }
       }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());

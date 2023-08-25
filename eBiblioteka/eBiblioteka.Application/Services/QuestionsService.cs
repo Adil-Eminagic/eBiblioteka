@@ -17,12 +17,12 @@ namespace eBiblioteka.Application
         {
             var pagedList = await CurrentRepository.GetPagedAsync(searchObject, cancellationToken);
             var dtos= Mapper.Map<PagedList<QuestionDto>>(pagedList);
-            if(pagedList!= null && pagedList.Items.Count > 0)
+            if(pagedList!= null && pagedList.Items.Count > 0) 
             {
                 for(int i = 0; i < pagedList.Items.Count; i++)
                 {
-                    if (pagedList.Items[i].Answers.Count<2)
-                        dtos.Items[i].isActive = false;
+                    if (pagedList.Items[i].Answers.Count<2)//if has les then two answers is flase
+                        dtos.Items[i].IsActive = false;
                     else
                     {
                         var _true = 0;
@@ -34,21 +34,21 @@ namespace eBiblioteka.Application
                             else 
                                 _false++;
                         }
-                        if (_true != 1)
-                            dtos.Items[i].isActive = false;
-                        else if (_false < 1)
-                            dtos.Items[i].isActive = false;
+                        if (_true != 1) //only one true answer
+                            dtos.Items[i].IsActive = false;
+                        else if (_false < 1) // if 0 false answrs false
+                            dtos.Items[i].IsActive = false;
                         else
-                            dtos.Items[i].isActive = true;
+                            dtos.Items[i].IsActive = true;
 
                     }
 
                 }
             }
 
-            if (searchObject.isActive != null)
+            if (searchObject.IsActive != null)
             {
-                dtos.Items = dtos.Items.Where(s => s.isActive == searchObject.isActive).ToList();
+                dtos.Items = dtos.Items.Where(s => s.IsActive == searchObject.IsActive).ToList();
                 dtos.TotalCount = dtos.Items.Count;
 
             }

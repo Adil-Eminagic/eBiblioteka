@@ -40,14 +40,19 @@ class _BookGenresPageState extends State<BookGenresPage> {
 
   Future<void> initTable() async {
     try {
-      var data = await _bookGenreProvider
-          .getPaged(filter: {'bookId': widget.book?.id,"genreName":_nameController.text, "pageSize":1000000});
+      var data = await _bookGenreProvider.getPaged(filter: {
+        'bookId': widget.book?.id,
+        "genreName": _nameController.text,
+        "pageSize": 1000000
+      });
       bookSend = await _bookProvider.getById(widget.book!.id!);
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -116,7 +121,6 @@ class _BookGenresPageState extends State<BookGenresPage> {
           const SizedBox(
             width: 20,
           ),
-         
           ElevatedButton(
               onPressed: () async {
                 try {
@@ -126,16 +130,18 @@ class _BookGenresPageState extends State<BookGenresPage> {
                     "bookId": widget.book!.id
                   });
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
                   alertBox(context, AppLocalizations.of(context).error,
                       e.toString());
                 }
               },
               child: Text(AppLocalizations.of(context).search)),
-               const SizedBox(
+          const SizedBox(
             width: 20,
           ),
           ElevatedButton(

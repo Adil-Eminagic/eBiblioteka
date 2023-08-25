@@ -143,7 +143,7 @@ class _AnswerDetailPageState extends State<AnswerDetailPage> {
                                               content: Text(
                                                   AppLocalizations.of(context).answer_add_su)));
 
-                                      Navigator.pop(context, 'reloadQ');
+                                      Navigator.pop(context, 'reload');
                                     }
                                   }
                                 } on Exception catch (e) {

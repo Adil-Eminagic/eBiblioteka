@@ -33,11 +33,11 @@ namespace eBiblioteka.Infrastructure
             return await DbSet.Include(c=>c.ProfilePhoto).Include(c=>c.Role).Include(c=>c.Gender).Where(c => searchObject.FullName == null || c.FirstName.ToLower().Contains(searchObject.FullName.ToLower())
             || c.LastName.ToLower().Contains(searchObject.FullName.ToLower())).
             Where(c=> searchObject.RoleName==null || searchObject.RoleName==c.Role.Value)
-            .Where(c=>searchObject.isActive== null || c.isActive==searchObject.isActive)
+            .Where(c=>searchObject.IsActive== null || c.IsActive==searchObject.IsActive)
             .ToPagedListAsync(searchObject, cancellationToken);
         }
 
-        public List<User> UsersWithReadHistory()
+        public List<User> UsersWithReadHistory()//this is for recommend system to get all books' history of all users
         {
             return DbSet.Include(c => c.OpenedBooks).Where(s=>s.RoleId==3).ToList();
         }
@@ -47,7 +47,7 @@ namespace eBiblioteka.Infrastructure
             return await DbSet.Include(c => c.Role).Include(c => c.Gender).Where(c => searchObject.FullName == null || c.FirstName.ToLower().Contains(searchObject.FullName.ToLower())
             || c.LastName.ToLower().Contains(searchObject.FullName.ToLower())).
             Where(c => searchObject.RoleName == null || searchObject.RoleName == c.Role.Value)
-            .Where(c => searchObject.isActive == null || c.isActive == searchObject.isActive)
+            .Where(c => searchObject.IsActive == null || c.IsActive == searchObject.IsActive)
             .ToReportInfoAsync(searchObject, cancellationToken);
         }
     }

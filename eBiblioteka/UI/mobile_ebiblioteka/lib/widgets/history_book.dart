@@ -49,12 +49,14 @@ class _HistoryBookState extends State<HistoryBook> {
     try {
       book = await _bookProvider.getById(widget.bookId!);
       author = await _authorProvider.getById(book!.authorID!);
-      if (book?.coverPhotoId != null &&  book!.coverPhotoId! > 0) {
+      if (book?.coverPhotoId != null && book!.coverPhotoId! > 0) {
         photo = await _photoProvider.getById(book!.coverPhotoId!);
       }
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -65,8 +67,8 @@ class _HistoryBookState extends State<HistoryBook> {
     return isLoading == true
         ? const SpinKitRing(color: Colors.brown)
         : ListTile(
-          title: Text(book?.title ?? ''),
-          subtitle: Text(author?.fullName ?? ''),
+            title: Text(book?.title ?? ''),
+            subtitle: Text(author?.fullName ?? ''),
             leading: photo == null
                 ? Image.asset(
                     'images/no_image.png',
@@ -78,14 +80,13 @@ class _HistoryBookState extends State<HistoryBook> {
                     width: 100,
                     height: 100,
                   ),
-                  onTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: ((context) {
-                            return BookDetailPage(
-                              book: book,
-                            );
-                          })));
-                        },
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                return BookDetailPage(
+                  book: book,
+                );
+              })));
+            },
           );
   }
 }

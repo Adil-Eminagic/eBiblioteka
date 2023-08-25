@@ -35,6 +35,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           ? null
           : Photo.fromJson(json['profilePhoto'] as Map<String, dynamic>),
       json['profilePhotoId'] as int?,
+      json['isActive'] as bool,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -54,4 +55,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'role': instance.role,
       'profilePhotoId': instance.profilePhotoId,
       'profilePhoto': instance.profilePhoto,
+      'isActive': instance.isActive,
     };

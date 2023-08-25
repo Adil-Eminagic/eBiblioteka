@@ -25,7 +25,6 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialValue = {
       'currentEmail': Autentification.tokenDecoded?['Email'],
@@ -99,10 +98,8 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                 } catch (e) {
                                   alertBox(context, AppLocalizations.of(context).error, e.toString());
                                 }
-                                // var res = _userProvider.changeEmail(
-                                //     Autentification.tokenDecoded?['Id'],
-                                //     Autentification.tokenDecoded?['Email']);
-                                // print(res);
+                              
+                               
                               }),
                               child:  Text(AppLocalizations.of(context).save))
                         ]),

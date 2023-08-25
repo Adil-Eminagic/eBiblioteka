@@ -119,7 +119,6 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
 
-                // )),
                 const SizedBox(
                   height: 25,
                 ),
@@ -145,12 +144,13 @@ class _LoginPageState extends State<LoginPage> {
                     ? const SpinKitRing(color: Colors.brown)
                     : ElevatedButton(
                         onPressed: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                          }
 
-                          _emailController.text = "user3@gmail.com";
-                          _passwordController.text = "test";
+                         
                           var email = _emailController.text;
                           var password = _passwordController.text;
 
@@ -164,30 +164,61 @@ class _LoginPageState extends State<LoginPage> {
 
                             if (Autentification.tokenDecoded?['Role'] !=
                                 'User') {
-                              alertBox(context, AppLocalizations.of(context).error,
+                              alertBox(
+                                  context,
+                                  AppLocalizations.of(context).error,
                                   AppLocalizations.of(context).forbid_users);
-                              setState(() {
-                                isLoading = false;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                            } else if (Autentification
+                                    .tokenDecoded!["IsActive"] ==
+                                "False") {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: Text(
+                                            AppLocalizations.of(context).error),
+                                        content: Text(
+                                          AppLocalizations.of(context)
+                                              .dec_account,
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                if (mounted) {
+                                                  setState(() {
+                                                    isLoading = false;
+                                                  });
+                                                }
+                                              },
+                                              child: const Text('Ok'))
+                                        ],
+                                      ));
                             } else {
                               if (Autentification
                                       .tokenDecoded!['IsActiveMembership'] ==
                                   "True") {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(builder: (context) {
-                                  return const HomePage(); 
+                                  return const HomePage();
                                 }));
                               } else {
                                 _paymentMethod(context);
                               }
 
-                              setState(() {
-                                isLoading = false;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
                             }
-// i think it is for spinning kit
                           } catch (e) {
-                            print(e.toString());
                             showDialog(
                                 barrierDismissible: false,
                                 context: context,
@@ -199,9 +230,11 @@ class _LoginPageState extends State<LoginPage> {
                                         TextButton(
                                             onPressed: () {
                                               Navigator.pop(context);
-                                              setState(() {
-                                                isLoading = false;
-                                              });
+                                              if (mounted) {
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                              }
                                             },
                                             child: const Text('Ok'))
                                       ],
@@ -215,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                isLoading
+                isLoading == true
                     ? Container()
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -253,9 +286,11 @@ class _LoginPageState extends State<LoginPage> {
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      setState(() {
-                        isLoading = false;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }
                     },
                     child: Text(AppLocalizations.of(context).cancel)),
                 ElevatedButton(

@@ -45,10 +45,12 @@ class _NotificationsListPageState extends State<NotificationsListPage> {
             _dropdownValue == 0 ? null : (_dropdownValue == 1 ? false : true)
       });
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -61,6 +63,9 @@ class _NotificationsListPageState extends State<NotificationsListPage> {
       child: Column(children: [
         _buildSearch(),
         isLoading ? Container() : _buildDataTable(),
+           isLoading == false && result != null && result!.pageCount > 1 ?  const SizedBox(
+          height: 20,
+        ) : Container(),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           if (isLoading == false && result != null && result!.pageCount > 1)
             for (int i = 0; i < result!.pageCount; i++)
@@ -77,9 +82,11 @@ class _NotificationsListPageState extends State<NotificationsListPage> {
                         'pageNumber': i + 1
                       });
 
-                      setState(() {
-                        result = data;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          result = data;
+                        });
+                      }
                     } on Exception catch (e) {
                       alertBox(context, AppLocalizations.of(context).error,
                           e.toString());
@@ -97,6 +104,9 @@ class _NotificationsListPageState extends State<NotificationsListPage> {
                                 : Colors.brown),
                       ))),
         ]),
+         const SizedBox(
+          height: 20,
+        )
       ]),
     );
   }
@@ -120,10 +130,12 @@ class _NotificationsListPageState extends State<NotificationsListPage> {
                                 try {
                                   await _notificationProvider
                                       .readNotfication(e.id!);
-                                  setState(() {
-                                    isLoading = true;
-                                    initTable();
-                                  });
+                                  if (mounted) {
+                                    setState(() {
+                                      isLoading = true;
+                                      initTable();
+                                    });
+                                  }
                                 } on Exception catch (e) {
                                   alertBox(
                                       context,
@@ -208,9 +220,11 @@ class _NotificationsListPageState extends State<NotificationsListPage> {
             value: _dropdownValue,
             onChanged: ((value) {
               if (value is int) {
-                setState(() {
-                  _dropdownValue = value;
-                });
+                if (mounted) {
+                  setState(() {
+                    _dropdownValue = value;
+                  });
+                }
               }
             }),
           )),
@@ -228,9 +242,11 @@ class _NotificationsListPageState extends State<NotificationsListPage> {
                         : (_dropdownValue == 1 ? false : true),
                   });
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
                   alertBox(context, AppLocalizations.of(context).error,
                       e.toString());

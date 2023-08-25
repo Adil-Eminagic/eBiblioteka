@@ -206,8 +206,8 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Property<string>("Biography")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("BirthYear")
+                        .HasColumnType("int");
 
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
@@ -230,8 +230,8 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("MortalDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("MortalYear")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PhotoId")
                         .HasColumnType("int");
@@ -250,68 +250,68 @@ namespace eBiblioteka.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDate = new DateTime(1910, 4, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BirthYear = 1910,
                             CountryId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             FullName = "Meša Selimović",
                             GenderId = 1,
                             IsDeleted = false,
-                            MortalDate = new DateTime(1982, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MortalYear = 1982
                         },
                         new
                         {
                             Id = 2,
-                            BirthDate = new DateTime(1892, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BirthYear = 1982,
                             CountryId = 1,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             FullName = "Ivo Andrić",
                             GenderId = 1,
                             IsDeleted = false,
-                            MortalDate = new DateTime(1975, 3, 13, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MortalYear = 1975
                         },
                         new
                         {
                             Id = 3,
-                            BirthDate = new DateTime(1564, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BirthYear = 1564,
                             CountryId = 7,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             FullName = "Wiliam Shakspeare",
                             GenderId = 1,
                             IsDeleted = false,
-                            MortalDate = new DateTime(1616, 4, 23, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MortalYear = 1616
                         },
                         new
                         {
                             Id = 4,
-                            BirthDate = new DateTime(1805, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BirthYear = 1805,
                             CountryId = 8,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             FullName = "Hans Christian Andersen",
                             GenderId = 1,
                             IsDeleted = false,
-                            MortalDate = new DateTime(1875, 8, 4, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MortalYear = 1875
                         },
                         new
                         {
                             Id = 5,
-                            BirthDate = new DateTime(1805, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BirthYear = 1694,
                             CountryId = 9,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             FullName = "Voltaire",
                             GenderId = 1,
                             IsDeleted = false,
-                            MortalDate = new DateTime(1875, 8, 4, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MortalYear = 1778
                         },
                         new
                         {
                             Id = 6,
-                            BirthDate = new DateTime(1828, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BirthYear = 1828,
                             CountryId = 10,
                             CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
                             FullName = "Henrik Ibsen",
                             GenderId = 1,
                             IsDeleted = false,
-                            MortalDate = new DateTime(1906, 5, 23, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            MortalYear = 1906
                         });
                 });
 
@@ -356,9 +356,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorID");
@@ -380,8 +377,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 4,
                             PublishingYear = 1970,
-                            Title = "Tvrdjava",
-                            isActive = true
+                            Title = "Tvrdjava"
                         },
                         new
                         {
@@ -393,8 +389,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 1,
                             PublishingYear = 1945,
-                            Title = "Na Drini cuprija",
-                            isActive = true
+                            Title = "Na Drini cuprija"
                         },
                         new
                         {
@@ -405,8 +400,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1597,
-                            Title = "Romeo i Julija",
-                            isActive = true
+                            Title = "Romeo i Julija"
                         },
                         new
                         {
@@ -417,8 +411,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 5,
                             PublishingYear = 1602,
-                            Title = "Hamlet",
-                            isActive = true
+                            Title = "Hamlet"
                         },
                         new
                         {
@@ -429,8 +422,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1843,
-                            Title = "Ružno pače",
-                            isActive = true
+                            Title = "Ružno pače"
                         },
                         new
                         {
@@ -440,8 +432,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1845,
-                            Title = "Snjeguljica",
-                            isActive = true
+                            Title = "Snjeguljica"
                         },
                         new
                         {
@@ -451,8 +442,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1835,
-                            Title = "Princeza na zrnu graška",
-                            isActive = true
+                            Title = "Princeza na zrnu graška"
                         },
                         new
                         {
@@ -462,8 +452,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 2,
                             PublishingYear = 1837,
-                            Title = "Mala sirena",
-                            isActive = true
+                            Title = "Mala sirena"
                         },
                         new
                         {
@@ -473,8 +462,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1966,
-                            Title = "Derviš i smrt",
-                            isActive = true
+                            Title = "Derviš i smrt"
                         },
                         new
                         {
@@ -484,8 +472,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1961,
-                            Title = "Tišine",
-                            isActive = true
+                            Title = "Tišine"
                         },
                         new
                         {
@@ -495,8 +482,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1983,
-                            Title = "Krug",
-                            isActive = true
+                            Title = "Krug"
                         },
                         new
                         {
@@ -506,8 +492,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1954,
-                            Title = "Prokleta Avlija",
-                            isActive = true
+                            Title = "Prokleta Avlija"
                         },
                         new
                         {
@@ -517,8 +502,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 2,
                             PublishingYear = 1945,
-                            Title = "Travnička hronika",
-                            isActive = true
+                            Title = "Travnička hronika"
                         },
                         new
                         {
@@ -528,8 +512,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1925,
-                            Title = "Gospođica",
-                            isActive = true
+                            Title = "Gospođica"
                         },
                         new
                         {
@@ -539,8 +522,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1968,
-                            Title = "Omerpaša Latas",
-                            isActive = true
+                            Title = "Omerpaša Latas"
                         },
                         new
                         {
@@ -550,8 +532,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1606,
-                            Title = "Kralj Lir",
-                            isActive = true
+                            Title = "Kralj Lir"
                         },
                         new
                         {
@@ -561,8 +542,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1599,
-                            Title = "Julije Cezar",
-                            isActive = true
+                            Title = "Julije Cezar"
                         },
                         new
                         {
@@ -572,8 +552,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 1,
                             PublishingYear = 1611,
-                            Title = "Bura",
-                            isActive = true
+                            Title = "Bura"
                         },
                         new
                         {
@@ -583,8 +562,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1718,
-                            Title = "Edip",
-                            isActive = true
+                            Title = "Edip"
                         },
                         new
                         {
@@ -594,8 +572,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 2,
                             PublishingYear = 1730,
-                            Title = "Brut",
-                            isActive = true
+                            Title = "Brut"
                         },
                         new
                         {
@@ -605,8 +582,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1749,
-                            Title = "Nanin",
-                            isActive = true
+                            Title = "Nanin"
                         },
                         new
                         {
@@ -616,8 +592,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 1,
                             PublishingYear = 1741,
-                            Title = "Mahomet",
-                            isActive = true
+                            Title = "Mahomet"
                         },
                         new
                         {
@@ -627,8 +602,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1837,
-                            Title = "Gospođica",
-                            isActive = true
+                            Title = "Gospođica"
                         },
                         new
                         {
@@ -638,8 +612,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 1,
                             PublishingYear = 1879,
-                            Title = "Nora (lutkina kuća)",
-                            isActive = true
+                            Title = "Nora (lutkina kuća)"
                         },
                         new
                         {
@@ -649,8 +622,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1890,
-                            Title = "Hedda Gabler",
-                            isActive = true
+                            Title = "Hedda Gabler"
                         },
                         new
                         {
@@ -660,8 +632,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1881,
-                            Title = "Duhovi",
-                            isActive = true
+                            Title = "Duhovi"
                         },
                         new
                         {
@@ -671,8 +642,7 @@ namespace eBiblioteka.Infrastructure.Migrations
                             IsDeleted = false,
                             OpeningCount = 0,
                             PublishingYear = 1882,
-                            Title = " Neprijatelj naroda",
-                            isActive = true
+                            Title = " Neprijatelj naroda"
                         });
                 });
 
@@ -777,9 +747,10 @@ namespace eBiblioteka.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
-
                     b.HasIndex("GenreId");
+
+                    b.HasIndex("BookId", "GenreId")
+                        .IsUnique();
 
                     b.ToTable("BookGenres");
 
@@ -1112,6 +1083,9 @@ namespace eBiblioteka.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -1122,14 +1096,33 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isRead")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Dobro došli u aplikaciju eBiblioteka desktop",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            IsRead = false,
+                            Title = "Dobrodošli",
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "Vi ste superadmin u ovoj aplikaciji",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            IsRead = false,
+                            Title = "Vaša uloga",
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.Photo", b =>
@@ -1585,6 +1578,9 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Property<int>("GenderId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsActiveMembership")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bit")
@@ -1627,9 +1623,6 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
@@ -1655,14 +1648,14 @@ namespace eBiblioteka.Infrastructure.Migrations
                             Email = "site.admin@gmail.com",
                             FirstName = "Site",
                             GenderId = 1,
+                            IsActive = true,
                             IsActiveMembership = false,
                             IsDeleted = false,
                             LastName = "Super Admin",
                             PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=",
                             PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                             PhoneNumber = "38761123456",
-                            RoleId = 1,
-                            isActive = true
+                            RoleId = 1
                         },
                         new
                         {
@@ -1673,14 +1666,14 @@ namespace eBiblioteka.Infrastructure.Migrations
                             Email = "admin1@gmail.com",
                             FirstName = "Admin1",
                             GenderId = 1,
+                            IsActive = true,
                             IsActiveMembership = false,
                             IsDeleted = false,
                             LastName = "LatnameA1",
                             PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=",
                             PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                             PhoneNumber = "134146161",
-                            RoleId = 2,
-                            isActive = true
+                            RoleId = 2
                         },
                         new
                         {
@@ -1691,14 +1684,14 @@ namespace eBiblioteka.Infrastructure.Migrations
                             Email = "user1@gmail.com",
                             FirstName = "User1",
                             GenderId = 1,
+                            IsActive = true,
                             IsActiveMembership = false,
                             IsDeleted = false,
                             LastName = "LastnameU1",
                             PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=",
                             PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                             PhoneNumber = "4644644868",
-                            RoleId = 3,
-                            isActive = true
+                            RoleId = 3
                         },
                         new
                         {
@@ -1709,14 +1702,14 @@ namespace eBiblioteka.Infrastructure.Migrations
                             Email = "user2@gmail.com",
                             FirstName = "User2",
                             GenderId = 1,
+                            IsActive = true,
                             IsActiveMembership = false,
                             IsDeleted = false,
                             LastName = "LastnameU2",
                             PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=",
                             PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                             PhoneNumber = "4644644868",
-                            RoleId = 3,
-                            isActive = true
+                            RoleId = 3
                         },
                         new
                         {
@@ -1727,14 +1720,14 @@ namespace eBiblioteka.Infrastructure.Migrations
                             Email = "user3@gmail.com",
                             FirstName = "User3",
                             GenderId = 2,
+                            IsActive = true,
                             IsActiveMembership = false,
                             IsDeleted = false,
                             LastName = "LastnameU3",
                             PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=",
                             PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                             PhoneNumber = "4644644868",
-                            RoleId = 3,
-                            isActive = true
+                            RoleId = 3
                         },
                         new
                         {
@@ -1745,14 +1738,14 @@ namespace eBiblioteka.Infrastructure.Migrations
                             Email = "user4@gmail.com",
                             FirstName = "User4",
                             GenderId = 2,
+                            IsActive = true,
                             IsActiveMembership = false,
                             IsDeleted = false,
                             LastName = "LastnameU4",
                             PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=",
                             PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                             PhoneNumber = "4644644868",
-                            RoleId = 3,
-                            isActive = true
+                            RoleId = 3
                         },
                         new
                         {
@@ -1763,14 +1756,14 @@ namespace eBiblioteka.Infrastructure.Migrations
                             Email = "user5@gmail.com",
                             FirstName = "User5",
                             GenderId = 1,
+                            IsActive = true,
                             IsActiveMembership = false,
                             IsDeleted = false,
                             LastName = "LastnameU5",
                             PasswordHash = "b4I5yA4Mp+0Pg1C3EsKU17sS13eDExGtBjjI07Vh/JM=",
                             PasswordSalt = "1wQEjdSFeZttx6dlvEDjOg==",
                             PhoneNumber = "4644644868",
-                            RoleId = 3,
-                            isActive = true
+                            RoleId = 3
                         });
                 });
 
@@ -2014,6 +2007,44 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserQuizzes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            Percentage = 80.0,
+                            QuizId = 1,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            Percentage = 50.0,
+                            QuizId = 2,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            Percentage = 100.0,
+                            QuizId = 1,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            Percentage = 0.0,
+                            QuizId = 2,
+                            UserId = 3
+                        });
                 });
 
             modelBuilder.Entity("eBiblioteka.Core.Answer", b =>

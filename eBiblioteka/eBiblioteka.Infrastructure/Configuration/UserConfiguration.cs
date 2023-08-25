@@ -31,7 +31,7 @@ namespace eBiblioteka.Infrastructure
                    .IsRequired();
 
 
-            builder.Property(e => e.isActive)
+            builder.Property(e => e.IsActive)
                    .IsRequired();
 
             builder.Property(e => e.LastSignInAt)

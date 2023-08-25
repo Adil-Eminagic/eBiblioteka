@@ -18,8 +18,9 @@ namespace eBiblioteka.Application
         protected readonly IValidator<RecommendResultUpsertDto> Validator;
         private readonly IBooksRepository _booksRepository;
         private readonly IUsersRepository _usersRepository;
+        private readonly IUserBooksService _userBooksService ;
 
-        public RecommendResultsService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<RecommendResultUpsertDto> validator, IPhotosService photosService, IRecommendResultsRepository currentRepository, IBooksRepository booksRepository, IUsersRepository usersRepository)
+        public RecommendResultsService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<RecommendResultUpsertDto> validator, IRecommendResultsRepository currentRepository, IBooksRepository booksRepository, IUsersRepository usersRepository, IUserBooksService userBooksService)
         {
             Mapper = mapper;
             UnitOfWork = (UnitOfWork)unitOfWork;
@@ -27,6 +28,7 @@ namespace eBiblioteka.Application
             CurrentRepository = currentRepository;
             _booksRepository = booksRepository;
             _usersRepository = usersRepository;
+            _userBooksService = userBooksService;
         }
 
         public virtual async Task<PagedList<RecommendResultDto>> GetPagedAsync(BaseSearchObject searchObject, CancellationToken cancellationToken = default)
@@ -48,23 +50,23 @@ namespace eBiblioteka.Application
 
         public List<BookDto> Recommend(int id)
         {
-            lock (isLocked)
+            lock (isLocked)// we lock it until it is finished
             {
                 if (mlContext == null)
                 {
                     mlContext = new MLContext();
 
-                    var tmpData = _usersRepository.UsersWithReadHistory();
+                    var tmpData = _usersRepository.UsersWithReadHistory();//get all customer with their opened books
 
                     var data = new List<BookEntry>();
 
-                    foreach (var x in tmpData)
+                    foreach (var x in tmpData)// fro each user
                     {
-                        if (x.OpenedBooks.Count > 1)
+                        if (x.OpenedBooks.Count > 1)//if user opened at least one book
                         {
-                            var distinctItemId = x.OpenedBooks.Select(y => y.BookId).ToList();
+                            var distinctItemId = x.OpenedBooks.Select(y => y.BookId).ToList();//extract id's of books that user opened
 
-                            distinctItemId.ForEach(y =>
+                            distinctItemId.ForEach(y =>//make all combinations of those extracted id's except when they are sam
                             {
                                 var relatedItems = x.OpenedBooks.Where(z => z.BookId != y);
 
@@ -80,7 +82,7 @@ namespace eBiblioteka.Application
                         }
                     }
 
-                    var trainData = mlContext.Data.LoadFromEnumerable(data);
+                    var trainData = mlContext.Data.LoadFromEnumerable(data);//trian data
 
                     MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
                     options.MatrixColumnIndexColumnName = nameof(BookEntry.BookID);
@@ -103,15 +105,15 @@ namespace eBiblioteka.Application
 
             var predictionResult = new List<Tuple<Book, float>>();
 
-            foreach (var book in books)
+            foreach (var book in books)//for each other book find other 3 with the greatest index
             {
 
                 var predictionengine = mlContext.Model.CreatePredictionEngine<BookEntry, CoBook_prediction>(model);
                 var prediction = predictionengine.Predict(
                                          new BookEntry()
                                          {
-                                             BookID = (uint)id,
-                                             CoOpenedBookID = (uint)book.Id
+                                             BookID = (uint)id,//book of recommmendation
+                                             CoOpenedBookID = (uint)book.Id//book from list
                                          });
 
 
@@ -119,9 +121,9 @@ namespace eBiblioteka.Application
             }
 
 
-            var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(3).ToList();
+            var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(3).ToList();//order by item 2 in tuple which is float variable score
 
-            return Mapper.Map<List<BookDto>>(finalResult);
+            return Mapper.Map<List<BookDto>>(finalResult);//return top three books
 
         }
 
@@ -129,28 +131,44 @@ namespace eBiblioteka.Application
         {
             var bookResult = await _booksRepository.GetPagedAsync(new BooksSearchObject() { PageSize = 100000 }, cancellationToken);
             var books = bookResult.Items.ToList();
+            var records = await _userBooksService.GetCountAsync( new UserBooksSearchObject() { PageSize=1000000},  cancellationToken);
 
-            List<RecommendResult> recommendList = new List<RecommendResult>();
-
-            foreach (var book in books)
+            if (books.Count() > 4 &&  records.TotalCount>8)
             {
-                var recommendedBooks = Recommend(book.Id);
+                List<RecommendResult> recommendList = new List<RecommendResult>();
 
-                var resultRecoomend = new RecommendResult()
+                foreach (var book in books)
                 {
-                    BookId = book.Id,
-                    FirstCobookId = recommendedBooks[0].Id,
-                    SecondCobookId = recommendedBooks[1].Id,
-                    ThirdCobookId = recommendedBooks[2].Id
-                };
-                recommendList.Add(resultRecoomend);
-            }
-            await CurrentRepository.CreateNewRecommendation(recommendList, cancellationToken);
-            await UnitOfWork.SaveChangesAsync();
+                    var recommendedBooks = Recommend(book.Id);//we do recommendation fro all books and then store it in database
 
-            return Mapper.Map<List<RecommendResultDto>>(recommendList);
+                    var resultRecoomend = new RecommendResult()
+                    {
+                        BookId = book.Id,
+                        FirstCobookId = recommendedBooks[0].Id,
+                        SecondCobookId = recommendedBooks[1].Id,
+                        ThirdCobookId = recommendedBooks[2].Id
+                    };
+                    recommendList.Add(resultRecoomend);
+                }
+                await CurrentRepository.CreateNewRecommendation(recommendList, cancellationToken);
+                await UnitOfWork.SaveChangesAsync();
+
+                return Mapper.Map<List<RecommendResultDto>>(recommendList);
+            }
+            else
+            {
+                throw new Exception("Not enough data to do recommmedation");
+            }
+
+
         }
 
+       
+
+        public async Task DeleteAllRecommendation(CancellationToken cancellationToken = default)
+        {
+            await CurrentRepository.DeleteAllRecommendation(cancellationToken);
+        }
     }
 
     public class CoBook_prediction

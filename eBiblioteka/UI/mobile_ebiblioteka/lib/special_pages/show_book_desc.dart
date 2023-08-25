@@ -23,7 +23,7 @@ class BookShortDesription extends StatelessWidget {
           )
           : Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(decription ?? 'Nema opisa',style: stil,),
+            child: Text(decription ?? AppLocalizations.of(context).no_short_de,style: stil,),
           ),
     );
   }

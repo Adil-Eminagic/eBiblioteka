@@ -12,7 +12,7 @@
         public int GenderId { get; set; }
         public int RoleId { get; set; }
         public int CountryId { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
 
 
         public string? ProfilePhoto { get; set; }

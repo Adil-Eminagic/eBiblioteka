@@ -2,21 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:mobile_ebiblioteka/detail_pages/book_detail.dart';
-import 'package:mobile_ebiblioteka/models/bookgenre.dart';
-import 'package:mobile_ebiblioteka/models/genre.dart';
-import 'package:mobile_ebiblioteka/models/search_result.dart';
-import 'package:mobile_ebiblioteka/pages/search_books.dart';
-import 'package:mobile_ebiblioteka/providers/bookgenre_provider.dart';
-import 'package:mobile_ebiblioteka/providers/genre_provider.dart';
-import 'package:mobile_ebiblioteka/utils/util_widgets.dart';
-import 'package:mobile_ebiblioteka/widgets/master_screen.dart';
+import '../detail_pages/book_detail.dart';
+import '../models/bookgenre.dart';
+import '../models/genre.dart';
+import '../models/search_result.dart';
+import '../pages/search_books.dart';
+import '../providers/bookgenre_provider.dart';
+import '../providers/genre_provider.dart';
+import '../utils/util_widgets.dart';
+import '../widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-
-
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -41,10 +38,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> initData() async {
     try {
-      genreResult = await _genreProvider.getPaged();
-      setState(() {
-        isLoading = false;
-      });
+      genreResult = await _genreProvider.getPaged();//fetching genres
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -54,7 +53,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: 'eBiblioteka',
-      child: SingleChildScrollView(
+      child: isLoading==true ? Container() : SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 50),
@@ -64,17 +63,17 @@ class _HomePageState extends State<HomePage> {
                 ElevatedButton(
                     onPressed: (() {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) => SearchBooksPage())));
+                          builder: ((context) => const SearchBooksPage())));
                     }),
-                    child:  Text(
+                    child: Text(
                       AppLocalizations.of(context).search,
-                      style: TextStyle(fontSize: 17),
+                      style:const TextStyle(fontSize: 17),
                     )),
               ],
             ),
             const SizedBox(height: 50),
             if (!isLoading && genreResult != null)
-              for (var g in genreResult!.items)
+              for (var g in genreResult!.items)//fro each genre fetch books
                 Row(
                   children: [
                     Expanded(
@@ -106,7 +105,6 @@ class _GenreBooksWidgetState extends State<GenreBooksWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _bookGenreProvider = context.read<BookGenreProvider>();
 
@@ -115,13 +113,17 @@ class _GenreBooksWidgetState extends State<GenreBooksWidget> {
 
   Future<void> initData() async {
     try {
-      bookGenreResult = await _bookGenreProvider
-          .getPaged(filter: {'genreId': widget.genre?.id, 'pageSize': 6, 'isActive':true});
-      setState(() {
-        isLoading = false;
-      });
+      bookGenreResult = await _bookGenreProvider.getPaged(filter: {
+        'genreId': widget.genre?.id,
+        'pageSize': 6
+      }); //fetch all books of genre
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context,  AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -187,7 +189,7 @@ class _GenreBooksWidgetState extends State<GenreBooksWidget> {
                       ),
                     )
                 else
-                   Text(AppLocalizations.of(context).no_books)
+                  Text(AppLocalizations.of(context).no_books)
               else
                 const SpinKitRing(color: Colors.brown)
             ],

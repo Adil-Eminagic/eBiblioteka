@@ -13,7 +13,7 @@ namespace eBiblioteka.Infrastructure
 
         public List<Book> GetAll()
         {
-           return DbSet.ToList<Book>();
+           return DbSet.ToList();
         }
 
 
@@ -23,7 +23,7 @@ namespace eBiblioteka.Infrastructure
         }
 
 
-        public List<Book> GetExceptById(int id)
+        public List<Book> GetExceptById(int id)// this is needed for recommendatio sytem to do make all combinations od specific book and all other books 
         {
             return DbSet.Where(c=>c.Id!=id).ToList();
         }
@@ -31,11 +31,10 @@ namespace eBiblioteka.Infrastructure
         public override async Task<PagedList<Book>> GetPagedAsync(BooksSearchObject searchObject, CancellationToken cancellationToken = default)
         {
 
-            if (searchObject.Descending)
+            if (searchObject.Descending)//descending is needed for home page in mobile app where are most read books showed
             {
                 return await DbSet.Include(c => c.UserRate).Include(c => c.CoverPhoto).Include(c => c.Author).Where(c => searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
                 .Where(c => searchObject.AuthorName == null || c.Author.FullName.ToLower().Contains(searchObject.AuthorName.ToLower()))
-                .Where(c => searchObject.isActive == null || c.isActive == searchObject.isActive)
                 .OrderByDescending(c => c.OpeningCount)
                .ToPagedListAsync(searchObject, cancellationToken);
             }
@@ -43,7 +42,6 @@ namespace eBiblioteka.Infrastructure
             {
                 return await DbSet.Include(c => c.UserRate).Include(c => c.CoverPhoto).Include(c => c.Author).Where(c => searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
                 .Where(c => searchObject.AuthorName == null || c.Author.FullName.ToLower().Contains(searchObject.AuthorName.ToLower()))
-                .Where(c => searchObject.isActive == null || c.isActive == searchObject.isActive)
                .ToPagedListAsync(searchObject, cancellationToken);
             }
         }
@@ -52,9 +50,9 @@ namespace eBiblioteka.Infrastructure
         {
             return await DbSet.Include(c => c.UserRate).Include(c => c.Author).Where(c => searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
                 .Where(c => searchObject.AuthorName == null || c.Author.FullName.ToLower().Contains(searchObject.AuthorName.ToLower()))
-                .Where(c => searchObject.isActive == null || c.isActive == searchObject.isActive)
                .ToReportInfoAsync(searchObject, cancellationToken);
         }
-
+            
+            
     }
 }

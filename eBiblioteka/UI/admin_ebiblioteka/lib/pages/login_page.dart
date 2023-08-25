@@ -10,7 +10,6 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -37,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(AppLocalizations.of(context).sign_in),
+        title: Text(AppLocalizations.of(context).sign_in),
         centerTitle: true,
         actions: [
           TextButton.icon(
@@ -45,27 +44,26 @@ class _LoginPageState extends State<LoginPage> {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                          content:
-                              Row(
+                          content: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               InkWell(
                                   onTap: (() {
                                     _languageProvider.changeLanguage('en');
-                                     Navigator.pop(context);
+                                    Navigator.pop(context);
                                   }),
                                   child: Image.asset(
                                     'assets/uk.png',
                                     width: 100,
                                     height: 100,
                                   )),
-                            const  SizedBox(
+                              const SizedBox(
                                 width: 100,
                               ),
                               InkWell(
                                 onTap: () {
-                                    _languageProvider.changeLanguage('bs');
-                                     Navigator.pop(context);
+                                  _languageProvider.changeLanguage('bs');
+                                  Navigator.pop(context);
                                 },
                                 child: Image.asset(
                                   'assets/bih.png',
@@ -75,13 +73,13 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ],
                           ),
-
                           actions: [
                             TextButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child:  Text(AppLocalizations.of(context).cancel)),
+                                child:
+                                    Text(AppLocalizations.of(context).cancel)),
                           ],
                         ));
               },
@@ -127,8 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration:  InputDecoration(
-                        label: Text(AppLocalizations.of(context).password), icon: const Icon(Icons.password)),
+                    decoration: InputDecoration(
+                        label: Text(AppLocalizations.of(context).password),
+                        icon: const Icon(Icons.password)),
                   ),
                   const SizedBox(
                     height: 55,
@@ -137,13 +136,15 @@ class _LoginPageState extends State<LoginPage> {
                       ? const SizedBox(
                           width: 25,
                           height: 25,
-                          child:  SpinKitRing(color: Colors.brown),
-                        ) 
+                          child: SpinKitRing(color: Colors.brown),
+                        )
                       : ElevatedButton(
                           onPressed: () async {
-                            setState(() {
-                              isLoading = true;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                            }
 
                             var email = _emailController.text;
                             var password = _passwordController.text;
@@ -155,35 +156,69 @@ class _LoginPageState extends State<LoginPage> {
                               Autentification.token = token;
                               Autentification.tokenDecoded =
                                   JwtDecoder.decode(token);
-                           
-                              if (Autentification.tokenDecoded?['Role'] == 'User') {
-                                    showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title:  Text(AppLocalizations.of(context).error),
-                                        content:  Text(
-                                         AppLocalizations.of(context).forbid_users,
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                setState(() {
-                                                  isLoading = false;
-                                                });
-                                              },
-                                              child: const Text('Ok'))
-                                        ],
-                                      ));
-                            
+
+                              if (Autentification.tokenDecoded?['Role'] ==
+                                  'User') {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                          title: Text(
+                                              AppLocalizations.of(context)
+                                                  .error),
+                                          content: Text(
+                                            AppLocalizations.of(context)
+                                                .forbid_users,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                  }
+                                                },
+                                                child: const Text('Ok'))
+                                          ],
+                                        ));
+                              } else if (Autentification
+                                          .tokenDecoded!["Role"] !=
+                                      "Superadmin" &&
+                                   Autentification.tokenDecoded!["IsActive"]=="False") {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                          title: Text(
+                                              AppLocalizations.of(context)
+                                                  .error),
+                                          content: Text(
+                                            AppLocalizations.of(context)
+                                                .dec_account,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                  }
+                                                },
+                                                child: const Text('Ok'))
+                                          ],
+                                        ));
                               } else {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) {
-                                return const ReportingPage();
-                              }));
-                              isLoading = false;
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(builder: (context) {
+                                  return const ReportingPage();
+                                }));
+                                isLoading = false;
                               }
                             } on Exception catch (e) {
                               showDialog(
@@ -191,7 +226,8 @@ class _LoginPageState extends State<LoginPage> {
                                   barrierDismissible: false,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
-                                        title:  Text(AppLocalizations.of(context).error),
+                                        title: Text(
+                                            AppLocalizations.of(context).error),
                                         content: Text(
                                           e.toString(),
                                         ),
@@ -199,9 +235,11 @@ class _LoginPageState extends State<LoginPage> {
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                setState(() {
-                                                  isLoading = false;
-                                                });
+                                                if (mounted) {
+                                                  setState(() {
+                                                    isLoading = false;
+                                                  });
+                                                }
                                               },
                                               child: const Text('Ok'))
                                         ],

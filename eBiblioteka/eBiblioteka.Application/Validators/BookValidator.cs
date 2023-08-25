@@ -11,7 +11,6 @@ namespace eBiblioteka.Application
             RuleFor(c => c.Title).NotEmpty().WithErrorCode(ErrorCodes.NotEmpty);
             RuleFor(c => c.OpeningCount).NotNull().WithErrorCode(ErrorCodes.NotNull);
             RuleFor(c=>c.AuthorID).NotNull().WithErrorCode(ErrorCodes.NotNull);
-            RuleFor(u => u.isActive).NotNull().WithErrorCode(ErrorCodes.NotNull);
 
         }
     }

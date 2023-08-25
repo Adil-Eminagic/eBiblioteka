@@ -25,7 +25,6 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
   late QuestionProvider _questionProvider = QuestionProvider();
-  late AnswerProvider _answerProvider = AnswerProvider();
 
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    _answerProvider = context.watch<AnswerProvider>();
     return MasterScreenWidget(
         title: widget.question != null
             ? "${AppLocalizations.of(context).question_id} ${(widget.question?.id.toString() ?? '')}"
@@ -226,6 +224,9 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                       
                     } else if (int.tryParse(value) == null) {
                       return AppLocalizations.of(context).numeric_field;
+                    }
+                    else if (int.parse(value) < 1 || int.parse(value) >10) {
+                      return AppLocalizations.of(context).invalid_points;
                     }
                   },
                   decoration: InputDecoration(

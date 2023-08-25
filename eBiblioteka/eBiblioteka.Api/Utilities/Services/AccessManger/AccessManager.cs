@@ -63,7 +63,8 @@ namespace eBiblioteka.Api
                     new Claim(ClaimNames.LastName, user.LastName),
                     new Claim(ClaimNames.Email, user.Email),
                     new Claim(ClaimNames.Role, user.Role.Value),
-                    new Claim(ClaimNames.IsActiveMembership, user.IsActiveMembership.ToString())
+                    new Claim(ClaimNames.IsActiveMembership, user.IsActiveMembership.ToString()),
+                    new Claim(ClaimNames.IsActive, user.IsActive.ToString())
 
                 }),
                 SigningCredentials = new SigningCredentials(
@@ -75,8 +76,7 @@ namespace eBiblioteka.Api
                 Expires = DateTime.UtcNow.AddMinutes(_jwtTokenConfig.Duration)
             };
 
-            //if (user.ProfilePhotoId != null)
-            //    tokenDescriptor.Subject.AddClaim(new Claim(ClaimNames.ProfilePhotoId, user.ProfilePhotoId.Value.ToString()));
+          
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);

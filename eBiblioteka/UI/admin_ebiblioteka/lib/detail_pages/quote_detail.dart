@@ -24,7 +24,6 @@ class _QuoteDetailPageState extends State<QuoteDetailPage> {
   Map<String, dynamic> _initialValue = {};
   late QuoteProvider _quoteProvider = QuoteProvider();
 
-  bool isLoading = true;
 
   @override
   void initState() {

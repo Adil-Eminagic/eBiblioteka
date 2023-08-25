@@ -5,7 +5,7 @@ namespace eBiblioteka.Core
     {
         public string Content { get; set; } = null!;
         public int Points { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
 
         public int QuizId { get; set; }
         public QuizDto Quiz { get; set; } = null!;

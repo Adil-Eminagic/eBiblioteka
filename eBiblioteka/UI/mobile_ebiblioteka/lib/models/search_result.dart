@@ -1,5 +1,4 @@
 class SearchResult<T> {
-  //int count=0;
   int pageNumber = 0;
   int pageSize = 0;
   int pageCount = 0;

@@ -7,7 +7,6 @@ namespace eBiblioteka.Core
         public string? ShortDescription { get; set; } = null!;
         public int? PublishingYear { get; set; }
         public int OpeningCount { get; set; }
-        public bool isActive { get; set; } = true;
 
         public int? CoverPhotoId { get; set; }
         public Photo? CoverPhoto { get; set; } = null!;

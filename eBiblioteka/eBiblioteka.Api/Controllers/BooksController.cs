@@ -2,9 +2,7 @@
 using eBiblioteka.Core;
 using eBiblioteka.Application.Interfaces;
 using eBiblioteka.Infrastructure.Interfaces;
-using Microsoft.ML;
 using Microsoft.AspNetCore.Authorization;
-using System.Net;
 
 namespace eBiblioteka.Api.Controllers
 {
@@ -19,7 +17,7 @@ namespace eBiblioteka.Api.Controllers
         }
 
         [Authorize]
-        [HttpPost("OpenBook/{bookId}")]
+        [HttpPut("OpenBook/{bookId}")]
         public virtual async Task<IActionResult> OpenBook(int bookId, CancellationToken cancellationToken = default)
         {
             try

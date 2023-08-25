@@ -12,6 +12,8 @@ import '../detail_pages/book_detail.dart';
 import '../models/book.dart';
 import '../utils/util_widgets.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class RecommendedBookWidget extends StatefulWidget {
   const RecommendedBookWidget({Key? key, this.bookId}) : super(key: key);
   final int? bookId;
@@ -48,11 +50,13 @@ class _RecommendedBookWidgetState extends State<RecommendedBookWidget> {
         Photo photo = await _photoProvider.getById(book!.coverPhotoId!);
         _base64Photo = photo.data;
       }
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -65,39 +69,41 @@ class _RecommendedBookWidgetState extends State<RecommendedBookWidget> {
                   book: book,
                 ))));
       }),
-      child: isLoading == true ? Container() : Container(
-        decoration: const BoxDecoration(
-          border: Border(
-              top: BorderSide(color: Colors.brown),
-              bottom: BorderSide(color: Colors.brown),
-              right: BorderSide(color: Colors.brown)),
-        ),
-        width: 205,
-        child:  Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: 150,
-                height: 100,
-                child: _base64Photo != null
-                    ? Image.memory(base64Decode(_base64Photo!))
-                    : Image.asset(
-                        'images/no_image.png',
-                        width: 150,
-                        height: 100,
-                      )),
-            const SizedBox(
-              height: 10,
+      child: isLoading == true
+          ? Container()
+          : Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                    top: BorderSide(color: Colors.brown),
+                    bottom: BorderSide(color: Colors.brown),
+                    right: BorderSide(color: Colors.brown)),
+              ),
+              width: 205,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      width: 150,
+                      height: 100,
+                      child: _base64Photo != null
+                          ? Image.memory(base64Decode(_base64Photo!))
+                          : Image.asset(
+                              'images/no_image.png',
+                              width: 150,
+                              height: 100,
+                            )),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(book?.title ?? ''),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text('(${author?.fullName ?? ''})')
+                ],
+              ),
             ),
-            Text(book?.title ?? ''),
-            const SizedBox(
-              height: 10,
-            ),
-            Text('(${author?.fullName ?? ''})')
-          ],
-        ),
-      ),
     );
   }
 }

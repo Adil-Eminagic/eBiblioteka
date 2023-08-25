@@ -9,7 +9,6 @@ import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class RatingListPage extends StatefulWidget {
   const RatingListPage({Key? key, this.bookId}) : super(key: key);
   final int? bookId;
@@ -37,9 +36,11 @@ class _RatingListPageState extends State<RatingListPage> {
     try {
       result = await _ratingProvider
           .getPaged(filter: {'bookId': widget.bookId, 'pageSize': 100000});
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -61,8 +62,8 @@ class _RatingListPageState extends State<RatingListPage> {
                 Expanded(
                   child: TextField(
                     controller: _userConroller,
-                    decoration:
-                         InputDecoration(label: Text(AppLocalizations.of(context).user_name)),
+                    decoration: InputDecoration(
+                        label: Text(AppLocalizations.of(context).user_name)),
                   ),
                 ),
                 const SizedBox(
@@ -73,16 +74,18 @@ class _RatingListPageState extends State<RatingListPage> {
                       try {
                         var data = await _ratingProvider.getPaged(filter: {
                           "bookId": widget.bookId,
-                          "userName": _userConroller
-                              .text,
+                          "userName": _userConroller.text,
                           "pageSize": 1000000
                         });
 
-                        setState(() {
-                          result = data;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            result = data;
+                          });
+                        }
                       } on Exception catch (e) {
-                        alertBox(context, AppLocalizations.of(context).error, e.toString());
+                        alertBox(context, AppLocalizations.of(context).error,
+                            e.toString());
                       }
                     },
                     child: Text(AppLocalizations.of(context).search)),
@@ -97,7 +100,8 @@ class _RatingListPageState extends State<RatingListPage> {
           ),
           (result == null || result!.items.isEmpty || isLoading == true)
               ? Expanded(
-                  child: Center(child: Text(AppLocalizations.of(context).no_rates)))
+                  child: Center(
+                      child: Text(AppLocalizations.of(context).no_rates)))
               : Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
@@ -121,16 +125,21 @@ class _RatingListPageState extends State<RatingListPage> {
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                            title:
-                                                 Text(AppLocalizations.of(context).rate_del_title),
-                                            content:  Text(
-                                                AppLocalizations.of(context).rate_del_mes),
+                                            title: Text(
+                                                AppLocalizations.of(context)
+                                                    .rate_del_title),
+                                            content: Text(
+                                                AppLocalizations.of(context)
+                                                    .rate_del_mes),
                                             actions: [
                                               TextButton(
                                                   onPressed: (() {
                                                     Navigator.pop(context);
                                                   }),
-                                                  child: Text(AppLocalizations.of(context).cancel)),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .cancel)),
                                               TextButton(
                                                   onPressed: () async {
                                                     try {
@@ -141,10 +150,11 @@ class _RatingListPageState extends State<RatingListPage> {
                                                               0);
                                                       ScaffoldMessenger.of(
                                                               context)
-                                                          .showSnackBar(
-                                                               SnackBar(
-                                                                  content: Text(
-                                                                      AppLocalizations.of(context).rate_del_su)));
+                                                          .showSnackBar(SnackBar(
+                                                              content: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .rate_del_su)));
 
                                                       Navigator.pop(
                                                         context,
@@ -153,7 +163,9 @@ class _RatingListPageState extends State<RatingListPage> {
                                                     } catch (e) {
                                                       alertBoxMoveBack(
                                                           context,
-                                                          AppLocalizations.of(context).error,
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .error,
                                                           e.toString());
                                                     }
                                                   },

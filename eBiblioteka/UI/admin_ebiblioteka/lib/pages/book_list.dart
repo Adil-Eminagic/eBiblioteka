@@ -1,5 +1,4 @@
 import 'package:admin_ebiblioteka/detail_pages/book_details.dart';
-import 'package:admin_ebiblioteka/models/recommend_result.dart';
 import 'package:admin_ebiblioteka/models/search_result.dart';
 import 'package:admin_ebiblioteka/providers/book_provider.dart';
 import 'package:admin_ebiblioteka/providers/recommend_result_provider.dart';
@@ -12,7 +11,6 @@ import '../utils/util_widgets.dart';
 import '../widgets/master_screen.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class BooksPage extends StatefulWidget {
   const BooksPage({Key? key}) : super(key: key);
@@ -27,9 +25,8 @@ class _BooksPageState extends State<BooksPage> {
       RecommendResultProvider();
   SearchResult<Book>? result;
   bool isLoading = true;
-  int _dropdownValue = 1;
 
- final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -41,17 +38,17 @@ class _BooksPageState extends State<BooksPage> {
 
   Future<void> initTable() async {
     try {
-      var data = await _bookProvider.getPaged(filter: {
-        "title": _titleController.text,
-        'isActive': _dropdownValue == 1 ? true : false,
-      });
+      var data = await _bookProvider
+          .getPaged(filter: {"title": _titleController.text});
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -64,9 +61,9 @@ class _BooksPageState extends State<BooksPage> {
           isLoading
               ? const SpinKitRing(color: Colors.brown)
               : _buildDataTable(),
-          const SizedBox(
-            height: 20,
-          ),
+          isLoading == false && result != null && result!.pageCount > 1 ?  const SizedBox(
+          height: 20,
+        ) : Container(),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (isLoading == false && result != null && result!.pageCount > 1)
               for (int i = 0; i < result!.pageCount; i++)
@@ -75,13 +72,14 @@ class _BooksPageState extends State<BooksPage> {
                       try {
                         var data = await _bookProvider.getPaged(filter: {
                           "title": _titleController.text,
-                          'isActive': _dropdownValue == 1 ? true : false,
                           'pageNumber': i + 1
                         });
 
-                        setState(() {
-                          result = data;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            result = data;
+                          });
+                        }
                       } on Exception catch (e) {
                         alertBox(context, 'Greška', e.toString());
                       }
@@ -99,7 +97,7 @@ class _BooksPageState extends State<BooksPage> {
                         ))),
           ]),
           const SizedBox(
-            height: 65,
+            height: 20,
           ),
         ]));
   }
@@ -108,8 +106,8 @@ class _BooksPageState extends State<BooksPage> {
     return Expanded(
       child: SingleChildScrollView(
         child: DataTable(
-          columns:  [
-           const DataColumn(label:  Text("Id")),
+          columns: [
+            const DataColumn(label: Text("Id")),
             DataColumn(label: Text(AppLocalizations.of(context).title)),
             DataColumn(label: Text(AppLocalizations.of(context).wrote)),
             DataColumn(label: Text(AppLocalizations.of(context).author)),
@@ -150,58 +148,43 @@ class _BooksPageState extends State<BooksPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 controller: _titleController,
-                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).title)),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).title)),
               ),
             ),
           ),
-          const SizedBox(
-            width: 15,
-          ),
-          Expanded(
-              child: DropdownButton(
-                  items:  [
-                DropdownMenuItem(value: 0, child: Text(AppLocalizations.of(context).inactive)),
-                DropdownMenuItem(value: 1, child: Text(AppLocalizations.of(context).active)),
-              ],
-                  value: _dropdownValue,
-                  onChanged: ((value) {
-                    if (value is int) {
-                      setState(() {
-                        _dropdownValue = value;
-                      });
-                    }
-                  }))),
           const SizedBox(
             width: 20,
           ),
           ElevatedButton(
               onPressed: () async {
                 try {
-                    var data = await _recommendResultProvider.trainData();
-                    ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text(AppLocalizations.of(context).su_trained)));
-
+                  var data = await _recommendResultProvider.trainData();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(AppLocalizations.of(context).su_trained)));
                 } on Exception catch (e) {
-                  alertBox(context, AppLocalizations.of(context).error, e.toString());
+                  alertBox(context, AppLocalizations.of(context).error,
+                      e.toString());
                 }
               },
-              child:  Text(AppLocalizations.of(context).train_recommend)),
+              child: Text(AppLocalizations.of(context).train_recommend)),
           const SizedBox(
             width: 15,
           ),
           ElevatedButton(
               onPressed: () async {
                 try {
-                  var data = await _bookProvider.getPaged(filter: {
-                    "title": _titleController.text,
-                    'isActive': _dropdownValue == 1 ? true : false
-                  });
+                  var data = await _bookProvider
+                      .getPaged(filter: {"title": _titleController.text});
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
-                  alertBox(context, 'Greška', e.toString());
+                  alertBox(context, AppLocalizations.of(context).error,
+                      e.toString());
                 }
               },
               child: Text(AppLocalizations.of(context).search)),

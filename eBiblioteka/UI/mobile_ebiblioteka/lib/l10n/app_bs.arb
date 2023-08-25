@@ -135,12 +135,16 @@
     "quiz_results":"Rezultati kvizova",
     "result_del_su":"Uspješno brisanje rezultata kiza",
     "result_del_title":"Brisanje rezultata kiza",
-    "result_del_mes":"Da li želite obrisati rezultata kiza?"
+    "result_del_mes":"Da li želite obrisati rezultata kiza?",
+    "dec_account":"Ne možete se prijaviti jer je vaš profil deaktiviran",
+    "no_open_rate":"Ne možete modifikovati ocjene od drugih korisnika, samo svoje",
+    "no_read_hist":"Nema ćitanih knjiga",
+    "error_pay":"Greška prilkom plaćanja",
+    "cancel_payment":"Plaćanje je otkazano",
+    "no_quiz_reuslts":"Nema rezultata kvizova"
+
+
     
     
-
-
-
-
 
 }

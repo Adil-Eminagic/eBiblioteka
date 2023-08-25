@@ -8,5 +8,6 @@ public static class ClaimNames
     public static readonly string Email = "Email";
     public static readonly string Role = "Role";
     public static readonly string IsActiveMembership = "IsActiveMembership";
+    public static readonly string IsActive = "IsActive";
 
 }

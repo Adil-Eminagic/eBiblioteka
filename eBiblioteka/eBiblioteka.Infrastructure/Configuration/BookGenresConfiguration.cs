@@ -19,6 +19,8 @@ namespace eBiblioteka.Infrastructure
                    .HasForeignKey(e => e.GenreId)
                    .IsRequired();
 
+            builder.HasIndex(e => new { e.BookId, e.GenreId }).IsUnique();
+
         }
     }
 }

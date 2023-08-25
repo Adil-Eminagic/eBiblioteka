@@ -31,17 +31,4 @@ Image imageFromBase64String(String base64Image) {
 
 
 
-//TODOs
-//textare biografija
-//snackbar
-//pagination
-//ne treba da se na dugme dohavataju getpaged, koristiti listview.builder
-// tašto radi kada reloadmo
-//brisanje korisnika
-// treba i dugme dohvati radi filtrirnaja
-// ** treba password biti password šifriran
-// ** da se ne može dva puta ista stranica otvoriti
-// ** style of button
-// ** smanjivanje base64 string
-// ** zabranniti userima da se logiranju na administratora
 

@@ -10,8 +10,8 @@ class Author {
   int? id;
   String? fullName;
   String? biography;
-  DateTime? birthDate;
-  DateTime? mortalDate;
+  int? birthYear;
+  int? mortalYear;
   int? genderId;
   Gender? gender;
   int? countryId;
@@ -23,8 +23,8 @@ class Author {
       this.id,
       this.fullName,
       this.biography,
-      this.birthDate,
-      this.mortalDate,
+      this.birthYear,
+      this.mortalYear,
       this.genderId,
       this.gender,
       this.country,

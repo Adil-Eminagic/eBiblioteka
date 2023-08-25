@@ -39,9 +39,11 @@ class _QuizResultListPageState extends State<QuizResultListPage> {
         'pageSize': 100000,
         'userId': int.parse(Autentification.tokenDecoded!["Id"])
       });
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -53,69 +55,71 @@ class _QuizResultListPageState extends State<QuizResultListPage> {
       title: AppLocalizations.of(context).quiz_results,
       child: isLoading == true
           ? const Center(child: SpinKitRing(color: Colors.brown))
-          : ListView.builder(
-              itemCount: result!.items.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    ListTile(
-                      leading: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () async {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text(AppLocalizations.of(context)
-                                        .rate_del_title),
-                                    content: Text(AppLocalizations.of(context)
-                                        .rate_del_mes),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: (() {
-                                            Navigator.pop(context);
-                                          }),
-                                          child: Text(
-                                              AppLocalizations.of(context)
-                                                  .cancel)),
-                                      TextButton(
-                                          onPressed: () async {
-                                            try {
-                                              await _userQuizProvider.remove(
-                                                  result?.items[index].id ?? 0);
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          AppLocalizations.of(
-                                                                  context)
-                                                              .rate_del_su)));
+          : SizedBox(
+            child: result!.items.isEmpty ?  Center(child: Text(AppLocalizations.of(context).no_quiz_reuslts)) : ListView.builder(
+                itemCount: result!.items.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      ListTile(
+                        leading: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () async {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      title: Text(AppLocalizations.of(context)
+                                          .rate_del_title),
+                                      content: Text(AppLocalizations.of(context)
+                                          .rate_del_mes),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: (() {
                                               Navigator.pop(context);
-                                              initData();
-                                            } catch (e) {
-                                              alertBoxMoveBack(
-                                                  context,
-                                                  AppLocalizations.of(context)
-                                                      .error,
-                                                  e.toString());
-                                            }
-                                          },
-                                          child: const Text('Ok')),
-                                    ],
-                                  ));
-                        },
+                                            }),
+                                            child: Text(
+                                                AppLocalizations.of(context)
+                                                    .cancel)),
+                                        TextButton(
+                                            onPressed: () async {
+                                              try {
+                                                await _userQuizProvider.remove(
+                                                    result?.items[index].id ?? 0);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .rate_del_su)));
+                                                Navigator.pop(context);
+                                                initData();
+                                              } catch (e) {
+                                                alertBoxMoveBack(
+                                                    context,
+                                                    AppLocalizations.of(context)
+                                                        .error,
+                                                    e.toString());
+                                              }
+                                            },
+                                            child: const Text('Ok')),
+                                      ],
+                                    ));
+                          },
+                        ),
+                        title: Text(result!.items[index].quiz?.title ?? ''),
+                        trailing: Text("${result!.items[index].percentage}%"),
+                        subtitle: Text(formatDate(result!.items[index].createdAt,
+                            [dd, '-', mm, '-', yyyy])),
                       ),
-                      title: Text(result!.items[index].quiz?.title ?? ''),
-                      trailing: Text("${result!.items[index].percentage}%"),
-                      subtitle: Text(formatDate(result!.items[index].createdAt,
-                          [dd, '-', mm, '-', yyyy])),
-                    ),
-                    const Divider(
-                      color: Colors.black,
-                      thickness: 1,
-                    )
-                  ],
-                );
-              },
-            ),
+                      const Divider(
+                        color: Colors.black,
+                        thickness: 1,
+                      )
+                    ],
+                  );
+                },
+              ),
+          ),
     );
   }
 }

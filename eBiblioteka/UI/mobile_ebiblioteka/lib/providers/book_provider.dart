@@ -19,7 +19,7 @@ class BookProvider extends BaseProvider<Book> {
 
     var headers = createHeaders();
 
-    Response response = await post(uri,
+    Response response = await put(uri,
        headers: headers,
         body: null);
 

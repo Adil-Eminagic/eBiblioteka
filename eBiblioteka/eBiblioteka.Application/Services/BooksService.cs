@@ -12,59 +12,34 @@ namespace eBiblioteka.Application
     {
         private readonly IPhotosService _photosService;
         private readonly IBookFilesService _bookFilesService;
-        private readonly IUsersRepository _usersRepository;
+        private readonly IRecommendResultsService _recommendResultsService;
 
 
-        public BooksService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<BookUpsertDto> validator, IPhotosService photosService, IBookFilesService bookFilesService, IUserBooksRepository userBooksRepository, IUsersService usersService, IUsersRepository usersRepository) : base(mapper, unitOfWork, validator)
+        public BooksService(IMapper mapper, IUnitOfWork unitOfWork, IValidator<BookUpsertDto> validator, IPhotosService photosService, IBookFilesService bookFilesService, IUserBooksRepository userBooksRepository, IUsersService usersService, IUsersRepository usersRepository, IRecommendResultsService recommendResultsService) : base(mapper, unitOfWork, validator)
         {
-            this._photosService = photosService;
+            _photosService = photosService;
             _bookFilesService = bookFilesService;
-            _usersRepository = usersRepository;
+            _recommendResultsService = recommendResultsService;
         }
 
 
-        public override async Task<PagedList<BookDto>> GetPagedAsync(BooksSearchObject searchObject, CancellationToken cancellationToken = default)
-        {
-            var pagedList = await CurrentRepository.GetPagedAsync(searchObject, cancellationToken);
-            var dtos = Mapper.Map<PagedList<BookDto>>(pagedList);
-
-            if (pagedList.Items != null && pagedList.Items.Count > 0)
-            {
-                for (int i = 0; i < pagedList.Items.Count(); i++)
-                {
-                    if (pagedList.Items[i].UserRate.Count > 0)
-                    {
-                        decimal ave = 0;
-                        foreach (var z in pagedList.Items[i].UserRate)
-                        {
-                            ave += z.Stars;
-                        }
-                        dtos.Items[i].AverageRate = ave / pagedList.Items[i].UserRate.Count();
-                    }
-                }
-            }
-
-            return dtos;
-        }
-
-      
         public async override Task<BookDto> AddAsync(BookUpsertDto dto, CancellationToken cancellationToken = default)
         {
             await ValidateAsync(dto, cancellationToken);
 
             var entity = Mapper.Map<Book>(dto);
-            if (dto.image != null)
+            if (dto.Image != null)
             {
                 PhotoUpsertDto photoUpsertDto = new PhotoUpsertDto();
-                photoUpsertDto.Data = dto.image;
+                photoUpsertDto.Data = dto.Image;
                 var photo = await _photosService.AddAsync(photoUpsertDto);
                 entity.CoverPhotoId = photo.Id;
             }
-            if (dto.document != null)
+            if (dto.Document != null)
             {
                 BookFileUpsertDto bookFileUpsertDto = new BookFileUpsertDto();
-                bookFileUpsertDto.Name = dto.document.Name;
-                bookFileUpsertDto.Data = dto.document.Data;
+                bookFileUpsertDto.Name = dto.Document.Name;
+                bookFileUpsertDto.Data = dto.Document.Data;
                 var file = await _bookFilesService.AddAsync(bookFileUpsertDto);
                 entity.BookFileId = file.Id;
             }
@@ -88,40 +63,40 @@ namespace eBiblioteka.Application
 
             Mapper.Map(dto, book);
 
-            if (dto.image == null && exsistringCoverPhotoId > 0)// ne može se null dodsjeliti 0
+            if (dto.Image == null && exsistringCoverPhotoId > 0)// ne može se null dodsjeliti 0
             {
                 book.CoverPhotoId = exsistringCoverPhotoId;
             }
-            else if (dto.image != null)
+            else if (dto.Image != null)
             {
                 if (exsistringCoverPhotoId > 0)
                 {
-                    PhotoUpsertDto photoUpsertDto = new PhotoUpsertDto() { Id = exsistringCoverPhotoId, Data = dto.image };
-                    var photo = await _photosService.UpdateAsync(photoUpsertDto);
+                    PhotoUpsertDto photoUpsertDto = new PhotoUpsertDto() { Id = exsistringCoverPhotoId, Data = dto.Image };
+                    await _photosService.UpdateAsync(photoUpsertDto);
                 }
                 else
                 {
-                    PhotoUpsertDto photoUpsertDto = new PhotoUpsertDto() { Id = 0, Data = dto.image };
+                    PhotoUpsertDto photoUpsertDto = new PhotoUpsertDto() { Id = 0, Data = dto.Image };
                     var photo = await _photosService.AddAsync(photoUpsertDto);
                     book.CoverPhotoId = photo.Id;
                 }
             }
 
 
-            if (dto.document == null && exsistringBookFileId > 0)// ne može se null dodsjeliti 0
+            if (dto.Document == null && exsistringBookFileId > 0)// ne može se null dodsjeliti 0
             {
                 book.BookFileId = exsistringBookFileId;
             }
-            else if (dto.document != null)
+            else if (dto.Document != null)
             {
                 if (exsistringBookFileId > 0)
                 {
-                    BookFileUpsertDto fileUpsertDto = new BookFileUpsertDto() { Id = exsistringBookFileId, Name = dto.document.Name, Data = dto.document.Data };
-                    var file = await _bookFilesService.UpdateAsync(fileUpsertDto);
+                    BookFileUpsertDto fileUpsertDto = new BookFileUpsertDto() { Id = exsistringBookFileId, Name = dto.Document.Name, Data = dto.Document.Data };
+                    await _bookFilesService.UpdateAsync(fileUpsertDto);
                 }
                 else
                 {
-                    BookFileUpsertDto fileUpsertDto = new BookFileUpsertDto() { Id = 0, Name = dto.document.Name, Data = dto.document.Data };
+                    BookFileUpsertDto fileUpsertDto = new BookFileUpsertDto() { Id = 0, Name = dto.Document.Name, Data = dto.Document.Data };
                     var file = await _bookFilesService.AddAsync(fileUpsertDto);
                     book.BookFileId = file.Id;
                 }
@@ -147,40 +122,13 @@ namespace eBiblioteka.Application
             return Mapper.Map<BookDto>(book);
         }
 
-        public async Task<BookDto> DeactivateAsync(int bookId, CancellationToken cancellationToken = default)
+        public async override Task RemoveByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            var book = await CurrentRepository.GetByIdAsync(bookId, cancellationToken);
+            await CurrentRepository.RemoveByIdAsync(id, false, cancellationToken);
 
-            if (book == null)
-                throw new UserNotFoundException();
+            await _recommendResultsService.DeleteAllRecommendation(cancellationToken);
+            await UnitOfWork.SaveChangesAsync(cancellationToken);
 
-            if (book.isActive == false)
-                throw new Exception("Ne mozete deaktivirati knjigu koji je vec deakativirana");
-
-            book.isActive = false;
-
-            CurrentRepository.Update(book);
-            await UnitOfWork.SaveChangesAsync();
-
-            return Mapper.Map<BookDto>(book);
-        }
-
-        public async Task<BookDto> ActivateAsync(int bookId, CancellationToken cancellationToken = default)
-        {
-            var book = await CurrentRepository.GetByIdAsync(bookId, cancellationToken);
-
-            if (book == null)
-                throw new UserNotFoundException();
-
-            if (book.isActive == true)
-                throw new Exception("Ne mozete aktivirati knjigu koji je aktivna");
-
-            book.isActive = true;
-
-            CurrentRepository.Update(book);
-            await UnitOfWork.SaveChangesAsync();
-
-            return Mapper.Map<BookDto>(book);
         }
     }
 }

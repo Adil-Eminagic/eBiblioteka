@@ -38,7 +38,7 @@ namespace eBiblioteka.Application
 
             var entities = await CurrentRepository.GetPagedAsync(new RatingsSearchObject() { BookId = dto.BookId, UserId = dto.UserId }, cancellationToken);
 
-            if(entities.TotalCount >0)
+            if(entities != null &&  entities.TotalCount >0)
                 throw new Exception("You have already added rating. You cann't add multiple ratings.");
 
             return await base.AddAsync(dto, cancellationToken);

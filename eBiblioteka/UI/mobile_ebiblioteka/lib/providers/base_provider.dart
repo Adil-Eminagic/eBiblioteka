@@ -13,7 +13,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   BaseProvider(String point) {
     endpoint += point;
     baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://10.0.2.2:7034/");
+        defaultValue: "http://10.0.2.2:7034/");
   }
 
   Future<SearchResult<T>> getPaged({dynamic filter}) async {
@@ -95,7 +95,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     Response response = await delete(uri, headers: headers);
     if (isValidResponse(response)) {
-      print('Uspjesno brisanje');
     } else {
       throw Exception("Unknown error");
     }
@@ -127,7 +126,6 @@ bool isValidResponse(Response response) {
   } else if (response.statusCode == 401) {
     throw Exception("Unauthorized");
   } else {
-    print(response.body);
     throw Exception(
         "Something bad happened please try again. Message: ${response.body}");
   }

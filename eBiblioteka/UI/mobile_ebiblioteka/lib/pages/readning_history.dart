@@ -14,7 +14,6 @@ import 'package:provider/provider.dart';
 
 import '../utils/util_widgets.dart';
 
-
 class ReadingHistoryPage extends StatefulWidget {
   const ReadingHistoryPage({Key? key}) : super(key: key);
 
@@ -23,28 +22,32 @@ class ReadingHistoryPage extends StatefulWidget {
 }
 
 class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
-late UserBookProvider _userBookProvider= UserBookProvider();
+  late UserBookProvider _userBookProvider = UserBookProvider();
 
-final TextEditingController _valueController=TextEditingController();
-bool isLoading=true;
-SearchResult<UserBook>? resultHistory;
+  final TextEditingController _valueController = TextEditingController();
+  bool isLoading = true;
+  SearchResult<UserBook>? resultHistory;
 
-@override
+  @override
   void initState() {
     super.initState();
     _userBookProvider = context.read<UserBookProvider>();
 
     initData();
-
   }
 
   Future<void> initData() async {
     try {
-      resultHistory = await _userBookProvider.getPaged(filter: {'pagesize':1000000, "userId":int.parse(Autentification.tokenDecoded!["Id"])});
-      
-      setState(() {
-        isLoading = false;
+      resultHistory = await _userBookProvider.getPaged(filter: {
+        'pagesize': 1000000,
+        "userId": int.parse(Autentification.tokenDecoded!["Id"])
       });
+
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -54,40 +57,22 @@ SearchResult<UserBook>? resultHistory;
   Widget build(BuildContext context) {
     return MasterScreenWidget(
         title: AppLocalizations.of(context).reading_hist,
-        child: Padding(
+        child: isLoading== true ? const Center(child: SpinKitRing(color: Colors.brown)) : Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
           child: Column(
             children: [
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       // mora u expande jer ne zan koliko da se širi
-              //       child: TextField(
-              //         controller: _valueController,
-              //         decoration: InputDecoration(
-              //             label: Text(AppLocalizations.of(context).value_name)),
-              //       ),
-              //     ),
-              //     ElevatedButton(
-              //         onPressed: (() async {
-              //           initData();
-              //         }),
-              //         child: Text(AppLocalizations.of(context).search))
-              //   ],
-              // ),
-              // const SizedBox(
-              //   height: 30,
-              // ),
               Expanded(
-                  child: (isLoading || resultHistory == null || resultHistory!.items.isEmpty)
-                      ? const Center(child:  SpinKitRing(color: Colors.brown))
+                  child: (isLoading ||
+                          resultHistory == null ||
+                          resultHistory!.items.isEmpty)
+                      ? Center(child: Text(AppLocalizations.of(context).no_read_hist),)
                       : ListView.builder(
                           // kada se koristi buider ucitavaju se kako scrollamo a ne sve od jednom
                           itemCount: resultHistory!.items.length,
                           itemBuilder: (context, index) {
                             // preko indeksa se pristupa elemntima u nizu
                             return HistoryBook(
-                              bookId: resultHistory!.items[index].bookId ,
+                              bookId: resultHistory!.items[index].bookId,
                             );
                           },
                         ))

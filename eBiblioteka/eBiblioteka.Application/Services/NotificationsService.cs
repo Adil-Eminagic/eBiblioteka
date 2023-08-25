@@ -20,9 +20,9 @@ namespace eBiblioteka.Application
             if (notification == null)
                 throw new Exception("Notification not found");
 
-            if (notification.isRead == true) throw new Exception("Cann't change read notification to read");
+            if (notification.IsRead == true) throw new Exception("Cann't change read notification to read");
 
-            notification.isRead = true;
+            notification.IsRead = true;
 
              CurrentRepository.Update(notification);
             await UnitOfWork.SaveChangesAsync();

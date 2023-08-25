@@ -48,11 +48,13 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
     try {
       genresResult = await _genreProvider.getPaged();
 
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -62,12 +64,12 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
       title: widget.bookGenre == null
           ? AppLocalizations.of(context).bookgenre_insert
           : "${AppLocalizations.of(context).book} ${widget.bookGenre?.book?.title}, ${AppLocalizations.of(context).genre} ${widget.bookGenre?.genre?.name}",
-      child: SingleChildScrollView(
+      child:  isLoading==true ? const Center( child:  SpinKitRing(color: Colors.brown)):  SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
           child: Column(
             children: [
-              isLoading ? const SpinKitRing(color: Colors.brown) : _buildForm(),
+            _buildForm(),
               const SizedBox(
                 height: 20,
               ),
@@ -200,9 +202,7 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
                   suffix: IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
-                      _formKey.currentState!
-                          .fields['genreId'] 
-                          ?.reset();
+                      _formKey.currentState!.fields['genreId']?.reset();
                     },
                   ),
                 ),

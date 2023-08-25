@@ -20,10 +20,7 @@ namespace eBiblioteka.Infrastructure
                .ToPagedListAsync(searchObject, cancellationToken);
         }
 
-        public async Task<IEnumerable<Quote>> GetByBookIdAsync(int bookId, CancellationToken cancellationToken = default)
-        {
-            return await DbSet.AsNoTracking().Where(c => c.BookId == bookId).ToListAsync(cancellationToken);
-        }
+    
 
         public async override Task<ReportInfo<Quote>> GetCountAsync(QuotesSearchObject searchObject, CancellationToken cancellationToken = default)
         {

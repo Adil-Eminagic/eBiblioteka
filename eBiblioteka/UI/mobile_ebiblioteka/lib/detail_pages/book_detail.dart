@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:mobile_ebiblioteka/models/recommend_result.dart';
 import 'package:mobile_ebiblioteka/pages/rating_page.dart';
 import 'package:mobile_ebiblioteka/providers/author_provider.dart';
@@ -21,7 +18,6 @@ import '../models/search_result.dart';
 import '../providers/book_provider.dart';
 import '../providers/bookgenre_provider.dart';
 import '../widgets/master_screen.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -61,7 +57,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   Book? bookSend;
   Author? bookAuthor;
-  double? rating;
 
   SearchResult<BookGenre>? bookGenreResult;
 
@@ -71,13 +66,12 @@ class _BookDetailPageState extends State<BookDetailPage> {
     _initialValue = {
       'title': widget.book?.title,
       'shortDescription': widget.book?.shortDescription,
-      'publishingYear': widget.book?.publishingYear.toString(), // mora biti
+      'publishingYear': widget.book?.publishingYear.toString(),
       'author': widget.book?.author == null
           ? bookAuthor
           : widget.book?.author?.fullName,
     };
 
-    print(widget.book?.bookFileId);
     _bookProvider = context.read<BookProvider>();
     _bookGenreProvider = context.read<BookGenreProvider>();
     _recommendResultProvider = context.read<RecommendResultProvider>();
@@ -94,15 +88,25 @@ class _BookDetailPageState extends State<BookDetailPage> {
     initRecommend();
   }
 
+   Future<void> initRecommend() async {
+    try {
+      recommendResult =
+          await _recommendResultProvider.getById(widget.book!.id!);
+      setState(() {
+        isRecommendLoading = false;
+      });
+    } catch (e) {
+      recommendResult = null;
+    }
+  }
+
   Future<void> initForm() async {
     try {
       if (widget.book != null) {
         bookSend = await _bookProvider.getById(widget.book!.id!);
         bookGenreResult = await _bookGenreProvider
             .getPaged(filter: {'bookId': widget.book?.id});
-        if (bookGenreResult!.items.isNotEmpty) {
-          print(bookGenreResult?.items[0].genre?.name);
-        }
+        if (bookGenreResult!.items.isNotEmpty) {}
         if (widget.book != null &&
             widget.book?.coverPhotoId != null &&
             widget.book!.coverPhotoId! > 0 &&
@@ -116,30 +120,21 @@ class _BookDetailPageState extends State<BookDetailPage> {
         } else {
           _authorController.text = widget.book?.author?.fullName ?? '';
         }
-        rating = await _ratingProvider.getAverageBookRate(widget.book!.id!);
+        await _ratingProvider.getAverageBookRate(widget.book!.id!);
       }
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
-  Future<void> initRecommend() async {
-    try {
-      recommendResult =
-          await _recommendResultProvider.getById(widget.book!.id!);
-      setState(() {
-        isRecommendLoading = false;
-      });
-    } catch (e) {
-      recommendResult = null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    _ratingProvider = context.watch<RatingProvider>();
     return MasterScreenWidget(
       title: "${widget.book?.title}",
       child: SingleChildScrollView(
@@ -153,12 +148,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
                     Row(
                       children: [
                         Text(
-                            '${AppLocalizations.of(context).rate} :  ${rating==0 ? AppLocalizations.of(context).no_rates : rating.toString()}',
+                            '${AppLocalizations.of(context).rate} :  ${_ratingProvider.review == 0 ? AppLocalizations.of(context).no_rates : _ratingProvider.review.toStringAsFixed(1)}',
                             style: const TextStyle(
                               fontSize: 17,
                             )),
-                            ///*${widget.book?.averageRate == null*/
-                            //widget.book?.averageRate.toString()
                       ],
                     ),
                     const SizedBox(
@@ -337,32 +330,38 @@ class _BookDetailPageState extends State<BookDetailPage> {
                               bookGenreResult!.items.isEmpty)
                             Text(AppLocalizations.of(context).no_genres)
                           else
-                            Row(
-                              children: bookGenreResult?.items
-                                      .map((BookGenre i) => Row(
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(4),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.brown,
-                                                        width: 2)),
-                                                child: Text(
-                                                  i.genre?.name ?? '',
-                                                  style: const TextStyle(
-                                                      color: Colors.brown,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 15,
-                                              )
-                                            ],
-                                          ))
-                                      .toList() ??
-                                  [],
+                            SizedBox(
+                              height: 50,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: bookGenreResult?.items
+                                          .map((BookGenre i) => Row(
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(4),
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Colors.brown,
+                                                            width: 2)),
+                                                    child: Text(
+                                                      i.genre?.name ?? '',
+                                                      style: const TextStyle(
+                                                          color: Colors.brown,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 15,
+                                                  )
+                                                ],
+                                              ))
+                                          .toList() ??
+                                      [],
+                                ),
+                              ),
                             ),
                           const SizedBox(
                             height: 10,

@@ -17,7 +17,6 @@ import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class SearchTitle extends StatefulWidget {
   const SearchTitle({Key? key}) : super(key: key);
 
@@ -35,7 +34,6 @@ class _SearchTitleState extends State<SearchTitle> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _bookProvider = context.read<BookProvider>();
 
@@ -44,11 +42,15 @@ class _SearchTitleState extends State<SearchTitle> {
 
   Future<void> initData() async {
     try {
-      result = await _bookProvider.getPaged(
-          filter: {'title': _valueController.text, 'pageSize': 100000, 'isActive':true});
-      setState(() {
-        isLoading = false;
+      result = await _bookProvider.getPaged(filter: {
+        'title': _valueController.text,
+        'pageSize': 100000
       });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -64,7 +66,8 @@ class _SearchTitleState extends State<SearchTitle> {
               // mora u expande jer ne zan koliko da se širi
               child: TextField(
                 controller: _valueController,
-                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).value_name)),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).value_name)),
               ),
             ),
             ElevatedButton(
@@ -133,7 +136,6 @@ class _SearchAuthorsState extends State<SearchAuthors> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _bookProvider = context.read<BookProvider>();
 
@@ -142,11 +144,15 @@ class _SearchAuthorsState extends State<SearchAuthors> {
 
   Future<void> initData() async {
     try {
-      result = await _bookProvider.getPaged(
-          filter: {'authorName': _valueController.text, 'pageSize': 1000000,'isActive':true});
-      setState(() {
-        isLoading = false;
+      result = await _bookProvider.getPaged(filter: {
+        'authorName': _valueController.text,
+        'pageSize': 1000000
       });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -162,14 +168,15 @@ class _SearchAuthorsState extends State<SearchAuthors> {
               // mora u expande jer ne zan koliko da se širi
               child: TextField(
                 controller: _valueController,
-                decoration:  InputDecoration(label: Text(AppLocalizations.of(context).value_name)),
+                decoration: InputDecoration(
+                    label: Text(AppLocalizations.of(context).value_name)),
               ),
             ),
             ElevatedButton(
                 onPressed: (() async {
                   initData();
                 }),
-                child:  Text(AppLocalizations.of(context).search))
+                child: Text(AppLocalizations.of(context).search))
           ],
         ),
         const SizedBox(
@@ -247,9 +254,11 @@ class _SearchGenreState extends State<SearchGenre> {
   Future<void> initData() async {
     try {
       genreResult = await _genreProvider.getPaged();
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -261,12 +270,13 @@ class _SearchGenreState extends State<SearchGenre> {
       if (_formKey.currentState!.validate()) {
         bookGenreResult = await _bookGenreProvider.getPaged(filter: {
           'genreId': _formKey.currentState?.value['genreId'],
-          'isActive':true,
           'pageSize': 1000000
         });
-        setState(() {
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
@@ -301,7 +311,6 @@ class _SearchGenreState extends State<SearchGenre> {
                             ?.reset();
                       },
                     ),
-                   
                   ),
                   items: genreResult?.items
                           .map((g) => DropdownMenuItem(
@@ -341,14 +350,14 @@ class _SearchGenreState extends State<SearchGenre> {
                         title: Text(bookGenreResult!.items[index].book!.title!),
                         subtitle: Text(bookGenreResult!
                             .items[index].book!.author!.fullName!),
-                            onTap: () {
-                              Navigator.of(context)
+                        onTap: () {
+                          Navigator.of(context)
                               .push(MaterialPageRoute(builder: ((context) {
                             return BookDetailPage(
                               book: bookGenreResult!.items[index].book,
                             );
                           })));
-                            },
+                        },
                         leading:
                             bookGenreResult!.items[index].book?.coverPhoto ==
                                     null

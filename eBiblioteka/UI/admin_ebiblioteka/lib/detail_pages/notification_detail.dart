@@ -32,15 +32,15 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
     };
     _notificationProvider = context.read<NotificationProvider>();
 
-   
   }
 
- 
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title: 'DSG',
+      title:  widget.notif != null
+            ? "${AppLocalizations.of(context).notif_id} ${(widget.notif?.id.toString() ?? '')}"
+            : '',
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),

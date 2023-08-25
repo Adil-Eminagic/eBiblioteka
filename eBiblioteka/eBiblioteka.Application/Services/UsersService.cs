@@ -7,8 +7,6 @@ using eBiblioteka.Infrastructure.Interfaces;
 using eBiblioteka.Shared.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.JsonPatch;
-using eBiblioteka.Core.Dtos.User;
-using System.Threading;
 
 namespace eBiblioteka.Application
 {
@@ -82,7 +80,7 @@ namespace eBiblioteka.Application
                 if (exsistringProfilePhotoId > 0)
                 {
                     PhotoUpsertDto photoUpsertDto = new PhotoUpsertDto() { Id = exsistringProfilePhotoId, Data = dto.ProfilePhoto };
-                    var pho = await _photosService.UpdateAsync(photoUpsertDto);
+                    await _photosService.UpdateAsync(photoUpsertDto);
                 }
                 else
                 {
@@ -102,7 +100,6 @@ namespace eBiblioteka.Application
         {
            var user=   await CurrentRepository.ChangeEmailAsync(userId, jsonPatch, cancellationToken);
             await UnitOfWork.SaveChangesAsync();
-            //var entity = CurrentRepository.GetByIdAsync(userId);
             return Mapper.Map<UserDto>(user);
 
         }
@@ -126,11 +123,6 @@ namespace eBiblioteka.Application
             await UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        public List<UserHisoryDto> UsersWithReadHistory()
-        {
-           var users=  CurrentRepository.UsersWithReadHistory();
-            return Mapper.Map<List<UserHisoryDto>>(users);
-        }
 
 
         public async Task PayMembershipAsync(int userId, CancellationToken cancellationToken = default)

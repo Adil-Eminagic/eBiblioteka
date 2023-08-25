@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mobile_ebiblioteka/models/search_result.dart';
 import 'package:mobile_ebiblioteka/providers/book_provider.dart';
@@ -10,7 +9,6 @@ import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class SearchBooksPage extends StatefulWidget {
   const SearchBooksPage({Key? key}) : super(key: key);
 
@@ -21,7 +19,7 @@ class SearchBooksPage extends StatefulWidget {
 class _SearchBooksPageState extends State<SearchBooksPage> {
   late BookProvider _bookProvider = BookProvider();
 
-  TextEditingController _valueController = TextEditingController();
+  final TextEditingController _valueController = TextEditingController();
   SearchResult<Book>? result;
 
   String menu = 'title';
@@ -29,7 +27,6 @@ class _SearchBooksPageState extends State<SearchBooksPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _bookProvider = context.read<BookProvider>();
 
@@ -40,11 +37,13 @@ class _SearchBooksPageState extends State<SearchBooksPage> {
     try {
       result = await _bookProvider
           .getPaged(filter: {'title': _valueController.text});
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      alertBox(context, 'Greška', e.toString());
+      alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -57,7 +56,7 @@ class _SearchBooksPageState extends State<SearchBooksPage> {
           appBar: AppBar(
             title: Text(AppLocalizations.of(context).search_by),
             centerTitle: true,
-            bottom:  TabBar(
+            bottom: TabBar(
               tabs: [
                 Tab(
                   child: Text(AppLocalizations.of(context).titles),
@@ -76,67 +75,7 @@ class _SearchBooksPageState extends State<SearchBooksPage> {
               child: TabBarView(
                 children: [SearchTitle(), SearchAuthors(), SearchGenre()],
               )
-              //  Column(
-              //   children: [
-              //     Row(
-              //       children: [
-              //         Expanded(
-              //           // mora u expande jer ne zan koliko da se širi
-              //           child: TextField(
-              //             controller: _valueController,
-              //             decoration:
-              //                 const InputDecoration(label: Text('Vrijednost')),
-              //           ),
-              //         ),
-              //         ElevatedButton(
-              //             onPressed: (() async {
-              //               initData();
-              //             }),
-              //             child: const Text('Traži'))
-              //       ],
-              //     ),
-              //     const SizedBox(
-              //       height: 30,
-              //     ),
-              //     Expanded(
-              //       child: isLoading
-              //           ? Container()
-              //           : ListView(children: [
-              //               const Divider(
-              //                 color: Colors.black,
-              //                 thickness: 0.4,
-              //               ),
-              //               if (result != null && result!.items.isEmpty == false)
-              //                 for (var b in result!.items)
-              //                   Column(
-              //                     children: [
-              //                       ListTile(
-              //                         title: Text(b.title ?? ''),
-              //                         subtitle: Text(b.author?.fullName ?? ''),
-              //                         leading: b.coverPhoto == null
-              //                             ? Image.asset(
-              //                                 'images/no_image.png',
-              //                                 width: 100,
-              //                                 height: 100,
-              //                               )
-              //                             : Image.memory(
-              //                                 base64Decode(b.coverPhoto!.data!),
-              //                                 width: 100,
-              //                                 height: 100,
-              //                               ),
-              //                       ),
-              //                       const Divider(
-              //                         color: Colors.black,
-              //                         thickness: 0.4,
-              //                       )
-              //                     ],
-              //                   )
-              //             ]),
-              //     )
-              //   ],
-              // ),
               ),
         ));
   }
 }
-

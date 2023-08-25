@@ -14,7 +14,7 @@ namespace eBiblioteka.Core
         public DateTime? LastSignInAt { get; set; }
         public string? Biography { get; set; }
         public DateTime BirthDate { get; set; }
-        public bool isActive { get; set; } = true;
+        public bool IsActive { get; set; } = true;
 
         public DateTime? PurchaseDate { get; set; }
         public DateTime? ExpirationDate { get; set; }

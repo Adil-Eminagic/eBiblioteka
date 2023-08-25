@@ -84,78 +84,89 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
       Photo p = await _photoProvider.getById(widget.user!.profilePhotoId!);
       photo = p.data;
     }
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: AppLocalizations.of(context).profile_settings,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-          child: Column(
-            children: [
-              isLoading ? const SpinKitRing(color: Colors.brown) : _buildForm(),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      child: isLoading == true
+          ? const Center(child: SpinKitRing(color: Colors.brown))
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
+                child: Column(
                   children: [
-                    widget.user == null
-                        ? Container()
-                        : ElevatedButton(
-                            onPressed: () async {
-                            
-                              _formKey.currentState?.save();
+                    _buildForm(),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          widget.user == null
+                              ? Container()
+                              : ElevatedButton(
+                                  onPressed: () async {
+                                    _formKey.currentState?.save();
 
-                              try {
-                                if (_formKey.currentState!.validate()) {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
+                                    try {
+                                      if (_formKey.currentState!.validate()) {
+                                        Map<String, dynamic> request = Map.of(
+                                            _formKey.currentState!.value);
 
-                                  request['id'] = widget.user?.id;
-                                  request['roleId'] = widget.user?.roleId;
-                                  request['birthDate'] = DateEncode(_formKey
-                                      .currentState?.value['birthDate']);
+                                        request['id'] = widget.user?.id;
+                                        request['roleId'] = widget.user?.roleId;
+                                        request['birthDate'] = DateEncode(
+                                            _formKey.currentState
+                                                ?.value['birthDate']);
 
-                                  if (_base64Image != null) {
-                                    request['profilePhoto'] = _base64Image;
-                                  }
+                                        request['isActive'] =
+                                            widget.user!.isActive;
 
-                                  var res = await _userProvider.update(request);
+                                        // request['biography'] =
+                                        //     widget.user?.biography;
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              AppLocalizations.of(context)
-                                                  .su_mod_profie)));
+                                        if (_base64Image != null) {
+                                          request['profilePhoto'] =
+                                              _base64Image;
+                                        }
 
-                               
+                                        var res =
+                                            await _userProvider.update(request);
 
-                                  Navigator.pop(context, 'getUser');//to refresh data
-                                  Navigator.pop(context);
-                                }
-                              } on Exception catch (e) {
-                                alertBox(
-                                    context,
-                                    AppLocalizations.of(context).error,
-                                    e.toString());
-                              }
-                            },
-                            child: Text(
-                              AppLocalizations.of(context).save,
-                              style: TextStyle(fontSize: 15),
-                            )),
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    AppLocalizations.of(context)
+                                                        .su_mod_profie)));
+
+                                        Navigator.pop(context,
+                                            'getUser'); //to refresh data
+                                        Navigator.pop(context);
+                                      }
+                                    } on Exception catch (e) {
+                                      alertBox(
+                                          context,
+                                          AppLocalizations.of(context).error,
+                                          e.toString());
+                                    }
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context).save,
+                                    style: TextStyle(fontSize: 15),
+                                  )),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 
@@ -276,7 +287,8 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                             builder: ((context) =>
                                 const ChangePasswordPage())));
                       }),
-                      child: Text(AppLocalizations.of(context).change_password)),
+                      child:
+                          Text(AppLocalizations.of(context).change_password)),
                 ],
               ))
             ],
@@ -300,9 +312,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                 suffix: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
-                    _formKey.currentState!
-                        .fields['genderId'] 
-                        ?.reset();
+                    _formKey.currentState!.fields['genderId']?.reset();
                   },
                 ),
               ),
@@ -384,7 +394,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                   : Container(),
               Expanded(
                   child: FormBuilderTextField(
-                name: AppLocalizations.of(context).biography,
+                name: 'biography',
                 maxLines: 3,
                 decoration: InputDecoration(
                     label: Text(AppLocalizations.of(context).biography)),
@@ -425,9 +435,11 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
           result.files.single.path!); //jer smo sa if provjerili pa je sigurn !
       _base64Image = base64Encode(_image!.readAsBytesSync());
 
-      setState(() {
-        photo = _base64Image; //opet !
-      });
+      if (mounted) {
+        setState(() {
+          photo = _base64Image; //opet !
+        });
+      }
     }
   }
 }

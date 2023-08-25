@@ -1,5 +1,4 @@
 ﻿using eBiblioteka.Core;
-using eBiblioteka.Core.Dtos.User;
 
 namespace eBiblioteka.Application
 {
@@ -11,12 +10,10 @@ namespace eBiblioteka.Application
 
             CreateMap<User, UserSensitiveDto>();
 
-            CreateMap<User, UserHisoryDto>().ReverseMap();
-
             CreateMap<UserDto, UserUpsertDto>();
 
             CreateMap<UserUpsertDto, User>()
-                .ForMember(u=>u.ProfilePhoto , o=>o.Ignore());
+                .ForMember(u=>u.ProfilePhoto , o=>o.Ignore());//because it will be menaged by photo service and repository
              
         }
     }

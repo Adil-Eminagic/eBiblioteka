@@ -66,8 +66,6 @@ class _ReportingPageState extends State<ReportingPage> {
 
   bool isLoading = true;
 
- 
-
   @override
   void initState() {
     super.initState();
@@ -83,7 +81,6 @@ class _ReportingPageState extends State<ReportingPage> {
     initData();
   }
 
-
   Future<void> initData() async {
     try {
       adminActive = await _userProvider
@@ -96,8 +93,6 @@ class _ReportingPageState extends State<ReportingPage> {
       userInactive = await _userProvider
           .getCount(filter: {'roleName': "User", 'isActive': false});
       userAll = await _userProvider.getCount(filter: {'roleName': "User"});
-      bookActive = await _bookProvider.getCount(filter: {'isActive': true});
-      bookInactive = await _bookProvider.getCount(filter: {'isActive': false});
       bookAll = await _bookProvider.getCount();
       quizActive = await _quizProvider.getPaged(filter: {'isActive': true});
       quizInactive = await _quizProvider.getPaged(filter: {'isActive': false});
@@ -115,9 +110,11 @@ class _ReportingPageState extends State<ReportingPage> {
       answerFlase = await _answerProvider.getCount(filter: {'isTrue': false});
       answerAll = await _answerProvider.getCount();
 
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -144,13 +141,13 @@ class _ReportingPageState extends State<ReportingPage> {
                         child: ScrollConfiguration(
                           behavior: MyCustomScrollBehavior(),
                           child: SingleChildScrollView(
-                             scrollDirection: Axis.horizontal,
+                            scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
                                 _activeCard(
                                     AppLocalizations.of(context).admins,
                                     adminActive!.totalCount,
-                                    adminActive!.totalCount,
+                                    adminInactive!.totalCount,
                                     adminAll!.totalCount),
                                 const SizedBox(
                                   width: 50,
@@ -160,8 +157,7 @@ class _ReportingPageState extends State<ReportingPage> {
                                     userActive!.totalCount,
                                     userInactive!.totalCount,
                                     userAll!.totalCount),
-                                   
-                                 const SizedBox(
+                                const SizedBox(
                                   width: 50,
                                 ),
                                 Card(
@@ -172,33 +168,37 @@ class _ReportingPageState extends State<ReportingPage> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             AppLocalizations.of(context).books,
                                             style: const TextStyle(
-                                                fontSize: 23, color: Colors.white),
+                                                fontSize: 23,
+                                                color: Colors.white),
                                           ),
                                           const SizedBox(
                                             height: 20,
                                           ),
-                                          Text(
-                                            '${AppLocalizations.of(context).active}: ${bookActive!.totalCount}',
-                                            style: const TextStyle(color: Colors.white),
+                                         const Text(
+                                            '',
+                                            style:  TextStyle(
+                                                color: Colors.white),
                                           ),
                                           const SizedBox(
                                             height: 10,
                                           ),
-                                          Text(
-                                              '${AppLocalizations.of(context).inactive}:  ${bookInactive!.totalCount}',
-                                              style:
-                                                  const TextStyle(color: Colors.white)),
+                                         const Text(
+                                              '',
+                                              style:  TextStyle(
+                                                  color: Colors.white)),
                                           const SizedBox(
                                             height: 10,
                                           ),
                                           Text(
                                               '${AppLocalizations.of(context).overall}:  ${bookAll!.totalCount}',
-                                              style: const TextStyle(color: Colors.white))
+                                              style: const TextStyle(
+                                                  color: Colors.white))
                                         ],
                                       ),
                                     ),
@@ -212,14 +212,15 @@ class _ReportingPageState extends State<ReportingPage> {
                                     quizActive!.totalCount,
                                     quizInactive!.totalCount,
                                     quizAll!.totalCount),
-                                    
                               ],
                             ),
                           ),
                         ),
                       ),
                     ),
-                   const SizedBox(height: 130,),
+                    const SizedBox(
+                      height: 130,
+                    ),
                     SizedBox(
                       height: 166,
                       child: ScrollConfiguration(
@@ -227,7 +228,6 @@ class _ReportingPageState extends State<ReportingPage> {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Card(
@@ -238,33 +238,38 @@ class _ReportingPageState extends State<ReportingPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          AppLocalizations.of(context).questions,
+                                          AppLocalizations.of(context)
+                                              .questions,
                                           style: const TextStyle(
-                                              fontSize: 23, color: Colors.white),
+                                              fontSize: 23,
+                                              color: Colors.white),
                                         ),
                                         const SizedBox(
                                           height: 20,
                                         ),
                                         Text(
                                           '${AppLocalizations.of(context).active_n}: ${questionActive!.totalCount}',
-                                          style: const TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         Text(
                                             '${AppLocalizations.of(context).inactive_n}:  ${questionInactive!.totalCount}',
-                                            style:
-                                                const TextStyle(color: Colors.white)),
+                                            style: const TextStyle(
+                                                color: Colors.white)),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         Text(
                                             '${AppLocalizations.of(context).overall}:  ${questionAll!.totalCount}',
-                                            style: const TextStyle(color: Colors.white))
+                                            style: const TextStyle(
+                                                color: Colors.white))
                                       ],
                                     ),
                                   ),
@@ -275,7 +280,7 @@ class _ReportingPageState extends State<ReportingPage> {
                               ),
                               _plainCard(AppLocalizations.of(context).authors,
                                   authorAll!.totalCount),
-                                  const SizedBox(
+                              const SizedBox(
                                 width: 50,
                               ),
                               Card(
@@ -286,33 +291,37 @@ class _ReportingPageState extends State<ReportingPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           AppLocalizations.of(context).rates,
                                           style: const TextStyle(
-                                              fontSize: 23, color: Colors.white),
+                                              fontSize: 23,
+                                              color: Colors.white),
                                         ),
                                         const SizedBox(
                                           height: 20,
                                         ),
                                         Text(
                                           '${AppLocalizations.of(context).one_star}: ${ratingOne!.totalCount}',
-                                          style: const TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         Text(
                                             '${AppLocalizations.of(context).five_stars}: ${ratingFive!.totalCount}',
-                                            style:
-                                                const TextStyle(color: Colors.white)),
+                                            style: const TextStyle(
+                                                color: Colors.white)),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         Text(
                                             '${AppLocalizations.of(context).overall}: ${ratingAll!.totalCount}',
-                                            style: const TextStyle(color: Colors.white))
+                                            style: const TextStyle(
+                                                color: Colors.white))
                                       ],
                                     ),
                                   ),
@@ -329,33 +338,37 @@ class _ReportingPageState extends State<ReportingPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          AppLocalizations.of(context).rates,
+                                          AppLocalizations.of(context).answers,
                                           style: const TextStyle(
-                                              fontSize: 23, color: Colors.white),
+                                              fontSize: 23,
+                                              color: Colors.white),
                                         ),
                                         const SizedBox(
                                           height: 20,
                                         ),
                                         Text(
                                           '${AppLocalizations.of(context).trues}: ${answerTrue!.totalCount}',
-                                          style: const TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         Text(
                                             '${AppLocalizations.of(context).falses}: ${answerFlase!.totalCount}',
-                                            style:
-                                                const TextStyle(color: Colors.white)),
+                                            style: const TextStyle(
+                                                color: Colors.white)),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         Text(
                                             '${AppLocalizations.of(context).overall}: ${answerAll!.totalCount}',
-                                            style: const TextStyle(color: Colors.white))
+                                            style: const TextStyle(
+                                                color: Colors.white))
                                       ],
                                     ),
                                   ),

@@ -10,7 +10,6 @@ import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class QuizzesListPage extends StatefulWidget {
   const QuizzesListPage({Key? key}) : super(key: key);
 
@@ -37,9 +36,11 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
     try {
       result = await _quizProvider.getPaged(
           filter: {'title': _titleController.text, 'pageSize': 100000});
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -61,7 +62,8 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
                 Expanded(
                   child: TextField(
                     controller: _titleController,
-                    decoration:  InputDecoration(label: Text(AppLocalizations.of(context).title)),
+                    decoration: InputDecoration(
+                        label: Text(AppLocalizations.of(context).title)),
                   ),
                 ),
                 const SizedBox(
@@ -75,14 +77,17 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
                           "pageSize": 100000000
                         });
 
-                        setState(() {
-                          result = data;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            result = data;
+                          });
+                        }
                       } on Exception catch (e) {
-                        alertBox(context, AppLocalizations.of(context).error, e.toString());
+                        alertBox(context, AppLocalizations.of(context).error,
+                            e.toString());
                       }
                     },
-                    child:  Text(AppLocalizations.of(context).search)),
+                    child: Text(AppLocalizations.of(context).search)),
                 const SizedBox(
                   width: 15,
                 ),
@@ -99,7 +104,7 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
                         initData();
                       }
                     },
-                    child:  Text(AppLocalizations.of(context).add)),
+                    child: Text(AppLocalizations.of(context).add)),
                 const SizedBox(
                   width: 15,
                 ),
@@ -109,9 +114,10 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
           const SizedBox(
             height: 15,
           ),
-          (result == null || result!.items.isEmpty || isLoading==true)
-              ?  Expanded(
-                  child: Center(child: Text(AppLocalizations.of(context).no_quizzes)))
+          (result == null || result!.items.isEmpty || isLoading == true)
+              ? Expanded(
+                  child: Center(
+                      child: Text(AppLocalizations.of(context).no_quizzes)))
               : Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
@@ -121,7 +127,8 @@ class _QuizzesListPageState extends State<QuizzesListPage> {
                         return Column(
                           children: [
                             ListTile(
-                              subtitle: Text(result!.items[index].description ?? ''),
+                              subtitle:
+                                  Text(result!.items[index].description ?? ''),
                               title: Text("${result!.items[index].title}"),
                               leading: Text("${result!.items[index].id}"),
                               onTap: (() async {

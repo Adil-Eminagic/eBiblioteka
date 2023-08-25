@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile_ebiblioteka/pages/profil_setting.dart';
 import 'package:mobile_ebiblioteka/pages/quiz_page.dart';
 import 'package:mobile_ebiblioteka/pages/readning_history.dart';
-import 'package:mobile_ebiblioteka/special_pages/pdf_show.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../pages/home_page.dart';
@@ -15,7 +14,6 @@ import '../utils/util.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../utils/util_widgets.dart';
-
 
 class MasterScreenWidget extends StatefulWidget {
   final Widget? child;
@@ -36,7 +34,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _userProvider = context.read<UserProvider>();
     _languageProvider = context.read<LanguageProvider>();
@@ -54,9 +51,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     int number = int.parse(Autentification.tokenDecoded!['Id']);
     user = await _userProvider.getById(number);
 
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -80,8 +79,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               color: Colors.white,
             ),
           ),
-          IconButton(onPressed: (() {
-            showDialog(
+          IconButton(
+              onPressed: (() {
+                showDialog(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
                           content: Row(
@@ -122,7 +122,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                                     Text(AppLocalizations.of(context).cancel)),
                           ],
                         ));
-          }), icon: const Icon(Icons.language))
+              }),
+              icon: const Icon(Icons.language))
         ],
       ),
       drawer: Drawer(
@@ -136,17 +137,25 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${user?.firstName} ${user?.lastName}", style: const TextStyle(color: Colors.white, fontSize: 17)),
-                  const SizedBox(height: 2.5,),
-                  Text("${user?.email}",style: const TextStyle(color: Colors.white, fontSize: 17) )
+                  Text("${user?.firstName} ${user?.lastName}",
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 17)),
+                  const SizedBox(
+                    height: 2.5,
+                  ),
+                  Text("${user?.email}",
+                      style: const TextStyle(color: Colors.white, fontSize: 17))
                 ],
               ),
             ),
           ),
-          drawerItem(context, AppLocalizations.of(context).home, const HomePage(), Icons.home),
-          drawerItem(context, AppLocalizations.of(context).reading_hist, const ReadingHistoryPage(), Icons.history),
+          drawerItem(context, AppLocalizations.of(context).home,
+              const HomePage(), Icons.home),
+          drawerItem(context, AppLocalizations.of(context).reading_hist,
+              const ReadingHistoryPage(), Icons.history),
 
-          drawerItem(context, AppLocalizations.of(context).quizes, const QuizzesListPage(), Icons.quiz),
+          drawerItem(context, AppLocalizations.of(context).quizes,
+              const QuizzesListPage(), Icons.quiz),
 
           drawerItem(
               context,
@@ -157,44 +166,42 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               Icons.settings),
           ListTile(
             leading: const Icon(Icons.logout),
-            title:  Text(AppLocalizations.of(context).log_out),
+            title: Text(AppLocalizations.of(context).log_out),
             onTap: () {
-             showDialog(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                          title:  Text(AppLocalizations.of(context).log_out),
-                          content:
-                               Text(AppLocalizations.of(context).logout_mess),
-                          actions: [
-                            TextButton(
-                                onPressed: (() {
-                                  Navigator.pop(context);
-                                }),
-                                child: Text(AppLocalizations.of(context).cancel)),
-                            TextButton(
-                                onPressed: () async {
-                                  try {
-                                    Autentification.token = '';
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                        title: Text(AppLocalizations.of(context).log_out),
+                        content: Text(AppLocalizations.of(context).logout_mess),
+                        actions: [
+                          TextButton(
+                              onPressed: (() {
+                                Navigator.pop(context);
+                              }),
+                              child: Text(AppLocalizations.of(context).cancel)),
+                          TextButton(
+                              onPressed: () async {
+                                try {
+                                  Autentification.token = '';
 
-                                    Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => const LoginPage()),
-                                        (route) =>
-                                            false); 
-
-                                  } catch (e) {
-                                    alertBoxMoveBack(
-                                        context, AppLocalizations.of(context).error, e.toString());
-                                  }
-                                },
-                                child: const Text('Ok')),
-                          ],
-                        ));
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => const LoginPage()),
+                                      (route) => false);
+                                } catch (e) {
+                                  alertBoxMoveBack(
+                                      context,
+                                      AppLocalizations.of(context).error,
+                                      e.toString());
+                                }
+                              },
+                              child: const Text('Ok')),
+                        ],
+                      ));
             },
           ),
-          //
-          drawerItem(context, 'Pdf', const PdfShowPage())
+          
         ]),
       ),
       body: widget.child!,

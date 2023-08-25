@@ -10,7 +10,7 @@ namespace eBiblioteka.Infrastructure
         protected readonly DatabaseContext DatabaseContext;
         protected readonly DbSet<RecommendResult> DbSet;
 
-        public RecommendResultsRepository(DatabaseContext databaseContext) 
+        public RecommendResultsRepository(DatabaseContext databaseContext)
         {
             DatabaseContext = databaseContext;
             DbSet = DatabaseContext.Set<RecommendResult>();
@@ -47,9 +47,15 @@ namespace eBiblioteka.Infrastructure
 
         }
 
+        public async Task DeleteAllRecommendation(CancellationToken cancellationToken = default)
+        {
+            await DbSet.ExecuteDeleteAsync(cancellationToken);
+        }
+
+
         public async Task<RecommendResult?> GetByIdAsync(int bookId, CancellationToken cancellationToken = default)
         {
-            return await DbSet.FirstOrDefaultAsync(c=>c.BookId==bookId);
+            return await DbSet.FirstOrDefaultAsync(c => c.BookId == bookId);
         }
 
         public async Task<PagedList<RecommendResult>> GetPagedAsync(BaseSearchObject searchObject, CancellationToken cancellationToken = default)

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:mobile_ebiblioteka/providers/user_provider.dart';
 import 'package:mobile_ebiblioteka/utils/util.dart';
+import 'package:mobile_ebiblioteka/utils/util_widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,7 +23,6 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _userProvider = context.read<UserProvider>();
   }
@@ -49,8 +49,7 @@ class _PaymentPageState extends State<PaymentPage> {
               : ElevatedButton.icon(
                   icon: const Icon(Icons.paypal),
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromRGBO(0, 48, 135, 1)
-                  ),
+                      primary: const Color.fromRGBO(0, 48, 135, 1)),
                   onPressed: () => {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -73,10 +72,6 @@ class _PaymentPageState extends State<PaymentPage> {
                                     },
                                     "description":
                                         "The payment transaction description.",
-                                    // "payment_options": {
-                                    //   "allowed_payment_method":
-                                    //       "INSTANT_FUNDING_SOURCE"
-                                    // },
                                     "item_list": {
                                       "items": [
                                         {
@@ -94,25 +89,33 @@ class _PaymentPageState extends State<PaymentPage> {
                                 onSuccess: (Map params) async {
                                   _userProvider.payMembership(int.parse(
                                       Autentification.tokenDecoded!['Id']));
-                                  setState(() {
-                                    isPayed = true;
-                                  });
+                                  if (mounted) {
+                                    setState(() {
+                                      isPayed = true;
+                                    });
+                                  }
                                   Autentification.token = null;
                                   Autentification.tokenDecoded = null;
-                                  print("onSuccess: $params");
                                 },
                                 onError: (error) {
-                                  print("onError: $error");
+                                  alertBox(
+                                      context,
+                                      AppLocalizations.of(context).error,
+                                      AppLocalizations.of(context).error_pay);
                                 },
                                 onCancel: (params) {
-                                  print('cancelled: $params');
+                                  alertBox(
+                                      context,
+                                      AppLocalizations.of(context).error,
+                                      AppLocalizations.of(context)
+                                          .cancel_payment);
                                 }),
                           ),
                         )
                       },
                   label: Text(
                     make,
-                    style:const TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   )),
         ));
   }

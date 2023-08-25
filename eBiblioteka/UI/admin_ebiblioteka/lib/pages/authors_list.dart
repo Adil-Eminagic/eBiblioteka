@@ -7,12 +7,10 @@ import '../widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:date_format/date_format.dart';
 
 import '../utils/util_widgets.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class AuthorsPage extends StatefulWidget {
   const AuthorsPage({super.key});
@@ -23,17 +21,15 @@ class AuthorsPage extends StatefulWidget {
 
 class _AuthorsPageState extends State<AuthorsPage> {
   late AuthorProvider _authorProvider;
-  late GenderProvider _genderProvider;
 
   SearchResult<Author>? result;
   bool isLoading = true;
 
-  TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _authorProvider = context.read<AuthorProvider>();
-    _genderProvider = context.read<GenderProvider>();
 
     initTable();
   }
@@ -43,10 +39,12 @@ class _AuthorsPageState extends State<AuthorsPage> {
       var data = await _authorProvider.getPaged(
           filter: {'roleName': 'User', "fullName": _fullNameController.text});
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -59,39 +57,48 @@ class _AuthorsPageState extends State<AuthorsPage> {
       child: Column(children: [
         _buildSearch(),
         isLoading ? const SpinKitRing(color: Colors.brown) : _buildDataTable(),
-         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            if (isLoading == false && result != null && result!.pageCount > 1)
-              for (int i = 0; i < result!.pageCount; i++)
-                InkWell(
-                    onTap: () async {
-                      try {
-                        var data = await _authorProvider.getPaged(filter: {
-                          "fullName": _fullNameController.text,
-                          'pageNumber': i + 1
-                        });
+        isLoading == false && result != null && result!.pageCount > 1
+            ? const SizedBox(
+                height: 20,
+              )
+            : Container(),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          if (isLoading == false && result != null && result!.pageCount > 1)
+            for (int i = 0; i < result!.pageCount; i++)
+              InkWell(
+                  onTap: () async {
+                    try {
+                      var data = await _authorProvider.getPaged(filter: {
+                        "fullName": _fullNameController.text,
+                        'pageNumber': i + 1
+                      });
 
+                      if (mounted) {
                         setState(() {
                           result = data;
                         });
-                      } on Exception catch (e) {
-                        alertBox(context, 'Greška', e.toString());
                       }
-                    },
-                    child: CircleAvatar(
-                      backgroundColor: (i+1== result?.pageNumber) ? Colors.brown : Colors.white,
-                      child: Text((i + 1).toString(),
-                      style: TextStyle(
-                        color: (i+1== result?.pageNumber) ? Colors.white : Colors.brown
-                      ),
-                      )
-                      )),
-                    
-          ]),
-         const SizedBox(
-            height: 20,
-          )
-       ]
-       ),
+                    } on Exception catch (e) {
+                      alertBox(context, AppLocalizations.of(context).error,
+                          e.toString());
+                    }
+                  },
+                  child: CircleAvatar(
+                      backgroundColor: (i + 1 == result?.pageNumber)
+                          ? Colors.brown
+                          : Colors.white,
+                      child: Text(
+                        (i + 1).toString(),
+                        style: TextStyle(
+                            color: (i + 1 == result?.pageNumber)
+                                ? Colors.white
+                                : Colors.brown),
+                      ))),
+        ]),
+        const SizedBox(
+          height: 20,
+        )
+      ]),
     );
   }
 
@@ -99,31 +106,29 @@ class _AuthorsPageState extends State<AuthorsPage> {
     return Expanded(
       child: SingleChildScrollView(
         child: DataTable(
-          columns:  [
+          columns: [
             const DataColumn(label: Text("Id")),
             DataColumn(label: Text(AppLocalizations.of(context).name)),
             DataColumn(label: Text(AppLocalizations.of(context).gender)),
-            DataColumn(label: Text(AppLocalizations.of(context).birth_date))
+            DataColumn(label: Text(AppLocalizations.of(context).birth_year))
           ],
           rows: result?.items
                   .map((Author e) => DataRow(
-                          onSelectChanged: (value) async{
-                          var refresh = await Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>  AuthorDetailPage(author: e),
+                          onSelectChanged: (value) async {
+                            var refresh = await Navigator.of(context)
+                                .push(MaterialPageRoute(
+                              builder: (context) => AuthorDetailPage(author: e),
                             ));
 
-                             if (refresh == 'reload') {
-                  initTable();
-                }
+                            if (refresh == 'reload') {
+                              initTable();
+                            }
                           },
                           cells: [
                             DataCell(Text(e.id?.toString() ?? "")),
                             DataCell(Text(e.fullName ?? '')),
                             DataCell(Text(e.gender?.value ?? '')),
-                            DataCell(Text(e.birthDate != null
-                                ? formatDate(
-                                    e.birthDate!, [dd, '-', mm, '-', yyyy])
-                                : "")),
+                            DataCell(Text(e.birthYear.toString())),
                           ]))
                   .toList() ??
               [],
@@ -140,7 +145,8 @@ class _AuthorsPageState extends State<AuthorsPage> {
           Expanded(
             child: TextField(
               controller: _fullNameController,
-              decoration:  InputDecoration(label: Text(AppLocalizations.of(context).name)),
+              decoration: InputDecoration(
+                  label: Text(AppLocalizations.of(context).name)),
             ),
           ),
           const SizedBox(
@@ -152,9 +158,11 @@ class _AuthorsPageState extends State<AuthorsPage> {
                   var data = await _authorProvider
                       .getPaged(filter: {"fullName": _fullNameController.text});
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
                   showDialog(
                       context: context,
@@ -169,7 +177,7 @@ class _AuthorsPageState extends State<AuthorsPage> {
                           ));
                 }
               },
-              child:  Text(AppLocalizations.of(context).search)),
+              child: Text(AppLocalizations.of(context).search)),
           const SizedBox(
             width: 15,
           ),

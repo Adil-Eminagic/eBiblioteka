@@ -24,9 +24,8 @@ namespace eBiblioteka.Api.Controllers
             {
 
                 var dto = await Service.GetByIdAsync(id, cancellationToken);
-                //byte[] bytes = Convert.FromBase64String(dto.Data);
                 byte[] bytes = await Converter(dto.Data);
-                System.IO.MemoryStream ms = new System.IO.MemoryStream(bytes);
+                MemoryStream ms = new MemoryStream(bytes);
                 return new FileStreamResult(ms, "application/pdf");
             }
             catch (Exception e)

@@ -76,6 +76,28 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
+        [Authorize]
+        [HttpDelete("ClearRecommendation")]
+        public virtual async Task<IActionResult> ClearRecommendation(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await _recommendResultsService.DeleteAllRecommendation();
+                return Ok();
+            }
+            catch (ValidationException e)
+            {
+                Logger.LogError(e, "Problem");
+                return ValidationResult(e.Errors);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error");
+                return BadRequest(e.Message + " " + e?.InnerException);
+
+            }
+        }
+
 
         protected IActionResult ValidationResult(List<ValidationError> errors)
         {

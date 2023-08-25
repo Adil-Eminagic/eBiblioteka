@@ -15,7 +15,7 @@ namespace eBiblioteka.Infrastructure
         {
             return await DbSet
                 .Where(c=> searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
-                .Where(c=> searchObject.isRead==null || c.isRead==searchObject.isRead)
+                .Where(c=> searchObject.IsRead==null || c.IsRead==searchObject.IsRead)
                 .Where(c=> searchObject.UserId==c.UserId || searchObject.UserId ==null)
                 .OrderByDescending(c=>c.Id)
             .ToPagedListAsync(searchObject, cancellationToken);
@@ -25,7 +25,7 @@ namespace eBiblioteka.Infrastructure
         {
             return await DbSet
                  .Where(c => searchObject.Title == null || c.Title.ToLower().Contains(searchObject.Title.ToLower()))
-                 .Where(c => searchObject.isRead == null || c.isRead == searchObject.isRead)
+                 .Where(c => searchObject.IsRead == null || c.IsRead == searchObject.IsRead)
                  .Where(c => searchObject.UserId == c.UserId || searchObject.UserId == null)
              .ToReportInfoAsync(searchObject, cancellationToken);
         }

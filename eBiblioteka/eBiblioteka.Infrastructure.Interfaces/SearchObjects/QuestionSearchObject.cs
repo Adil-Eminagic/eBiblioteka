@@ -6,7 +6,7 @@ namespace eBiblioteka.Infrastructure.Interfaces
         public string? Content { get; set; }
         public int? Points { get; set; }
         public int? QuizId { get; set; }
-        public bool? isActive { get; set; }
+        public bool? IsActive { get; set; }
 
     }
 }

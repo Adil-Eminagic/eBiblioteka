@@ -10,12 +10,8 @@ Author _$AuthorFromJson(Map<String, dynamic> json) => Author(
       json['id'] as int?,
       json['fullName'] as String?,
       json['biography'] as String?,
-      json['birthDate'] == null
-          ? null
-          : DateTime.parse(json['birthDate'] as String),
-      json['mortalDate'] == null
-          ? null
-          : DateTime.parse(json['mortalDate'] as String),
+      json['birthYear'] as int?,
+      json['mortalYear'] as int?,
       json['genderId'] as int?,
       json['gender'] == null
           ? null
@@ -34,8 +30,8 @@ Map<String, dynamic> _$AuthorToJson(Author instance) => <String, dynamic>{
       'id': instance.id,
       'fullName': instance.fullName,
       'biography': instance.biography,
-      'birthDate': instance.birthDate?.toIso8601String(),
-      'mortalDate': instance.mortalDate?.toIso8601String(),
+      'birthYear': instance.birthYear,
+      'mortalYear': instance.mortalYear,
       'genderId': instance.genderId,
       'gender': instance.gender,
       'countryId': instance.countryId,

@@ -20,7 +20,6 @@ Book _$BookFromJson(Map<String, dynamic> json) => Book(
           ? null
           : Author.fromJson(json['author'] as Map<String, dynamic>),
       json['authorID'] as int?,
-      (json['averageRate'] as num?)?.toDouble(),
       json['bookFileId'] as int?,
     )..isActive = json['isActive'] as bool?;
 
@@ -32,7 +31,6 @@ Map<String, dynamic> _$BookToJson(Book instance) => <String, dynamic>{
       'openingCount': instance.openingCount,
       'isActive': instance.isActive,
       'coverPhotoId': instance.coverPhotoId,
-      'averageRate': instance.averageRate,
       'coverPhoto': instance.coverPhoto,
       'authorID': instance.authorID,
       'author': instance.author,

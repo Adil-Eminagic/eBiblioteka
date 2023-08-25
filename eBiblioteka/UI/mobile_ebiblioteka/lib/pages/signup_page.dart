@@ -38,7 +38,6 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _genderProvider = context.read<GenderProvider>();
     _countryProvider = context.read<CountryProvider>();
@@ -52,9 +51,11 @@ class _SignupPageState extends State<SignupPage> {
     try {
       countryResult = await _countryProvider.getPaged();
       genderResult = await _genderProvider.getPaged();
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       alertBoxMoveBack(
           context, AppLocalizations.of(context).error, e.toString());
@@ -65,15 +66,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(AppLocalizations.of(context).sign_up),
-          centerTitle: true,
-          leading: isLoading == true
-              ? Container()
-              : IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back))),
+          title: Text(AppLocalizations.of(context).sign_up), centerTitle: true),
       body: isLoading
           ? const SpinKitRing(color: Colors.brown)
           : SingleChildScrollView(
@@ -130,6 +123,7 @@ class _SignupPageState extends State<SignupPage> {
                         Expanded(
                           child: FormBuilderTextField(
                             name: 'password',
+                            obscureText: true,
                             validator: ((value) {
                               if (value == null || value.isEmpty) {
                                 return AppLocalizations.of(context).mvalue;
@@ -258,6 +252,8 @@ class _SignupPageState extends State<SignupPage> {
                                     request['birthDate'] = DateEncode(_formKey
                                         .currentState?.value['birthDate']);
 
+                                    request['isActive'] = true;
+
                                     await _signProvider.signUp(request);
 
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -267,11 +263,12 @@ class _SignupPageState extends State<SignupPage> {
                                                     .su_sign_up)));
                                     _notificationProvider
                                         .sendRabbitNotification({
-                                          "title": "Registracija korinika",
-  "content": "Korisnik imena: ${request["fristName"]} ${request["lastName"]}",
-  "isRead": false,
-  "userId": 1
-                                        });
+                                      "title": "Registracija korinika",
+                                      "content":
+                                          "Korisnik imena: ${request["firstName"]} ${request["lastName"]}",
+                                      "isRead": false,
+                                      "userId": 1
+                                    });
 
                                     Navigator.pop(context);
                                   } else {}

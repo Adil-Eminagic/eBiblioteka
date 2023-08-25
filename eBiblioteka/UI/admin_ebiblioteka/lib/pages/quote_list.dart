@@ -37,10 +37,12 @@ class _QuotesListPageState extends State<QuotesListPage> {
       var data = await _quoteProvider.getPaged(
           filter: {"bookId": widget.bookId, "content": _contentConroller.text});
 
-      setState(() {
-        result = data;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          result = data;
+          isLoading = false;
+        });
+      }
     } on Exception catch (e) {
       alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
@@ -53,6 +55,9 @@ class _QuotesListPageState extends State<QuotesListPage> {
       child: Column(children: [
         _buildSearch(),
         isLoading ? Container() : _buildDataTable(),
+         isLoading == false && result != null && result!.pageCount > 1 ?  const SizedBox(
+          height: 20,
+        ) : Container(),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           if (isLoading == false && result != null && result!.pageCount > 1)
             for (int i = 0; i < result!.pageCount; i++)
@@ -65,11 +70,13 @@ class _QuotesListPageState extends State<QuotesListPage> {
                         'pageNumber': i + 1
                       });
 
-                      setState(() {
-                        result = data;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          result = data;
+                        });
+                      }
                     } on Exception catch (e) {
-                      alertBox(context, 'Greška', e.toString());
+                      alertBox(context, AppLocalizations.of(context).error, e.toString());
                     }
                   },
                   child: CircleAvatar(
@@ -84,6 +91,9 @@ class _QuotesListPageState extends State<QuotesListPage> {
                                 : Colors.brown),
                       ))),
         ]),
+        const SizedBox(
+          height: 20,
+        )
       ]),
     );
   }
@@ -94,7 +104,7 @@ class _QuotesListPageState extends State<QuotesListPage> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(80, 0, 80, 0),
           child: DataTable(
-            columns:  [
+            columns: [
               DataColumn(label: Text(AppLocalizations.of(context).name_2)),
             ],
             rows: result?.items
@@ -130,7 +140,8 @@ class _QuotesListPageState extends State<QuotesListPage> {
           Expanded(
             child: TextField(
               controller: _contentConroller,
-              decoration:  InputDecoration(label: Text(AppLocalizations.of(context).name_2)),
+              decoration: InputDecoration(
+                  label: Text(AppLocalizations.of(context).name_2)),
             ),
           ),
           const SizedBox(
@@ -141,14 +152,18 @@ class _QuotesListPageState extends State<QuotesListPage> {
                 try {
                   var data = await _quoteProvider.getPaged(filter: {
                     "bookId": widget.bookId,
-                    "content": _contentConroller.text
+                    "content": _contentConroller.text,
+                    
                   });
 
-                  setState(() {
-                    result = data;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      result = data;
+                    });
+                  }
                 } on Exception catch (e) {
-                  alertBox(context, AppLocalizations.of(context).error, e.toString());
+                  alertBox(context, AppLocalizations.of(context).error,
+                      e.toString());
                 }
               },
               child: Text(AppLocalizations.of(context).search)),

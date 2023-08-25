@@ -20,7 +20,6 @@ namespace eBiblioteka.Infrastructure
         {
             return await DbSet.Where(c=> searchObject.BookId== null || searchObject.BookId== c.BookId)
                 .Where(c=> searchObject.GenreId== null || searchObject.GenreId == c.GenreId)
-                .Where(c=>searchObject.IsActive== null || c.Book.isActive==searchObject.IsActive)
                  .Where(c=> searchObject.GenreName==null || c.Genre.Name.ToLower().Contains(searchObject.GenreName.ToLower()))
                 .Include(c=>c.Genre).Include(c=>c.Book).ThenInclude(c=>c.Author).Include(c=>c.Book).ThenInclude(c=>c.CoverPhoto)
                 .Include(c=>c.Book).ThenInclude(c=>c.UserRate)
@@ -31,7 +30,6 @@ namespace eBiblioteka.Infrastructure
         {
             return await DbSet.Where(c => searchObject.BookId == null || searchObject.BookId == c.BookId)
                 .Where(c => searchObject.GenreId == null || searchObject.GenreId == c.GenreId)
-                .Where(c => searchObject.IsActive == null || c.Book.isActive == searchObject.IsActive)
                  .Where(c => searchObject.GenreName == null || c.Genre.Name.ToLower().Contains(searchObject.GenreName.ToLower()))
                 .Include(c => c.Genre).Include(c => c.Book).ThenInclude(c => c.Author).Include(c => c.Book).ThenInclude(c => c.CoverPhoto)
                 .Include(c => c.Book).ThenInclude(c => c.UserRate)
