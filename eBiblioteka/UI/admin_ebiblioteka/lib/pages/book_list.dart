@@ -154,21 +154,6 @@ class _BooksPageState extends State<BooksPage> {
             ),
           ),
           const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                try {
-                  var data = await _recommendResultProvider.trainData();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(AppLocalizations.of(context).su_trained)));
-                } on Exception catch (e) {
-                  alertBox(context, AppLocalizations.of(context).error,
-                      e.toString());
-                }
-              },
-              child: Text(AppLocalizations.of(context).train_recommend)),
-          const SizedBox(
             width: 15,
           ),
           ElevatedButton(

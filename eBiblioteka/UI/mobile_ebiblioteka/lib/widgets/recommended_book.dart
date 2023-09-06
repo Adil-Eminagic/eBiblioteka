@@ -56,7 +56,7 @@ class _RecommendedBookWidgetState extends State<RecommendedBookWidget> {
         });
       }
     } catch (e) {
-      alertBox(context, AppLocalizations.of(context).error, e.toString());
+      //alertBox(context, AppLocalizations.of(context).error, e.toString());
     }
   }
 
@@ -71,7 +71,7 @@ class _RecommendedBookWidgetState extends State<RecommendedBookWidget> {
       }),
       child: isLoading == true
           ? Container()
-          : Container(
+          :( book==null ? Container():  Container(
               decoration: const BoxDecoration(
                 border: Border(
                     top: BorderSide(color: Colors.brown),
@@ -103,7 +103,7 @@ class _RecommendedBookWidgetState extends State<RecommendedBookWidget> {
                   Text('(${author?.fullName ?? ''})')
                 ],
               ),
-            ),
+            ))
     );
   }
 }

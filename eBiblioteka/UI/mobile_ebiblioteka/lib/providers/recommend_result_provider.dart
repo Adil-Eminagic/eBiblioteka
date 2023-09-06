@@ -59,29 +59,11 @@ class RecommendResultProvider extends ChangeNotifier {
 
     Response response = await get(uri, headers: headers);
     if (isValidResponse(response)) {
-        
+      if (response.body != "") {
         var data = jsonDecode(response.body);
 
         return RecommendResult.fromJson(data);
-     
-    } else {
-      throw Exception("Unknown error");
-    }
-  }
-
-  Future trainData() async {
-    var url = "$_baseUrl$_endpoint/TrainModelAsync";
-    var uri = Uri.parse(url);
-    var headers = createHeaders();
-
-    Response response = await post(
-      uri,
-      headers: headers,
-    );
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-
-      return data;
+      }
     } else {
       throw Exception("Unknown error");
     }

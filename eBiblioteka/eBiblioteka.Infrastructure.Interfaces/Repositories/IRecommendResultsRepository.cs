@@ -9,9 +9,7 @@ namespace eBiblioteka.Infrastructure.Interfaces
         Task<PagedList<RecommendResult>> GetPagedAsync(BaseSearchObject searchObject, CancellationToken cancellationToken = default);
 
         Task CreateNewRecommendation(List<RecommendResult> results, CancellationToken cancellationToken = default);
-        void UpdateRecommendation(List<RecommendResult> results);
 
-        Task DeleteAllRecommendation(CancellationToken cancellationToken = default);
        
 
     }

@@ -212,7 +212,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get del_author_title => 'Deleting author';
 
   @override
-  String get del_author_mes => 'Do you want to delete this author?\nIf you delete this author recommendations\nwill be deleted(if it exists) and you will have to trian data again.\nAll books of this author will be also deleted ';
+  String get del_author_mes => 'Do you want to delete this author?';
 
   @override
   String get author_del_lbl => 'Delete author';
@@ -578,7 +578,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get book_del_title => 'Deleting book';
 
   @override
-  String get book_del_mes => 'Do you want to delete this book?\nIf you delete this book recommendations will be deleted(if it exists)\nand you will have to trian data again';
+  String get book_del_mes => 'Do you want to delete this book?';
 
   @override
   String get book_del_lbl => 'Delete book';

@@ -1,3 +1,6 @@
+import 'package:mobile_ebiblioteka/models/notification.dart';
+import 'package:mobile_ebiblioteka/providers/notification_provider.dart';
+
 import '../special_pages/payment_page.dart';
 import '../pages/home_page.dart';
 import '../providers/language_provider.dart';
@@ -118,7 +121,6 @@ class _LoginPageState extends State<LoginPage> {
                         )),
                   ],
                 ),
-
                 const SizedBox(
                   height: 25,
                 ),
@@ -150,7 +152,6 @@ class _LoginPageState extends State<LoginPage> {
                             });
                           }
 
-                         
                           var email = _emailController.text;
                           var password = _passwordController.text;
 

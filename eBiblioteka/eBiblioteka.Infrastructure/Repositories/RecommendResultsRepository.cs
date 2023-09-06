@@ -18,40 +18,8 @@ namespace eBiblioteka.Infrastructure
 
         public async Task CreateNewRecommendation(List<RecommendResult> results, CancellationToken cancellationToken = default)
         {
-
-            var list = DbSet.ToList();
-            if (DbSet.Count() != 0)
-            {
-                for (int i = 0; i < DbSet.Count(); i++)
-                {
-                    list[i].BookId = results[i].BookId;
-                    list[i].FirstCobookId = results[i].FirstCobookId;
-                    list[i].SecondCobookId = results[i].SecondCobookId;
-                    list[i].ThirdCobookId = results[i].ThirdCobookId;
-                }
-                var num = results.Count() - DbSet.Count();
-
-                if (num > 0)
-                {
-                    for (int i = results.Count() - num; i < results.Count(); i++)
-                    {
-                        DbSet.Add(results[i]);
-                    }
-                }
-            }
-            else
-            {
-                await DbSet.AddRangeAsync(results);
-
-            }
-
+            await DbSet.AddRangeAsync(results);
         }
-
-        public async Task DeleteAllRecommendation(CancellationToken cancellationToken = default)
-        {
-            await DbSet.ExecuteDeleteAsync(cancellationToken);
-        }
-
 
         public async Task<RecommendResult?> GetByIdAsync(int bookId, CancellationToken cancellationToken = default)
         {
@@ -63,16 +31,6 @@ namespace eBiblioteka.Infrastructure
             return await DbSet.ToPagedListAsync(searchObject, cancellationToken);
         }
 
-        public void UpdateRecommendation(List<RecommendResult> results)
-        {
-            if (DbSet.Count() != 0)
-            {
-                DbSet.UpdateRange(results);
-            }
-            else
-            {
-                DbSet.AddRange(results);
-            }
-        }
+
     }
 }

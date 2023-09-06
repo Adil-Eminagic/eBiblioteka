@@ -163,12 +163,6 @@ namespace eBiblioteka.Application
 
         }
 
-       
-
-        public async Task DeleteAllRecommendation(CancellationToken cancellationToken = default)
-        {
-            await CurrentRepository.DeleteAllRecommendation(cancellationToken);
-        }
     }
 
     public class CoBook_prediction

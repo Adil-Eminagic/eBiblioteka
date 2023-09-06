@@ -78,7 +78,6 @@ namespace eBiblioteka.Application
         {
             await CurrentRepository.RemoveByIdAsync(id, false, cancellationToken);
 
-            await _recommendResultsService.DeleteAllRecommendation(cancellationToken);
             await UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 

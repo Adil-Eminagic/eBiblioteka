@@ -1,4 +1,3 @@
-import 'package:mobile_ebiblioteka/providers/notification_provider.dart';
 
 import '../providers/country_provider.dart';
 import '../providers/gender_provider.dart';
@@ -27,10 +26,7 @@ class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormBuilderState>();
   late GenderProvider _genderProvider = GenderProvider();
   late CountryProvider _countryProvider = CountryProvider();
-  late NotificationProvider _notificationProvider = NotificationProvider();
   late SignProvider _signProvider = SignProvider();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  Map<String, dynamic> _initialValue = {};
 
   SearchResult<Country>? countryResult;
   SearchResult<Gender>? genderResult;
@@ -42,7 +38,6 @@ class _SignupPageState extends State<SignupPage> {
     _genderProvider = context.read<GenderProvider>();
     _countryProvider = context.read<CountryProvider>();
     _signProvider = context.read<SignProvider>();
-    _notificationProvider = context.read<NotificationProvider>();
 
     intiForm();
   }
@@ -261,14 +256,6 @@ class _SignupPageState extends State<SignupPage> {
                                             content: Text(
                                                 AppLocalizations.of(context)
                                                     .su_sign_up)));
-                                    _notificationProvider
-                                        .sendRabbitNotification({
-                                      "title": "Registracija korinika",
-                                      "content":
-                                          "Korisnik imena: ${request["firstName"]} ${request["lastName"]}",
-                                      "isRead": false,
-                                      "userId": 1
-                                    });
 
                                     Navigator.pop(context);
                                   } else {}

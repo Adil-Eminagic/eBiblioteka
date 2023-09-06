@@ -122,13 +122,6 @@ namespace eBiblioteka.Application
             return Mapper.Map<BookDto>(book);
         }
 
-        public async override Task RemoveByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            await CurrentRepository.RemoveByIdAsync(id, false, cancellationToken);
-
-            await _recommendResultsService.DeleteAllRecommendation(cancellationToken);
-            await UnitOfWork.SaveChangesAsync(cancellationToken);
-
-        }
+       
     }
 }

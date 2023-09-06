@@ -505,7 +505,7 @@ abstract class AppLocalizations {
   /// No description provided for @del_author_mes.
   ///
   /// In en, this message translates to:
-  /// **'Do you want to delete this author?\nIf you delete this author recommendations\nwill be deleted(if it exists) and you will have to trian data again.\nAll books of this author will be also deleted '**
+  /// **'Do you want to delete this author?'**
   String get del_author_mes;
 
   /// No description provided for @author_del_lbl.
@@ -1237,7 +1237,7 @@ abstract class AppLocalizations {
   /// No description provided for @book_del_mes.
   ///
   /// In en, this message translates to:
-  /// **'Do you want to delete this book?\nIf you delete this book recommendations will be deleted(if it exists)\nand you will have to trian data again'**
+  /// **'Do you want to delete this book?'**
   String get book_del_mes;
 
   /// No description provided for @book_del_lbl.

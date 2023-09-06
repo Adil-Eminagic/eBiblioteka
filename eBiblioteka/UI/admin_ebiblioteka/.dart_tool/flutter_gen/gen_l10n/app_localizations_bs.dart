@@ -212,7 +212,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get del_author_title => 'Brisanje autora';
 
   @override
-  String get del_author_mes => 'Da li želite obrisati autora?\nAko obrišete ovog autora preporuka će biti\nobrisana(ako postoji), pa će te morati ponovo trenirati preporuku.\nTakođer i sve knjige ovog autora će butu obrisane ';
+  String get del_author_mes => 'Da li želite obrisati autora?';
 
   @override
   String get author_del_lbl => 'Obriši autora';
@@ -578,7 +578,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get book_del_title => 'Brisanje knjige';
 
   @override
-  String get book_del_mes => 'Da li želite obrisati knjige?\nAko obrišete ovu knjigu preporuka će biti\nobrisana(ako postoji), pa će te morati ponovo trenirati preporuku';
+  String get book_del_mes => 'Da li želite obrisati knjige?';
 
   @override
   String get book_del_lbl => 'Obriši knjigu';

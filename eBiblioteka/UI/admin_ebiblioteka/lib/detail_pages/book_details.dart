@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:admin_ebiblioteka/models/recommend_result.dart';
 import 'package:admin_ebiblioteka/pages/quote_list.dart';
 import 'package:admin_ebiblioteka/pages/rating_list.dart';
+import 'package:admin_ebiblioteka/providers/notification_provider.dart';
 import 'package:admin_ebiblioteka/providers/recommend_result_provider.dart';
 
 import '../models/author.dart';
@@ -40,8 +41,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
   late AuthorProvider _authorProvider = AuthorProvider();
   late BookProvider _bookProvider = BookProvider();
   late BookGenreProvider _bookGenreProvider = BookGenreProvider();
-  late RecommendResultProvider _recommendResultProvider =
-      RecommendResultProvider();
+  late NotificationProvider _notificationProvider = NotificationProvider();
 
   bool isLoading = false;
   String? photo;
@@ -63,7 +63,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
     _authorProvider = context.read<AuthorProvider>();
     _bookProvider = context.read<BookProvider>();
     _bookGenreProvider = context.read<BookGenreProvider>();
-    _recommendResultProvider = context.read<RecommendResultProvider>();
+    _notificationProvider = context.read<NotificationProvider>();
 
     if (widget.book != null && widget.book?.coverPhoto != null) {
       photo = widget.book?.coverPhoto?.data ?? '';
@@ -79,8 +79,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         bookSend = await _bookProvider.getById(widget.book!.id!);
         bookGenreResult = await _bookGenreProvider
             .getPaged(filter: {'bookId': widget.book?.id});
-        if (bookGenreResult!.items.isNotEmpty) {
-        }
+        if (bookGenreResult!.items.isNotEmpty) {}
       }
       if (mounted) {
         setState(() {
@@ -201,7 +200,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                       request['publishingYear'] =
                                           publishingYear;
 
-
                                       var openingCount =
                                           widget.book?.openingCount as int;
                                       request['openingCount'] = 0;
@@ -249,13 +247,23 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                         request['image'] = _base64Image;
                                       }
 
-                                      await _bookProvider.insert(request);
+                                      Book rtnBook= await _bookProvider.insert(request);
 
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
                                               content: Text(
                                                   AppLocalizations.of(context)
                                                       .su_add_book)));
+
+
+                                      await _notificationProvider
+                                          .sendRabbitNotification({
+                                             "title": "Dodana knjiga",
+                                      "content":
+                                      "Uspejšno je dodana knjiga naziva ${rtnBook.title}",
+                                      "isRead": false,
+                                      "userId": 1
+                                          });
 
                                       Navigator.pop(context, 'reload');
                                     }
@@ -457,7 +465,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
                                                   book: bookSend,
                                                 )));
 
-                                    if (refresh == 'reload2') {// to reload genres when new is added or delete of book
+                                    if (refresh == 'reload2') {
+                                      // to reload genres when new is added or delete of book
                                       initForm();
                                     }
                                   },
@@ -518,7 +527,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           ),
                           ElevatedButton(
                               onPressed: getFile,
-                              child: (_base64Document != null || widget.book?.bookFileId != null)
+                              child: (_base64Document != null ||
+                                      widget.book?.bookFileId != null)
                                   ? Text(
                                       AppLocalizations.of(context).change_doc)
                                   : Text(

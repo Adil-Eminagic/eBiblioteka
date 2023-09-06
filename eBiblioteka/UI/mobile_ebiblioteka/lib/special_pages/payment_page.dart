@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
+import 'package:mobile_ebiblioteka/providers/notification_provider.dart';
 import 'package:mobile_ebiblioteka/providers/user_provider.dart';
 import 'package:mobile_ebiblioteka/utils/util.dart';
 import 'package:mobile_ebiblioteka/utils/util_widgets.dart';
@@ -54,8 +55,10 @@ class _PaymentPageState extends State<PaymentPage> {
                           MaterialPageRoute(
                             builder: (BuildContext context) => UsePaypal(
                                 sandboxMode: true,
-                                clientId: 'AZkL37Viqql10TlDRH-phzZyRO-5CzaQ_tX4gidYXEbRF-sJS2S0nZ60q-CtSPG3sgR4d7mYKyV99Oh4',
-                                secretKey: 'EIDWu9u9z122pgdaN9JOsLelVZsdZb5k0knNWHVh_xt_6EFJRpuL6CnmFibS51s3-QcZ1PiEqaBkAqSW',
+                                clientId:
+                                    'AZkL37Viqql10TlDRH-phzZyRO-5CzaQ_tX4gidYXEbRF-sJS2S0nZ60q-CtSPG3sgR4d7mYKyV99Oh4',
+                                secretKey:
+                                    'EIDWu9u9z122pgdaN9JOsLelVZsdZb5k0knNWHVh_xt_6EFJRpuL6CnmFibS51s3-QcZ1PiEqaBkAqSW',
                                 returnURL: "https://samplesite.com/return",
                                 cancelURL: "https://samplesite.com/cancel",
                                 transactions: const [
@@ -86,12 +89,17 @@ class _PaymentPageState extends State<PaymentPage> {
                                 note:
                                     "Contact us for any questions on your order.",
                                 onSuccess: (Map params) async {
-                                  _userProvider.payMembership(int.parse(
-                                      Autentification.tokenDecoded!['Id']));
-                                  if (mounted) {
-                                    setState(() {
-                                      isPayed = true;
-                                    });
+                                  try {
+                                    _userProvider.payMembership(int.parse(
+                                        Autentification.tokenDecoded!['Id']));
+                                        
+                                    if (mounted) {
+                                      setState(() {
+                                        isPayed = true;
+                                      });
+                                    }
+                                  } on Exception catch (e) {
+                                    // TODO
                                   }
                                   Autentification.token = null;
                                   Autentification.tokenDecoded = null;

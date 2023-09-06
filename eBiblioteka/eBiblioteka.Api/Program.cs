@@ -72,52 +72,71 @@ using (var scope = app.Services.CreateScope())
     if (!dataContext.Database.CanConnect())
     {
         dataContext.Database.Migrate();
+
+        var recommendResutService = scope.ServiceProvider.GetRequiredService<IRecommendResultsService>();
+        try
+        {
+            await recommendResutService.TrainBooksModelAsync();
+        }
+        catch (Exception E)
+        {
+            
+        }
     }
 }
 
+string hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "";
+string username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
+string password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
+string virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
 
+var factory = new ConnectionFactory
+{
+    HostName = hostname,
+    UserName = username,
+    Password = password,
+    VirtualHost = virtualHost,
+};
+using var connection = factory.CreateConnection();
+using var channel = connection.CreateModel();
 
-    var factory = new ConnectionFactory { HostName = "rmq_host", Port = 5672 };
-    using var connection = factory.CreateConnection();
-    using var channel = connection.CreateModel();
+channel.QueueDeclare(queue: "notification",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: true,
+                     arguments: null);
 
-    channel.QueueDeclare(queue: "notification",
-                         durable: false,
-                         exclusive: false,
-                         autoDelete: true,
-                         arguments: null);
+Console.WriteLine(" [*] Waiting for messages.");
 
-    Console.WriteLine(" [*] Waiting for messages.");
-
-    var consumer = new EventingBasicConsumer(channel);
-    consumer.Received += async (model, ea) =>
+var consumer = new EventingBasicConsumer(channel);
+consumer.Received += async (model, ea) =>
+{
+    var body = ea.Body.ToArray();
+    var message = Encoding.UTF8.GetString(body);
+    Console.WriteLine(message.ToString());
+    var notification = JsonSerializer.Deserialize<NotificationUpsertDto>(message);
+    using (var scope = app.Services.CreateScope())
     {
-        var body = ea.Body.ToArray();
-        var message = Encoding.UTF8.GetString(body);
-        Console.WriteLine(message.ToString());
-        var notification = JsonSerializer.Deserialize<NotificationUpsertDto>(message);
-        using (var scope = app.Services.CreateScope())
+        var notificationsService = scope.ServiceProvider.GetRequiredService<INotificationsService>();
+
+        if (notification != null)
         {
-            var notificationsService = scope.ServiceProvider.GetRequiredService<INotificationsService>();
-
-            if (notification != null)
+            try
             {
-                try
-                {
 
-                    await notificationsService.AddAsync(notification);
-                }
-                catch (Exception e)
-                {
+                await notificationsService.AddAsync(notification);
+            }
+            catch (Exception e)
+            {
 
-                }
             }
         }
-        Console.WriteLine();
-    };
-    channel.BasicConsume(queue: "notification",
-                         autoAck: true,
-                         consumer: consumer);
+    }
+    Console.WriteLine(Environment.GetEnvironmentVariable("Some"));
+};
+channel.BasicConsume(queue: "notification",
+                     autoAck: true,
+                     consumer: consumer);
 
 
 
