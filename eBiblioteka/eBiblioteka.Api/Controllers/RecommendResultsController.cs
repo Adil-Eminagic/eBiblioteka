@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eBiblioteka.Api.Controllers
 {
-    public class RecommendResultsController :BaseController
+    public class RecommendResultsController : BaseController
     {
         private readonly IRecommendResultsService _recommendResultsService;
         public RecommendResultsController(IRecommendResultsService service, ILogger<RecommendResultsController> logger, IRecommendResultsService recommendResultsService) : base(logger)
@@ -21,9 +21,9 @@ namespace eBiblioteka.Api.Controllers
             try
             {
                 var dto = await _recommendResultsService.GetByIdAsync(bookId, cancellationToken);
-                if(dto == null) 
-                { 
-                return Ok(null);
+                if (dto == null)
+                {
+                    return Ok(null);
                 }
                 return Ok(dto);
             }
@@ -33,6 +33,8 @@ namespace eBiblioteka.Api.Controllers
                 return BadRequest(e.Message + " " + e?.InnerException);
             }
         }
+
+
 
         [Authorize]
         [HttpGet("GetPaged")]
@@ -50,7 +52,6 @@ namespace eBiblioteka.Api.Controllers
 
             }
         }
-
 
 
         protected IActionResult ValidationResult(List<ValidationError> errors)
