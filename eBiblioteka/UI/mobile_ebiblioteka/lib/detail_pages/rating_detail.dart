@@ -37,7 +37,6 @@ class _RatingDetailPageState extends State<RatingDetailPage> {
       'comment': widget.rating?.comment,
     };
     _ratingProvider = context.read<RatingProvider>();
-
   }
 
   @override
@@ -179,6 +178,9 @@ class _RatingDetailPageState extends State<RatingDetailPage> {
 
                                     var res =
                                         await _ratingProvider.update(request);
+
+                                    await _ratingProvider
+                                        .getAverageBookRate(widget.bookId!);
 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
