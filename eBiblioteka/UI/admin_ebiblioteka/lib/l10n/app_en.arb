@@ -191,12 +191,15 @@
     "book_del_title":"Deleting book",
     "book_del_mes":"Do you want to delete this book?",
     "book_del_lbl":"Delete book",
-    "book_su_del":"Book si successfully deleted",
+    "book_su_del":"Book is successfully deleted",
     "recommend_su_del":"Recommednation is successfully deleted",
     "notif_id":"Notification Id: ",
     "dec_account":"You cann't log in because your account is deactivated",
     "invalid_points":"Points must be between 1 and 10",
-    "birth_date":"Birth date"
+    "birth_date":"Birth date",
+    "no_book_genres":"There are no added genres for this book",
+    "no_quotes":"No quotes for this book"
+
 
 
     

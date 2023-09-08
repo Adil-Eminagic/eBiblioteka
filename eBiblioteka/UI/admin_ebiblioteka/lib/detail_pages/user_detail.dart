@@ -102,97 +102,103 @@ class _UserDetailPageState extends State<UserDetailPage> {
             : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-                  child: Column(
-                    children: [
-                      _buildForm(),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            widget.user == null
-                                ? Container()
-                                : const SizedBox(
-                                    width: 7,
-                                  ),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  _formKey.currentState?.save();
-
-                                  try {
-                                    if (_formKey.currentState!.validate()) {
-                                      if (widget.user != null) {
-                                        Map<String, dynamic> request = Map.of(
-                                            _formKey.currentState!.value);
-
-                                        request['id'] = widget.user?.id;
-                                        request['birthDate'] = DateEncode(
-                                            _formKey.currentState
-                                                ?.value['birthDate']);
-                                        if (_base64Image != null) {
-                                          request['profilePhoto'] =
-                                              _base64Image;
+                  child: Card(
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        children: [
+                          _buildForm(),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                widget.user == null
+                                    ? Container()
+                                    : const SizedBox(
+                                        width: 7,
+                                      ),
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      _formKey.currentState?.save();
+                  
+                                      try {
+                                        if (_formKey.currentState!.validate()) {
+                                          if (widget.user != null) {
+                                            Map<String, dynamic> request = Map.of(
+                                                _formKey.currentState!.value);
+                  
+                                            request['id'] = widget.user?.id;
+                                            request['birthDate'] = DateEncode(
+                                                _formKey.currentState
+                                                    ?.value['birthDate']);
+                                            if (_base64Image != null) {
+                                              request['profilePhoto'] =
+                                                  _base64Image;
+                                            }
+                  
+                                            request['roleId'] = widget.user!.roleId;
+                  
+                                            request['isActive'] = isActive;
+                                            var res =
+                                                await _userProvider.update(request);
+                  
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        AppLocalizations.of(context)
+                                                            .user_mod_su)));
+                  
+                                            Navigator.pop(context, 'reload');
+                                          } else {
+                                            Map<String, dynamic> request = Map.of(
+                                                _formKey.currentState!.value);
+                  
+                                            request['birthDate'] = DateEncode(
+                                                _formKey.currentState
+                                                    ?.value['birthDate']);
+                  
+                                            if (request['passsword'] == '') {
+                                              request['passsword'] = null;
+                                            }
+                                            if (_base64Image != null) {
+                                              request['profilePhoto'] =
+                                                  _base64Image;
+                                            }
+                                            request['isActive'] = true;
+                  
+                                            request['roleId'] =
+                                                widget.roleUser == "User" ? 3 : 2;
+                  
+                                            await _userProvider.insert(request);
+                  
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        AppLocalizations.of(context)
+                                                            .user_add_su)));
+                  
+                                            Navigator.pop(context, 'reload');
+                                          }
                                         }
-
-                                        request['roleId'] = widget.user!.roleId;
-
-                                        request['isActive'] = isActive;
-                                        var res =
-                                            await _userProvider.update(request);
-
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    AppLocalizations.of(context)
-                                                        .user_mod_su)));
-
-                                        Navigator.pop(context, 'reload');
-                                      } else {
-                                        Map<String, dynamic> request = Map.of(
-                                            _formKey.currentState!.value);
-
-                                        request['birthDate'] = DateEncode(
-                                            _formKey.currentState
-                                                ?.value['birthDate']);
-
-                                        if (request['passsword'] == '') {
-                                          request['passsword'] = null;
-                                        }
-                                        if (_base64Image != null) {
-                                          request['profilePhoto'] =
-                                              _base64Image;
-                                        }
-                                        request['isActive'] = true;
-
-                                        request['roleId'] =
-                                            widget.roleUser == "User" ? 3 : 2;
-
-                                        await _userProvider.insert(request);
-
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    AppLocalizations.of(context)
-                                                        .user_add_su)));
-
-                                        Navigator.pop(context, 'reload');
+                                      } on Exception catch (e) {
+                                        alertBox(
+                                            context,
+                                            AppLocalizations.of(context).error,
+                                            e.toString());
                                       }
-                                    }
-                                  } on Exception catch (e) {
-                                    alertBox(
-                                        context,
-                                        AppLocalizations.of(context).error,
-                                        e.toString());
-                                  }
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context).save,
-                                  style: const TextStyle(fontSize: 15),
-                                )),
-                          ],
-                        ),
-                      )
-                    ],
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context).save,
+                                      style: const TextStyle(fontSize: 15),
+                                    )),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ));

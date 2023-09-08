@@ -41,116 +41,140 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
           : "${AppLocalizations.of(context).genre_id} ${widget.genre?.id}",
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-          child: Column(
+          padding: const EdgeInsets.fromLTRB(65, 80, 65, 100),
+          child: Row(
             children: [
-              _buildForm(),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    widget.genre == null
-                        ? Container()
-                        : TextButton(
-                            onPressed: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title: Text(AppLocalizations.of(context)
-                                            .genre_del_title),
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .genre_del_mes),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: (() {
-                                                Navigator.pop(context);
-                                              }),
-                                              child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .cancel)),
-                                          TextButton(
-                                              onPressed: () async {
-                                                try {
-                                                  await _genreProvider.remove(
-                                                      widget.genre?.id ?? 0);
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                          content: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .genre_del_su)));
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(
-                                                      context, 'reload');
-                                                } catch (e) {
-                                                  alertBoxMoveBack(
-                                                      context,
-                                                      AppLocalizations.of(
-                                                              context)
-                                                          .error,
-                                                      e.toString());
-                                                }
-                                              },
-                                              child: const Text('Ok')),
-                                        ],
-                                      ));
-                            },
-                            child: Text(
-                                AppLocalizations.of(context).genre_del_lbl)),
-                    widget.genre == null
-                        ? Container()
-                        : const SizedBox(
-                            width: 7,
+              Expanded(child: Container()),
+              Expanded(
+                child: Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(34.0),
+                    child: Column(
+                      children: [
+                        _buildForm(),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              widget.genre == null
+                                  ? Container()
+                                  : TextButton(
+                                      onPressed: () async {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                AlertDialog(
+                                                  title: Text(
+                                                      AppLocalizations.of(context)
+                                                          .genre_del_title),
+                                                  content: Text(
+                                                      AppLocalizations.of(context)
+                                                          .genre_del_mes),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: (() {
+                                                          Navigator.pop(context);
+                                                        }),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .cancel)),
+                                                    TextButton(
+                                                        onPressed: () async {
+                                                          try {
+                                                            await _genreProvider
+                                                                .remove(widget.genre
+                                                                        ?.id ??
+                                                                    0);
+                                                            ScaffoldMessenger.of(
+                                                                    context)
+                                                                .showSnackBar(SnackBar(
+                                                                    content: Text(
+                                                                        AppLocalizations.of(
+                                                                                context)
+                                                                            .genre_del_su)));
+                                                            Navigator.pop(context);
+                                                            Navigator.pop(
+                                                                context, 'reload');
+                                                          } catch (e) {
+                                                            alertBoxMoveBack(
+                                                                context,
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .error,
+                                                                e.toString());
+                                                          }
+                                                        },
+                                                        child: const Text('Ok')),
+                                                  ],
+                                                ));
+                                      },
+                                      child: Text(AppLocalizations.of(context)
+                                          .genre_del_lbl)),
+                              widget.genre == null
+                                  ? Container()
+                                  : const SizedBox(
+                                      width: 7,
+                                    ),
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    _formKey.currentState?.save();
+                
+                                    try {
+                                      if (_formKey.currentState!.validate()) {
+                                        if (widget.genre != null) {
+                                          Map<String, dynamic> request =
+                                              Map.of(_formKey.currentState!.value);
+                
+                                          request['id'] = widget.genre?.id;
+                
+                                          var res =
+                                              await _genreProvider.update(request);
+                
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      AppLocalizations.of(context)
+                                                          .genre_mod_su)));
+                
+                                          Navigator.pop(context, 'reload');
+                                        } else {
+                                          Map<String, dynamic> request =
+                                              Map.of(_formKey.currentState!.value);
+                
+                                          await _genreProvider.insert(request);
+                
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      AppLocalizations.of(context)
+                                                          .genre_add_su)));
+                
+                                          Navigator.pop(context, 'reload');
+                                        }
+                                      }
+                                    } on Exception catch (e) {
+                                      alertBox(
+                                          context,
+                                          AppLocalizations.of(context).error,
+                                          e.toString());
+                                    }
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context).save,
+                                    style: const TextStyle(fontSize: 15),
+                                  )),
+                            ],
                           ),
-                    ElevatedButton(
-                        onPressed: () async {
-                          _formKey.currentState?.save();
-
-                          try {
-                            if (_formKey.currentState!.validate()) {
-                              if (widget.genre != null) {
-                                Map<String, dynamic> request =
-                                    Map.of(_formKey.currentState!.value);
-
-                                request['id'] = widget.genre?.id;
-
-                                var res = await _genreProvider.update(request);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .genre_mod_su)));
-
-                                Navigator.pop(context, 'reload');
-                              } else {
-                                Map<String, dynamic> request =
-                                    Map.of(_formKey.currentState!.value);
-
-                                await _genreProvider.insert(request);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                   SnackBar(
-                                        content:
-                                            Text(AppLocalizations.of(context).genre_add_su)));
-
-                                Navigator.pop(context, 'reload');
-                              }
-                            }
-                          } on Exception catch (e) {
-                            alertBox(context, AppLocalizations.of(context).error, e.toString());
-                          }
-                        },
-                        child: Text(
-                          AppLocalizations.of(context).save,
-                          style: const TextStyle(fontSize: 15),
-                        )),
-                  ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-              )
+              ),
+              Expanded(child: Container()),
             ],
           ),
         ),

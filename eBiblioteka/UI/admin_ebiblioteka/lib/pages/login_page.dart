@@ -97,6 +97,10 @@ class _LoginPageState extends State<LoginPage> {
         child: Container(
           constraints: const BoxConstraints(maxHeight: 400, maxWidth: 400),
           child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -187,7 +191,8 @@ class _LoginPageState extends State<LoginPage> {
                               } else if (Autentification
                                           .tokenDecoded!["Role"] !=
                                       "Superadmin" &&
-                                   Autentification.tokenDecoded!["IsActive"]=="False") {
+                                  Autentification.tokenDecoded!["IsActive"] ==
+                                      "False") {
                                 showDialog(
                                     context: context,
                                     barrierDismissible: false,

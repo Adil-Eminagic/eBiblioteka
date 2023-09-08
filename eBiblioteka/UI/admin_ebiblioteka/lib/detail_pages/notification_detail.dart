@@ -43,72 +43,78 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
             : '',
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-          child: Column(
-            children: [
-              _buildForm(),
-              const SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    widget.notif == null
-                        ? Container()
-                        : const SizedBox(
-                            width: 7,
-                          ),
-                    TextButton(
-                        onPressed: () async {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text(AppLocalizations.of(context)
-                                        .notif_del_title),
-                                    content: Text(AppLocalizations.of(context)
-                                        .notif_del_mes),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: (() {
-                                            Navigator.pop(context);
-                                          }),
-                                          child: Text(
-                                              AppLocalizations.of(context)
-                                                  .cancel)),
-                                      TextButton(
-                                          onPressed: () async {
-                                            try {
-                                              await _notificationProvider
-                                                  .remove(
-                                                      widget.notif?.id ?? 0);
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          AppLocalizations.of(
-                                                                  context)
-                                                              .notif_del_su)));
-                                              Navigator.pop(context);
-                                              Navigator.pop(context, 'reload');
-                                            } catch (e) {
-                                              alertBoxMoveBack(
-                                                  context,
+          padding: const EdgeInsets.fromLTRB(65, 80, 65, 100),
+          child: Card(
+            elevation: 4,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                children: [
+                  _buildForm(),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        widget.notif == null
+                            ? Container()
+                            : const SizedBox(
+                                width: 7,
+                              ),
+                        TextButton(
+                            onPressed: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                        title: Text(AppLocalizations.of(context)
+                                            .notif_del_title),
+                                        content: Text(AppLocalizations.of(context)
+                                            .notif_del_mes),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: (() {
+                                                Navigator.pop(context);
+                                              }),
+                                              child: Text(
                                                   AppLocalizations.of(context)
-                                                      .error,
-                                                  e.toString());
-                                            }
-                                          },
-                                          child: const Text('Ok')),
-                                    ],
-                                  ));
-                        },
-                        child:
-                            Text(AppLocalizations.of(context).notif_del_lbl)),
-                  ],
-                ),
-              )
-            ],
+                                                      .cancel)),
+                                          TextButton(
+                                              onPressed: () async {
+                                                try {
+                                                  await _notificationProvider
+                                                      .remove(
+                                                          widget.notif?.id ?? 0);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .notif_del_su)));
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context, 'reload');
+                                                } catch (e) {
+                                                  alertBoxMoveBack(
+                                                      context,
+                                                      AppLocalizations.of(context)
+                                                          .error,
+                                                      e.toString());
+                                                }
+                                              },
+                                              child: const Text('Ok')),
+                                        ],
+                                      ));
+                            },
+                            child:
+                                Text(AppLocalizations.of(context).notif_del_lbl)),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),

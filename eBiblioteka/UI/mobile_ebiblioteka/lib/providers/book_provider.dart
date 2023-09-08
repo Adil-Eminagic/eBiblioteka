@@ -19,13 +19,31 @@ class BookProvider extends BaseProvider<Book> {
 
     var headers = createHeaders();
 
-    Response response = await put(uri,
-       headers: headers,
-        body: null);
+    Response response = await put(uri, headers: headers, body: null);
 
     if (isValidResponse(response)) {
     } else {
-      throw new Exception("Unknown error");
+      throw Exception("Unknown error");
+    }
+  }
+
+  Future<bool> doesExist(int bookId) async {
+    var url = "${BaseProvider.baseUrl}$endpoint/DoesExist/$bookId";
+
+    var uri = Uri.parse(url);
+
+    var headers = createHeaders();
+
+    Response response = await get(
+      uri,
+      headers: headers,
+    );
+
+    if (isValidResponse(response)) {
+      bool so = response.body == "true" ? true : false;
+      return so;
+    } else {
+      throw Exception("Unknown error");
     }
   }
 }

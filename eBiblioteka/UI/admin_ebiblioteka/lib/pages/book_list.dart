@@ -1,7 +1,6 @@
 import 'package:admin_ebiblioteka/detail_pages/book_details.dart';
 import 'package:admin_ebiblioteka/models/search_result.dart';
 import 'package:admin_ebiblioteka/providers/book_provider.dart';
-import 'package:admin_ebiblioteka/providers/recommend_result_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +20,6 @@ class BooksPage extends StatefulWidget {
 
 class _BooksPageState extends State<BooksPage> {
   late BookProvider _bookProvider = BookProvider();
-  late RecommendResultProvider _recommendResultProvider =
-      RecommendResultProvider();
   SearchResult<Book>? result;
   bool isLoading = true;
 
@@ -31,7 +28,6 @@ class _BooksPageState extends State<BooksPage> {
   void initState() {
     super.initState();
     _bookProvider = context.read<BookProvider>();
-    _recommendResultProvider = context.read<RecommendResultProvider>();
 
     initTable();
   }

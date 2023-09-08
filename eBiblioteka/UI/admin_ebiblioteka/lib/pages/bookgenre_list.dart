@@ -66,7 +66,7 @@ class _BookGenresPageState extends State<BookGenresPage> {
         child: Column(children: [
           _buildSearch(),
           (isLoading || result == null || result!.items.isEmpty)
-              ? Container()
+              ? Center(child: Text(AppLocalizations.of(context).no_book_genres, style:const TextStyle(fontSize: 17),))
               : _buildDataTable(),
         ]));
   }

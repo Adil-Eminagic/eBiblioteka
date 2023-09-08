@@ -1,5 +1,6 @@
 import 'package:admin_ebiblioteka/models/quiz.dart';
 import 'package:admin_ebiblioteka/pages/question_list.dart';
+import 'package:admin_ebiblioteka/utils/util.dart';
 import 'package:admin_ebiblioteka/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -42,133 +43,139 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
             : AppLocalizations.of(context).quiz_new,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(65, 20, 65, 100),
-            child: Column(
-              children: [
-                _buildForm(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+            padding: const EdgeInsets.fromLTRB(65, 80, 65, 100),
+            child: Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        children: [
-                          widget.quiz == null
-                              ? Container()
-                              : TextButton(
+                    _buildForm(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              widget.quiz == null
+                                  ? Container()
+                                  : TextButton(
+                                      onPressed: () async {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                AlertDialog(
+                                                  title:
+                                                       Text( AppLocalizations.of(context).quiz_del_title),
+                                                  content:  Text(
+                                                       AppLocalizations.of(context).quiz_del_mes),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: (() {
+                                                          Navigator.pop(context);
+                                                        }),
+                                                        child:
+                                                           Text( AppLocalizations.of(context).cancel)),
+                                                    TextButton(
+                                                        onPressed: () async {
+                                                          try {
+                                                            await _quizProvider
+                                                                .remove(widget
+                                                                        .quiz?.id ??
+                                                                    0);
+                                                            ScaffoldMessenger.of(
+                                                                    context)
+                                                                .showSnackBar(
+                                                                     SnackBar(
+                                                                        content: Text(
+                                                                             AppLocalizations.of(context).quiz_del_su)));
+                                                            Navigator.pop(context);
+                                                            Navigator.pop(
+                                                                context, 'reload');
+                                                          } catch (e) {
+                                                            alertBoxMoveBack(
+                                                                context,
+                                                                 AppLocalizations.of(context).error,
+                                                                e.toString());
+                                                          }
+                                                        },
+                                                        child: const Text('Ok')),
+                                                  ],
+                                                ));
+                                      },
+                                      child:  Text( AppLocalizations.of(context).quiz_del_lbl)),
+                              widget.quiz == null
+                                  ? Container()
+                                  : const SizedBox(
+                                      width: 7,
+                                    ),
+                              ElevatedButton(
                                   onPressed: () async {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                              title:
-                                                   Text( AppLocalizations.of(context).quiz_del_title),
-                                              content:  Text(
-                                                   AppLocalizations.of(context).quiz_del_mes),
-                                              actions: [
-                                                TextButton(
-                                                    onPressed: (() {
-                                                      Navigator.pop(context);
-                                                    }),
-                                                    child:
-                                                       Text( AppLocalizations.of(context).cancel)),
-                                                TextButton(
-                                                    onPressed: () async {
-                                                      try {
-                                                        await _quizProvider
-                                                            .remove(widget
-                                                                    .quiz?.id ??
-                                                                0);
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                 SnackBar(
-                                                                    content: Text(
-                                                                         AppLocalizations.of(context).quiz_del_su)));
+                                    _formKey.currentState?.save();
+            
+                                    try {
+                                      if (_formKey.currentState!.validate()) {
+                                        if (widget.quiz != null) {
+                                          Map<String, dynamic> request =
+                                              Map.of(_formKey.currentState!.value);
+            
+                                          request['id'] = widget.quiz?.id;
+            
+                                          var res =
+                                              await _quizProvider.update(request);
+            
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar( SnackBar(
+                                                  content: Text(
+                                                     AppLocalizations.of(context).quiz_mod_su)));
+            
+                                          Navigator.pop(context, 'reload');
+                                        } else {
+                                          Map<String, dynamic> request =
+                                              Map.of(_formKey.currentState!.value);
+            
+                                          await _quizProvider.insert(request);
+            
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar( SnackBar(
+                                                  content: Text(
+                                                      AppLocalizations.of(context).quiz_add_su)));
+            
+                                          Navigator.pop(context, 'reload');
+                                        }
+                                      }
+                                    } on Exception catch (e) {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                                title:  Text(AppLocalizations.of(context).error),
+                                                content: Text(
+                                                  e.toString(),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
                                                         Navigator.pop(context);
-                                                        Navigator.pop(
-                                                            context, 'reload');
-                                                      } catch (e) {
-                                                        alertBoxMoveBack(
-                                                            context,
-                                                             AppLocalizations.of(context).error,
-                                                            e.toString());
-                                                      }
-                                                    },
-                                                    child: const Text('Ok')),
-                                              ],
-                                            ));
-                                  },
-                                  child:  Text( AppLocalizations.of(context).quiz_del_lbl)),
-                          widget.quiz == null
-                              ? Container()
-                              : const SizedBox(
-                                  width: 7,
-                                ),
-                          ElevatedButton(
-                              onPressed: () async {
-                                _formKey.currentState?.save();
-
-                                try {
-                                  if (_formKey.currentState!.validate()) {
-                                    if (widget.quiz != null) {
-                                      Map<String, dynamic> request =
-                                          Map.of(_formKey.currentState!.value);
-
-                                      request['id'] = widget.quiz?.id;
-
-                                      var res =
-                                          await _quizProvider.update(request);
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar( SnackBar(
-                                              content: Text(
-                                                 AppLocalizations.of(context).quiz_mod_su)));
-
-                                      Navigator.pop(context, 'reload');
-                                    } else {
-                                      Map<String, dynamic> request =
-                                          Map.of(_formKey.currentState!.value);
-
-                                      await _quizProvider.insert(request);
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar( SnackBar(
-                                              content: Text(
-                                                  AppLocalizations.of(context).quiz_add_su)));
-
-                                      Navigator.pop(context, 'reload');
+                                                      },
+                                                      child: const Text('Ok'))
+                                                ],
+                                              ));
                                     }
-                                  }
-                                } on Exception catch (e) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          AlertDialog(
-                                            title:  Text(AppLocalizations.of(context).error),
-                                            content: Text(
-                                              e.toString(),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Ok'))
-                                            ],
-                                          ));
-                                }
-                              },
-                              child:  Text(
-                               AppLocalizations.of(context).save,
-                                style: const TextStyle(fontSize: 15),
-                              )),
-                        ],
-                      ),
-                    ),
+                                  },
+                                  child:  Text(
+                                   AppLocalizations.of(context).save,
+                                    style: const TextStyle(fontSize: 15),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           ),
         ));
@@ -196,7 +203,7 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                 decoration:  InputDecoration(label: Text(AppLocalizations.of(context).title)),
               )),
               const SizedBox(
-                width: 20,
+                width: 70,
               ),
               Expanded(
                 child: FormBuilderTextField(
@@ -208,7 +215,7 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
             ],
           ),
           const SizedBox(
-            height: 30,
+            height: 50,
           ),
           widget.quiz == null
               ? Container()
@@ -222,11 +229,12 @@ class _QuizDetailPageState extends State<QuizDetailPage> {
                                         quizId: widget.quiz!.id!,
                                       )));
                         },
+                        style: buttonStyleSecondary,
                         child: Text(AppLocalizations.of(context).quiz_questions)),
                   ],
                 ),
           const SizedBox(
-            height: 30,
+            height: 50,
           ),
           widget.quiz == null
               ? Container()

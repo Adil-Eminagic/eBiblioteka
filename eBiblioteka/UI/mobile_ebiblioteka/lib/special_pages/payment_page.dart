@@ -92,7 +92,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                   try {
                                     _userProvider.payMembership(int.parse(
                                         Autentification.tokenDecoded!['Id']));
-                                        
+
                                     if (mounted) {
                                       setState(() {
                                         isPayed = true;
@@ -105,10 +105,6 @@ class _PaymentPageState extends State<PaymentPage> {
                                   Autentification.tokenDecoded = null;
                                 },
                                 onError: (error) {
-                                  alertBox(
-                                      context,
-                                      AppLocalizations.of(context).error,
-                                      AppLocalizations.of(context).error_pay);
                                 },
                                 onCancel: (params) {
                                   alertBox(

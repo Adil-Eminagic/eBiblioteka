@@ -100,70 +100,76 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-                child: Column(
-                  children: [
-                    _buildForm(),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          widget.user == null
-                              ? Container()
-                              : ElevatedButton(
-                                  onPressed: () async {
-                                    _formKey.currentState?.save();
-
-                                    try {
-                                      if (_formKey.currentState!.validate()) {
-                                        Map<String, dynamic> request = Map.of(
-                                            _formKey.currentState!.value);
-
-                                        request['id'] = widget.user?.id;
-                                        request['roleId'] = widget.user?.roleId;
-                                        request['birthDate'] = DateEncode(
-                                            _formKey.currentState
-                                                ?.value['birthDate']);
-
-                                        request['isActive'] =
-                                            widget.user!.isActive;
-
-                                        // request['biography'] =
-                                        //     widget.user?.biography;
-
-                                        if (_base64Image != null) {
-                                          request['profilePhoto'] =
-                                              _base64Image;
+                child: Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: [
+                        _buildForm(),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              widget.user == null
+                                  ? Container()
+                                  : ElevatedButton(
+                                      onPressed: () async {
+                                        _formKey.currentState?.save();
+                
+                                        try {
+                                          if (_formKey.currentState!.validate()) {
+                                            Map<String, dynamic> request = Map.of(
+                                                _formKey.currentState!.value);
+                
+                                            request['id'] = widget.user?.id;
+                                            request['roleId'] = widget.user?.roleId;
+                                            request['birthDate'] = DateEncode(
+                                                _formKey.currentState
+                                                    ?.value['birthDate']);
+                
+                                            request['isActive'] =
+                                                widget.user!.isActive;
+                
+                                            // request['biography'] =
+                                            //     widget.user?.biography;
+                
+                                            if (_base64Image != null) {
+                                              request['profilePhoto'] =
+                                                  _base64Image;
+                                            }
+                
+                                            var res =
+                                                await _userProvider.update(request);
+                
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        AppLocalizations.of(context)
+                                                            .su_mod_profie)));
+                
+                                            Navigator.pop(context,
+                                                'getUser'); //to refresh data
+                                            Navigator.pop(context);
+                                          }
+                                        } on Exception catch (e) {
+                                          alertBox(
+                                              context,
+                                              AppLocalizations.of(context).error,
+                                              e.toString());
                                         }
-
-                                        var res =
-                                            await _userProvider.update(request);
-
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    AppLocalizations.of(context)
-                                                        .su_mod_profie)));
-
-                                        Navigator.pop(context,
-                                            'getUser'); //to refresh data
-                                        Navigator.pop(context);
-                                      }
-                                    } on Exception catch (e) {
-                                      alertBox(
-                                          context,
-                                          AppLocalizations.of(context).error,
-                                          e.toString());
-                                    }
-                                  },
-                                  child: Text(
-                                    AppLocalizations.of(context).save,
-                                    style: TextStyle(fontSize: 15),
-                                  )),
-                        ],
-                      ),
-                    )
-                  ],
+                                      },
+                                      child: Text(
+                                        AppLocalizations.of(context).save,
+                                        style: TextStyle(fontSize: 15),
+                                      )),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -277,6 +283,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: ((context) => const ChangeEmailPage())));
                       }),
+                      style: buttonStyleSecondary,
                       child: Text(AppLocalizations.of(context).change_email)),
                   const SizedBox(
                     width: 15,
@@ -287,6 +294,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                             builder: ((context) =>
                                 const ChangePasswordPage())));
                       }),
+                      style: buttonStyleSecondary,
                       child:
                           Text(AppLocalizations.of(context).change_password)),
                 ],

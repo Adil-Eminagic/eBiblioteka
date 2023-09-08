@@ -54,7 +54,8 @@ class _QuotesListPageState extends State<QuotesListPage> {
       title: AppLocalizations.of(context).quotes,
       child: Column(children: [
         _buildSearch(),
-        isLoading ? Container() : _buildDataTable(),
+        (isLoading==true || result == null || result!.items.isEmpty) ?
+         Center(child: Text(AppLocalizations.of(context).no_quotes, style: const TextStyle(fontSize: 17),),) : _buildDataTable(),
          isLoading == false && result != null && result!.pageCount > 1 ?  const SizedBox(
           height: 20,
         ) : Container(),

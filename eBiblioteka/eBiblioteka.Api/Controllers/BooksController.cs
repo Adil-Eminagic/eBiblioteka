@@ -27,12 +27,29 @@ namespace eBiblioteka.Api.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Error while getting book by book ID {0}", bookId);
+                Logger.LogError(e, "Error ", bookId);
                 return BadRequest();
             }
         }
 
-      
-       
+
+        [Authorize]
+        [HttpGet("DoesExist/{bookId}")]
+        public virtual async Task<IActionResult> DoesExist(int bookId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var exist = await Service.DoesExist(bookId, cancellationToken);
+                return Ok(exist);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error ", bookId);
+                return BadRequest();
+            }
+        }
+
+
+
     }
 }

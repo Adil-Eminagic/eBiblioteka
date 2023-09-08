@@ -129,7 +129,7 @@ class _GenreBooksWidgetState extends State<GenreBooksWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return (isLoading==false && bookGenreResult!.items.isEmpty) ? Container() : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -188,8 +188,7 @@ class _GenreBooksWidgetState extends State<GenreBooksWidget> {
                         ),
                       ),
                     )
-                else
-                  Text(AppLocalizations.of(context).no_books)
+               
               else
                 const SpinKitRing(color: Colors.brown)
             ],

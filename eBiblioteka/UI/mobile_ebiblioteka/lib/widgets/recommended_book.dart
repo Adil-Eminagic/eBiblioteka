@@ -71,39 +71,45 @@ class _RecommendedBookWidgetState extends State<RecommendedBookWidget> {
       }),
       child: isLoading == true
           ? Container()
-          :( book==null ? Container():  Container(
-              decoration: const BoxDecoration(
-                border: Border(
-                    top: BorderSide(color: Colors.brown),
-                    bottom: BorderSide(color: Colors.brown),
-                    right: BorderSide(color: Colors.brown)),
-              ),
-              width: 205,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      width: 150,
-                      height: 100,
-                      child: _base64Photo != null
-                          ? Image.memory(base64Decode(_base64Photo!))
-                          : Image.asset(
-                              'images/no_image.png',
-                              width: 150,
-                              height: 100,
-                            )),
-                  const SizedBox(
-                    height: 10,
+          :( book==null ? Container():  Column(
+            children: [
+             
+              Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                        top: BorderSide(color: Colors.brown),
+                        bottom: BorderSide(color: Colors.brown),
+                        right: BorderSide(color: Colors.brown)),
                   ),
-                  Text(book?.title ?? ''),
-                  const SizedBox(
-                    height: 10,
+                  width: 205,
+                  height: 200,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width: 150,
+                          height: 100,
+                          child: _base64Photo != null
+                              ? Image.memory(base64Decode(_base64Photo!))
+                              : Image.asset(
+                                  'images/no_image.png',
+                                  width: 150,
+                                  height: 100,
+                                )),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(book?.title ?? ''),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text('(${author?.fullName ?? ''})')
+                    ],
                   ),
-                  Text('(${author?.fullName ?? ''})')
-                ],
-              ),
-            ))
+                ),
+            ],
+          ))
     );
   }
 }

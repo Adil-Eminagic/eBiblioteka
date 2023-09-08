@@ -1249,7 +1249,7 @@ abstract class AppLocalizations {
   /// No description provided for @book_su_del.
   ///
   /// In en, this message translates to:
-  /// **'Book si successfully deleted'**
+  /// **'Book is successfully deleted'**
   String get book_su_del;
 
   /// No description provided for @recommend_su_del.
@@ -1281,6 +1281,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Birth date'**
   String get birth_date;
+
+  /// No description provided for @no_book_genres.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no added genres for this book'**
+  String get no_book_genres;
+
+  /// No description provided for @no_quotes.
+  ///
+  /// In en, this message translates to:
+  /// **'No quotes for this book'**
+  String get no_quotes;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

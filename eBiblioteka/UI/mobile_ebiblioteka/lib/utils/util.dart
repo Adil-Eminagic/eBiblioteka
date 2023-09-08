@@ -7,7 +7,6 @@ class Autentification {
   static Map? tokenDecoded;
 }
 
-
 dynamic DateEncode(dynamic item) {
   if (item is DateTime) {
     return item.toIso8601String();
@@ -23,5 +22,7 @@ Image imageFromBase64String(String base64Image) {
   );
 }
 
+ButtonStyle buttonStyleSecondary = ElevatedButton.styleFrom(
+    primary: Colors.brown[100], onPrimary: Colors.black);
 
 

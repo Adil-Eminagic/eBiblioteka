@@ -600,4 +600,10 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get birth_date => 'Datum rođenja';
+
+  @override
+  String get no_book_genres => 'Nema dodanih žanrova za ovu knjigu';
+
+  @override
+  String get no_quotes => 'Nema dodanih citata za ovu knjigu';
 }

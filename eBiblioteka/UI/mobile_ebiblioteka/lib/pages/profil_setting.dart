@@ -97,65 +97,71 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       title: AppLocalizations.of(context).profile_settings,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(65, 0, 65, 50),
-          child: Column(
-            children: [
-              isLoading ? const SpinKitRing(color: Colors.brown) : _buildForm(),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    (widget.user == null || isLoading)
-                        ? Container()
-                        : ElevatedButton(
-                            onPressed: () async {
-                              _formKey.currentState?.save();
-
-                              try {
-                                if (_formKey.currentState!.validate()) {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
-
-                                  request['id'] = widget.user?.id;
-                                  request['roleId'] = widget.user?.roleId;
-                                  request['birthDate'] = DateEncode(_formKey
-                                      .currentState?.value['birthDate']);
-
-                                  if (_base64Image != null) {
-                                    request['profilePhoto'] = _base64Image;
+          padding: const EdgeInsets.fromLTRB(45, 20, 45, 50),
+          child: Card(
+            elevation: 4,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  isLoading ? const SpinKitRing(color: Colors.brown) : _buildForm(),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        (widget.user == null || isLoading)
+                            ? Container()
+                            : ElevatedButton(
+                                onPressed: () async {
+                                  _formKey.currentState?.save();
+          
+                                  try {
+                                    if (_formKey.currentState!.validate()) {
+                                      Map<String, dynamic> request =
+                                          Map.of(_formKey.currentState!.value);
+          
+                                      request['id'] = widget.user?.id;
+                                      request['roleId'] = widget.user?.roleId;
+                                      request['birthDate'] = DateEncode(_formKey
+                                          .currentState?.value['birthDate']);
+          
+                                      if (_base64Image != null) {
+                                        request['profilePhoto'] = _base64Image;
+                                      }
+          
+                                        request['isActive'] = widget.user!.isActive;
+          
+          
+                                      var res = await _userProvider.update(request);
+          
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                                  AppLocalizations.of(context)
+                                                      .su_mod_profie)));
+          
+                                    
+          
+                                      Navigator.pop(context, 'getUser');
+                                    }
+                                  } on Exception catch (e) {
+                                    alertBox(
+                                        context,
+                                        AppLocalizations.of(context).error,
+                                        e.toString());
                                   }
-
-                                    request['isActive'] = widget.user!.isActive;
-
-
-                                  var res = await _userProvider.update(request);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              AppLocalizations.of(context)
-                                                  .su_mod_profie)));
-
-                                
-
-                                  Navigator.pop(context, 'getUser');
-                                }
-                              } on Exception catch (e) {
-                                alertBox(
-                                    context,
-                                    AppLocalizations.of(context).error,
-                                    e.toString());
-                              }
-                            },
-                            child: Text(
-                              AppLocalizations.of(context).save,
-                              style: const TextStyle(fontSize: 17),
-                            )),
-                  ],
-                ),
-              )
-            ],
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context).save,
+                                  style: const TextStyle(fontSize: 17),
+                                )),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -202,11 +208,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             textField('firstName', AppLocalizations.of(context).name),
           ),
           const SizedBox(
-            height: 15,
+            height: 25,
           ),
           rowMethod(textField('lastName', AppLocalizations.of(context).lname)),
           const SizedBox(
-            height: 15,
+            height: 25,
           ),
           rowMethod(Expanded(
               child: FormBuilderDateTimePicker(
@@ -222,12 +228,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 label: Text(AppLocalizations.of(context).birth_date)),
           ))),
           const SizedBox(
-            height: 15,
+            height: 25,
           ),
           rowMethod(
               textField('phoneNumber', AppLocalizations.of(context).telphone)),
           const SizedBox(
-            height: 15,
+            height: 25,
           ),
           rowMethod(Expanded(
               child: FormBuilderTextField(
@@ -247,7 +253,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             decoration: const InputDecoration(label: Text('Email (readonly)')),
           ))),
           const SizedBox(
-            height: 15,
+            height: 35,
           ),
           Row(
             children: [
@@ -255,25 +261,27 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
+                  ElevatedButton(
                     onPressed: (() {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: ((context) => const ChangeEmailPage())));
                     }),
+                    style:buttonStyleSecondary,
                     child: Text(
                       AppLocalizations.of(context).new_email,
                       style: const TextStyle(fontSize: 17),
                     ),
                   ),
                   const SizedBox(
-                    width: 15,
+                    width: 7,
                   ),
-                  TextButton(
+                  ElevatedButton(
                       onPressed: (() {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: ((context) =>
                                 const ChangePasswordPage())));
                       }),
+                      style: buttonStyleSecondary,
                       child: Text(AppLocalizations.of(context).new_password,
                           style: const TextStyle(fontSize: 17))),
                 ],
@@ -281,7 +289,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             ],
           ),
           const SizedBox(
-            height: 15,
+            height: 35,
           ),
           rowMethod(Expanded(
               child: FormBuilderDropdown<String>(
@@ -314,7 +322,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 [],
           ))),
           const SizedBox(
-            height: 15,
+            height: 25,
           ),
           rowMethod(Expanded(
               child: FormBuilderDropdown<String>(

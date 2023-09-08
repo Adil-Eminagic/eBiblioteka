@@ -82,194 +82,200 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
             ? const Center(child: SpinKitRing(color: Colors.brown))
             : SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(65, 20, 65, 100),
-                  child: Column(
-                    children: [
-                      _buildForm(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                  padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
+                  child: Card(
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: [
-                                widget.author == null
-                                    ? Container()
-                                    : TextButton(
-                                        onPressed: () async {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  AlertDialog(
-                                                    title: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .del_author_title),
-                                                    content: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .del_author_mes),
-                                                    actions: [
-                                                      TextButton(
-                                                          onPressed: (() {
-                                                            Navigator.pop(
-                                                                context);
-                                                          }),
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .cancel)),
-                                                      TextButton(
-                                                          onPressed: () async {
-                                                            try {
-                                                              await _authorProvider
-                                                                  .remove(widget
-                                                                          .author
-                                                                          ?.id ??
-                                                                      0);
-                                                              ScaffoldMessenger
-                                                                      .of(
-                                                                          context)
-                                                                  .showSnackBar(
-                                                                      SnackBar(
-                                                                          content:
-                                                                              Text(AppLocalizations.of(context).su_del_author)));
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context,
-                                                                  'reload');
-                                                            } catch (e) {
-                                                              alertBoxMoveBack(
-                                                                  context,
+                          _buildForm(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  children: [
+                                    widget.author == null
+                                        ? Container()
+                                        : TextButton(
+                                            onPressed: () async {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) =>
+                                                      AlertDialog(
+                                                        title: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .del_author_title),
+                                                        content: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .del_author_mes),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: (() {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              }),
+                                                              child: Text(
                                                                   AppLocalizations.of(
                                                                           context)
-                                                                      .error,
-                                                                  e.toString());
-                                                            }
-                                                          },
-                                                          child:
-                                                              const Text('Ok')),
-                                                    ],
-                                                  ));
-                                        },
-                                        child: Text(AppLocalizations.of(context)
-                                            .author_del_lbl)),
-                                widget.author == null
-                                    ? Container()
-                                    : const SizedBox(
-                                        width: 7,
-                                      ),
-                                ElevatedButton(
-                                    onPressed: () async {
-                                      _formKey.currentState?.save();
-
-                                      try {
-                                        if (_formKey.currentState!.validate()) {
-                                          if (widget.author != null) {
-                                            Map<String, dynamic> request =
-                                                Map.of(_formKey
-                                                    .currentState!.value);
-
-                                            request['id'] = widget.author?.id;
-                                            
-                                            if (_base64Image != null) {
-                                              request['image'] = _base64Image;
-                                            }
-
-                                            var birthYear = int.parse(_formKey
-                                                .currentState!
-                                                .value['birthYear']);
-
-                                            request['birthYear'] = birthYear;
-
-                                            var mortalYear = ( _formKey.currentState!.value['mortalYear']==null ||
-                                            _formKey.currentState!.value['mortalYear']=='')
-                                             ? null: int.parse(_formKey
-                                                .currentState!
-                                                .value['mortalYear']) ;
-
-                                            request['mortalYear'] = mortalYear;
-
-                                            var res = await _authorProvider
-                                                .update(request);
-
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .su_mod_author)));
-
-                                            Navigator.pop(context, 'reload');
-                                          } else {
-                                            Map<String, dynamic> request =
-                                                Map.of(_formKey
-                                                    .currentState!.value);
-
-                                            var birthYear = int.parse(_formKey
-                                                .currentState!
-                                                .value['birthYear']);
-
-                                            request['birthYear'] = birthYear;
-
-                                           var mortalYear = ( _formKey.currentState!.value['mortalYear']==null ||
-                                            _formKey.currentState!.value['mortalYear']=='')
-                                             ? null: int.parse(_formKey
-                                                .currentState!
-                                                .value['mortalYear']) ;
+                                                                      .cancel)),
+                                                          TextButton(
+                                                              onPressed: () async {
+                                                                try {
+                                                                  await _authorProvider
+                                                                      .remove(widget
+                                                                              .author
+                                                                              ?.id ??
+                                                                          0);
+                                                                  ScaffoldMessenger
+                                                                          .of(
+                                                                              context)
+                                                                      .showSnackBar(
+                                                                          SnackBar(
+                                                                              content:
+                                                                                  Text(AppLocalizations.of(context).su_del_author)));
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pop(
+                                                                      context,
+                                                                      'reload');
+                                                                } catch (e) {
+                                                                  alertBoxMoveBack(
+                                                                      context,
+                                                                      AppLocalizations.of(
+                                                                              context)
+                                                                          .error,
+                                                                      e.toString());
+                                                                }
+                                                              },
+                                                              child:
+                                                                  const Text('Ok')),
+                                                        ],
+                                                      ));
+                                            },
+                                            child: Text(AppLocalizations.of(context)
+                                                .author_del_lbl)),
+                                    widget.author == null
+                                        ? Container()
+                                        : const SizedBox(
+                                            width: 7,
+                                          ),
+                                    ElevatedButton(
+                                        onPressed: () async {
+                                          _formKey.currentState?.save();
+                  
+                                          try {
+                                            if (_formKey.currentState!.validate()) {
+                                              if (widget.author != null) {
+                                                Map<String, dynamic> request =
+                                                    Map.of(_formKey
+                                                        .currentState!.value);
+                  
+                                                request['id'] = widget.author?.id;
                                                 
-                                            request['mortalYear'] = mortalYear;
-
-                                            if (_base64Image != null) {
-                                              request['image'] = _base64Image;
+                                                if (_base64Image != null) {
+                                                  request['image'] = _base64Image;
+                                                }
+                  
+                                                var birthYear = int.parse(_formKey
+                                                    .currentState!
+                                                    .value['birthYear']);
+                  
+                                                request['birthYear'] = birthYear;
+                  
+                                                var mortalYear = ( _formKey.currentState!.value['mortalYear']==null ||
+                                                _formKey.currentState!.value['mortalYear']=='')
+                                                 ? null: int.parse(_formKey
+                                                    .currentState!
+                                                    .value['mortalYear']) ;
+                  
+                                                request['mortalYear'] = mortalYear;
+                  
+                                                var res = await _authorProvider
+                                                    .update(request);
+                  
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .su_mod_author)));
+                  
+                                                Navigator.pop(context, 'reload');
+                                              } else {
+                                                Map<String, dynamic> request =
+                                                    Map.of(_formKey
+                                                        .currentState!.value);
+                  
+                                                var birthYear = int.parse(_formKey
+                                                    .currentState!
+                                                    .value['birthYear']);
+                  
+                                                request['birthYear'] = birthYear;
+                  
+                                               var mortalYear = ( _formKey.currentState!.value['mortalYear']==null ||
+                                                _formKey.currentState!.value['mortalYear']=='')
+                                                 ? null: int.parse(_formKey
+                                                    .currentState!
+                                                    .value['mortalYear']) ;
+                                                    
+                                                request['mortalYear'] = mortalYear;
+                  
+                                                if (_base64Image != null) {
+                                                  request['image'] = _base64Image;
+                                                }
+                                                await _authorProvider
+                                                    .insert(request);
+                  
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .su_add_author)));
+                  
+                                                Navigator.pop(context, 'reload');
+                                              }
                                             }
-                                            await _authorProvider
-                                                .insert(request);
-
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .su_add_author)));
-
-                                            Navigator.pop(context, 'reload');
+                                          } on Exception catch (e) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) =>
+                                                    AlertDialog(
+                                                      title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .error),
+                                                      content: Text(
+                                                        e.toString(),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text('Ok'))
+                                                      ],
+                                                    ));
                                           }
-                                        }
-                                      } on Exception catch (e) {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                AlertDialog(
-                                                  title: Text(
-                                                      AppLocalizations.of(
-                                                              context)
-                                                          .error),
-                                                  content: Text(
-                                                    e.toString(),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: const Text('Ok'))
-                                                  ],
-                                                ));
-                                      }
-                                    },
-                                    child: Text(
-                                      AppLocalizations.of(context).save,
-                                      style: const TextStyle(fontSize: 15),
-                                    )),
-                              ],
-                            ),
-                          ),
+                                        },
+                                        child: Text(
+                                          AppLocalizations.of(context).save,
+                                          style: const TextStyle(fontSize: 15),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   ),
                 ),
               ));

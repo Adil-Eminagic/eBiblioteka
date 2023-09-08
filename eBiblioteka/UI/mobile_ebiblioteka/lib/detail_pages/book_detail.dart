@@ -54,6 +54,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
   bool isRecommendLoading = true;
   String? photo;
   RecommendResult? recommendResult;
+  bool existRecommend = false;
 
   Book? bookSend;
   Author? bookAuthor;
@@ -88,10 +89,21 @@ class _BookDetailPageState extends State<BookDetailPage> {
     initRecommend();
   }
 
-   Future<void> initRecommend() async {
+  Future<void> initRecommend() async {
     try {
       recommendResult =
           await _recommendResultProvider.getById(widget.book!.id!);
+      if (recommendResult != null) {
+        bool first =
+            await _bookProvider.doesExist(recommendResult!.firstCobookId!);
+        bool second =
+            await _bookProvider.doesExist(recommendResult!.secondCobookId!);
+        bool third =
+            await _bookProvider.doesExist(recommendResult!.thirdCobookId!);
+        if (!(first == false && second == false && third == false)) {
+          existRecommend = true;
+        }
+      }
       setState(() {
         isRecommendLoading = false;
       });
@@ -139,86 +151,92 @@ class _BookDetailPageState extends State<BookDetailPage> {
       title: "${widget.book?.title}",
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
+          padding: const EdgeInsets.fromLTRB(45, 40, 45, 100),
           child: isLoading
               ? const SpinKitRing(color: Colors.brown)
-              : Column(
-                  children: [
-                    _buildForm(),
-                    Row(
+              : Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
                       children: [
-                        Text(
-                            '${AppLocalizations.of(context).rate} :  ${_ratingProvider.review == 0 ? AppLocalizations.of(context).no_rates : _ratingProvider.review.toStringAsFixed(1)}',
-                            style: const TextStyle(
-                              fontSize: 17,
-                            )),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: ((context) => RatingListPage(
-                                        bookId: widget.book!.id,
-                                      ))));
-                            },
-                            child: Text(
-                              AppLocalizations.of(context).see_rates,
-                              style: const TextStyle(
-                                  fontSize: 17, color: Colors.brown),
-                            ))
-                      ],
-                    ),
-                    SizedBox(
-                      height: widget.book?.bookFileId != null ? 20 : 45,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          (widget.book?.bookFileId != null)
-                              ? ElevatedButton(
-                                  onPressed: () async {
-                                    try {
-                                      await _userBookProvider.insert({
-                                        'userId': int.parse(Autentification
-                                            .tokenDecoded?['Id']),
-                                        'bookId': widget.book?.id
-                                      });
-                                    } catch (e) {}
-                                    try {
-                                      await _bookProvider
-                                          .openBook(widget.book!.id!);
+                        _buildForm(),
+                        Row(
+                          children: [
+                            Text(
+                                '${AppLocalizations.of(context).rate} :  ${_ratingProvider.review == 0 ? AppLocalizations.of(context).no_rates : _ratingProvider.review.toStringAsFixed(1)}',
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                )),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: ((context) => RatingListPage(
+                                            bookId: widget.book!.id,
+                                          ))));
+                                },
+                                style: buttonStyleSecondary,
+                                child: Text(
+                                    AppLocalizations.of(context).see_rates))
+                          ],
+                        ),
+                        SizedBox(
+                          height: widget.book?.bookFileId != null ? 20 : 45,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              (widget.book?.bookFileId != null)
+                                  ? ElevatedButton(
+                                      onPressed: () async {
+                                        try {
+                                          await _userBookProvider.insert({
+                                            'userId': int.parse(Autentification
+                                                .tokenDecoded?['Id']),
+                                            'bookId': widget.book?.id
+                                          });
+                                        } catch (e) {}
+                                        try {
+                                          await _bookProvider
+                                              .openBook(widget.book!.id!);
 
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: ((context) =>
-                                                  BookPdfShow(
-                                                    fileId: widget
-                                                        .book!.bookFileId!,
-                                                  ))));
-                                    } on Exception catch (e) {
-                                      alertBox(
-                                          context,
-                                          AppLocalizations.of(context).error,
-                                          e.toString());
-                                    }
-                                  },
-                                  child: Text(
-                                    AppLocalizations.of(context).read,
-                                    style: const TextStyle(fontSize: 18),
-                                  ))
-                              : Text(AppLocalizations.of(context).no_reading),
-                        ],
-                      ),
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: ((context) =>
+                                                      BookPdfShow(
+                                                        fileId: widget
+                                                            .book!.bookFileId!,
+                                                      ))));
+                                        } on Exception catch (e) {
+                                          alertBox(
+                                              context,
+                                              AppLocalizations.of(context)
+                                                  .error,
+                                              e.toString());
+                                        }
+                                      },
+                                      child: Text(
+                                        AppLocalizations.of(context).read,
+                                        style: const TextStyle(fontSize: 18),
+                                      ))
+                                  : Text(
+                                      AppLocalizations.of(context).no_reading),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
         ),
       ),
@@ -256,6 +274,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
           const SizedBox(height: 15),
           rowMethod(Expanded(
             child: TextField(
+              readOnly: true,
               controller: _authorController,
               decoration: InputDecoration(
                   label: Text(AppLocalizations.of(context).author)),
@@ -266,49 +285,58 @@ class _BookDetailPageState extends State<BookDetailPage> {
             height: 20,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(
+              ElevatedButton(
                   onPressed: (() {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: ((context) => BookShortDesription(
                               decription: widget.book?.shortDescription,
                             ))));
                   }),
+                  style: buttonStyleSecondary,
                   child: Text(AppLocalizations.of(context).short_desc)),
-              TextButton(
+              const SizedBox(
+                width: 40,
+              ),
+              ElevatedButton(
                   onPressed: (() {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: ((context) => QuoteListPage(
                               bookId: widget.book!.id,
                             ))));
                   }),
+                  style: buttonStyleSecondary,
                   child: Text(AppLocalizations.of(context).quotes)),
             ],
-          ),
-          const Divider(
-            color: Colors.black,
-            thickness: 0.7,
           ),
           const SizedBox(
             height: 35,
           ),
-          (recommendResult == null || isRecommendLoading == true)
+          (recommendResult == null ||
+                  isRecommendLoading == true ||
+                  existRecommend == false)
               ? Container()
               : Row(
                   children: [Text(AppLocalizations.of(context).rec_books)],
                 ),
-          (recommendResult == null || isRecommendLoading == true)
+          (recommendResult == null ||
+                  isRecommendLoading == true ||
+                  existRecommend == false)
               ? Container()
               : const SizedBox(
                   height: 25,
                 ),
-          (recommendResult == null || isRecommendLoading == true)
+          (recommendResult == null ||
+                  isRecommendLoading == true ||
+                  existRecommend == false)
               ? Container()
               : _recommendList(),
-          const SizedBox(
-            height: 35,
-          ),
+          existRecommend == false
+              ? Container()
+              : const SizedBox(
+                  height: 35,
+                ),
           (widget.book == null || isLoading == true)
               ? Container()
               : Row(

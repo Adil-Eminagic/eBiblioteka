@@ -66,16 +66,27 @@ class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
                           resultHistory == null ||
                           resultHistory!.items.isEmpty)
                       ? Center(child: Text(AppLocalizations.of(context).no_read_hist),)
-                      : ListView.builder(
-                          // kada se koristi buider ucitavaju se kako scrollamo a ne sve od jednom
-                          itemCount: resultHistory!.items.length,
-                          itemBuilder: (context, index) {
-                            // preko indeksa se pristupa elemntima u nizu
-                            return HistoryBook(
-                              bookId: resultHistory!.items[index].bookId,
-                            );
-                          },
-                        ))
+                      : Card(
+                        elevation: 4,
+                        child: ListView.builder(
+                            // kada se koristi buider ucitavaju se kako scrollamo a ne sve od jednom
+                            itemCount: resultHistory!.items.length,
+                            itemBuilder: (context, index) {
+                              // preko indeksa se pristupa elemntima u nizu
+                              return Column(
+                                children: [
+                                  HistoryBook(
+                                    bookId: resultHistory!.items[index].bookId,
+                                  ),
+                                   const Divider(
+                          color: Colors.black,
+                          thickness: 0.2,
+                        )
+                                ],
+                              );
+                            },
+                          ),
+                      ))
             ],
           ),
         ));

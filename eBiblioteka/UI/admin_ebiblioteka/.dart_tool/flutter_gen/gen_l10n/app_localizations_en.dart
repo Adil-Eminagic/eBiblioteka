@@ -584,7 +584,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get book_del_lbl => 'Delete book';
 
   @override
-  String get book_su_del => 'Book si successfully deleted';
+  String get book_su_del => 'Book is successfully deleted';
 
   @override
   String get recommend_su_del => 'Recommednation is successfully deleted';
@@ -600,4 +600,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get birth_date => 'Birth date';
+
+  @override
+  String get no_book_genres => 'There are no added genres for this book';
+
+  @override
+  String get no_quotes => 'No quotes for this book';
 }

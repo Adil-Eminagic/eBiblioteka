@@ -29,6 +29,11 @@ Image imageFromBase64String(String base64Image) {
   );
 }
 
+ButtonStyle buttonStyleSecondary = ElevatedButton.styleFrom(
+    primary: Colors.brown[100], onPrimary: Colors.black);
 
 
-
+// in genre detail, you cann't have ecpanded with child coulum niside column, bacause
+// expanded and listview need to know exact height and widht
+// by default column takes all height and widht as needed, row oposstite
+// so you nedd to have row as expamded in column, because both w and h ara bounded with row and column

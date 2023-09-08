@@ -64,118 +64,150 @@ class _BookGenreDetailPageState extends State<BookGenreDetailPage> {
       title: widget.bookGenre == null
           ? AppLocalizations.of(context).bookgenre_insert
           : "${AppLocalizations.of(context).book} ${widget.bookGenre?.book?.title}, ${AppLocalizations.of(context).genre} ${widget.bookGenre?.genre?.name}",
-      child:  isLoading==true ? const Center( child:  SpinKitRing(color: Colors.brown)):  SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(65, 40, 65, 100),
-          child: Column(
-            children: [
-            _buildForm(),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
+      child: isLoading == true
+          ? const Center(child: SpinKitRing(color: Colors.brown))
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(65, 80, 65, 100),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    widget.bookGenre == null
-                        ? Container()
-                        : TextButton(
-                            onPressed: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title: Text(AppLocalizations.of(context)
-                                            .bookgenre_del_title),
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .bookgenre_del_mes),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: (() {
-                                                Navigator.pop(context);
-                                              }),
-                                              child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .cancel)),
-                                          TextButton(
-                                              onPressed: () async {
-                                                try {
+                    Expanded(child: Container()),
+                    Expanded(
+                      child: Card(
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(35.0),
+                          child: Column(
+                            children: [
+                              _buildForm(),
+                              const SizedBox(
+                                height: 60,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    widget.bookGenre == null
+                                        ? Container()
+                                        :  Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder:
+                                                              (BuildContext context) =>
+                                                                  AlertDialog(
+                                                                    title: Text(
+                                                                        AppLocalizations.of(
+                                                                                context)
+                                                                            .bookgenre_del_title),
+                                                                    content: Text(
+                                                                        AppLocalizations.of(
+                                                                                context)
+                                                                            .bookgenre_del_mes),
+                                                                    actions: [
+                                                                      TextButton(
+                                                                          onPressed: (() {
+                                                                            Navigator.pop(
+                                                                                context);
+                                                                          }),
+                                                                          child: Text(
+                                                                              AppLocalizations.of(
+                                                                                      context)
+                                                                                  .cancel)),
+                                                                      TextButton(
+                                                                          onPressed:
+                                                                              () async {
+                                                                            try {
+                                                                              await _bookGenreProvider
+                                                                                  .remove(
+                                                                                      widget.bookGenre?.id ??
+                                                                                          0);
+                                                                              ScaffoldMessenger.of(
+                                                                                      context)
+                                                                                  .showSnackBar(SnackBar(
+                                                                                      content:
+                                                                                          Text(AppLocalizations.of(context).bookgenre_del_su)));
+                                                                              Navigator.pop(
+                                                                                  context);
+                                                                              Navigator.pop(
+                                                                                  context,
+                                                                                  'reload');
+                                                                            } catch (e) {
+                                                                              alertBoxMoveBack(
+                                                                                  context,
+                                                                                  AppLocalizations.of(context)
+                                                                                      .error,
+                                                                                  e.toString());
+                                                                            }
+                                                                          },
+                                                                          child:
+                                                                              const Text(
+                                                                                  'Ok')),
+                                                                    ],
+                                                                  ));
+                                                    },
+                                                    child: Text(
+                                                        AppLocalizations.of(context)
+                                                            .bookgenre_del_lbl)),
+                                              ],
+                                            ),
+                                    widget.bookGenre == null
+                                        ? Container()
+                                        : const SizedBox(
+                                            width: 7,
+                                          ),
+                                    widget.bookGenre != null
+                                        ? Container()
+                                        : ElevatedButton(
+                                            onPressed: () async {
+                                              _formKey.currentState?.save();
+                                            
+                                              try {
+                                                if (_formKey.currentState!.validate()) {
+                                                  Map<String, dynamic> request = Map.of(
+                                                      _formKey.currentState!.value);
+                                            
+                                                  request['bookId'] = widget.book?.id;
+                                            
                                                   await _bookGenreProvider
-                                                      .remove(widget
-                                                              .bookGenre?.id ??
-                                                          0);
+                                                      .insert(request);
+                                            
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(SnackBar(
                                                           content: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .bookgenre_del_su)));
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(
-                                                      context, 'reload');
-                                                } catch (e) {
-                                                  alertBoxMoveBack(
-                                                      context,
-                                                      AppLocalizations.of(
-                                                              context)
-                                                          .error,
-                                                      e.toString());
+                                                              AppLocalizations.of(context)
+                                                                  .bookgenre_add_su)));
+                                            
+                                                  Navigator.pop(context, 'reload');
                                                 }
-                                              },
-                                              child: const Text('Ok')),
-                                        ],
-                                      ));
-                            },
-                            child: Text(AppLocalizations.of(context)
-                                .bookgenre_del_lbl)),
-                    widget.bookGenre == null
-                        ? Container()
-                        : const SizedBox(
-                            width: 7,
+                                              } on Exception catch (e) {
+                                                alertBox(
+                                                    context,
+                                                    AppLocalizations.of(context).error,
+                                                    e.toString());
+                                              }
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context).save,
+                                              style: TextStyle(fontSize: 15),
+                                            )),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
-                    widget.bookGenre != null
-                        ? Container()
-                        : ElevatedButton(
-                            onPressed: () async {
-                              _formKey.currentState?.save();
-
-                              try {
-                                if (_formKey.currentState!.validate()) {
-                                  Map<String, dynamic> request =
-                                      Map.of(_formKey.currentState!.value);
-
-                                  request['bookId'] = widget.book?.id;
-
-                                  await _bookGenreProvider.insert(request);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              AppLocalizations.of(context)
-                                                  .bookgenre_add_su)));
-
-                                  Navigator.pop(context, 'reload');
-                                }
-                              } on Exception catch (e) {
-                                alertBox(
-                                    context,
-                                    AppLocalizations.of(context).error,
-                                    e.toString());
-                              }
-                            },
-                            child: Text(
-                              AppLocalizations.of(context).save,
-                              style: TextStyle(fontSize: 15),
-                            )),
+                        ),
+                      ),
+                    ),
+                     Expanded(child: Container()),
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 

@@ -68,211 +68,217 @@ class _SignupPageState extends State<SignupPage> {
               child: FormBuilder(
                 key: _formKey,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(65, 0, 65, 0),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 60,
-                      ),
-                      rowMethod(_textField(
-                          'firstName', AppLocalizations.of(context).name)),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      rowMethod(_textField(
-                          'lastName', AppLocalizations.of(context).lname)),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      rowMethod(
-                        Expanded(
-                          child: FormBuilderTextField(
-                            name: 'email',
-                            validator: ((value) {
-                              if (value == null || value.isEmpty) {
-                                return AppLocalizations.of(context).mvalue;
-                              } else if (!RegExp(
-                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                  .hasMatch(value)) {
-                                return AppLocalizations.of(context)
-                                    .invalid_email;
-                              } else {
-                                return null;
-                              }
-                            }),
-                            decoration: const InputDecoration(
-                              label: Text('Email'),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      rowMethod(_textField('phoneNumber',
-                          AppLocalizations.of(context).telphone)),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      rowMethod(
-                        Expanded(
-                          child: FormBuilderTextField(
-                            name: 'password',
-                            obscureText: true,
-                            validator: ((value) {
-                              if (value == null || value.isEmpty) {
-                                return AppLocalizations.of(context).mvalue;
-                              } else if (value.length < 8 ||
-                                  !value.contains(RegExp(r'[A-Z]')) ||
-                                  !value.contains(RegExp(r'[a-z]')) ||
-                                  !value.contains(RegExp(r'[0-9]'))) {
-                                return AppLocalizations.of(context)
-                                    .reg_password;
-                              } else {
-                                return null;
-                              }
-                            }),
-                            decoration: InputDecoration(
-                              label:
-                                  Text(AppLocalizations.of(context).password),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      rowMethod(
-                        Expanded(
-                            child: FormBuilderDateTimePicker(
-                          name: 'birthDate',
-                          validator: (value) {
-                            if (value == null) {
-                              return AppLocalizations.of(context).mfield;
-                            } else {
-                              return null;
-                            }
-                          },
-                          decoration: InputDecoration(
-                              label: Text(
-                                  AppLocalizations.of(context).birth_date)),
-                        )),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      rowMethod(
-                        Expanded(
-                            child: FormBuilderDropdown<String>(
-                          name: 'genderId',
-                          validator: (value) {
-                            if (value == null) {
-                              return AppLocalizations.of(context).mfield;
-                            } else {
-                              return null;
-                            }
-                          },
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).gender,
-                            suffix: IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () {
-                                _formKey
-                                    .currentState!
-                                    .fields[
-                                        'genderId'] //brisnje selekcije iz forme
-                                    ?.reset();
-                              },
-                            ),
-                          ),
-                          items: genderResult?.items
-                                  .map((g) => DropdownMenuItem(
-                                        alignment: AlignmentDirectional.center,
-                                        value: g.id.toString(),
-                                        child: Text(g.value ?? ''),
-                                      ))
-                                  .toList() ??
-                              [],
-                        )),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      rowMethod(Expanded(
-                          child: FormBuilderDropdown<String>(
-                        name: 'countryId',
-                        validator: (value) {
-                          if (value == null) {
-                            return AppLocalizations.of(context).mfield;
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context).country,
-                          suffix: IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              _formKey
-                                  .currentState!
-                                  .fields[
-                                      'countryId'] //brisnje selekcije iz forme
-                                  ?.reset();
-                            },
-                          ),
-                        ),
-                        items: countryResult?.items
-                                .map((g) => DropdownMenuItem(
-                                      alignment: AlignmentDirectional.center,
-                                      value: g.id.toString(),
-                                      child: Text(g.name ?? ''),
-                                    ))
-                                .toList() ??
-                            [],
-                      ))),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                  padding: const EdgeInsets.fromLTRB(45, 20, 45, 20),
+                  child: Card(
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
                         children: [
-                          ElevatedButton(
-                              onPressed: () async {
-                                try {
-                                  _formKey.currentState?.save();
-                                  if (_formKey.currentState!.validate()) {
-                                    Map<String, dynamic> request =
-                                        Map.of(_formKey.currentState!.value);
-
-                                    request['birthDate'] = DateEncode(_formKey
-                                        .currentState?.value['birthDate']);
-
-                                    request['isActive'] = true;
-
-                                    await _signProvider.signUp(request);
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                AppLocalizations.of(context)
-                                                    .su_sign_up)));
-
-                                    Navigator.pop(context);
-                                  } else {}
-                                } catch (e) {
-                                  alertBox(
-                                      context,
-                                      AppLocalizations.of(context).error,
-                                      e.toString());
+                          // const SizedBox(
+                          //   height: 60,
+                          // ),
+                          rowMethod(_textField(
+                              'firstName', AppLocalizations.of(context).name)),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          rowMethod(_textField(
+                              'lastName', AppLocalizations.of(context).lname)),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          rowMethod(
+                            Expanded(
+                              child: FormBuilderTextField(
+                                name: 'email',
+                                validator: ((value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppLocalizations.of(context).mvalue;
+                                  } else if (!RegExp(
+                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                      .hasMatch(value)) {
+                                    return AppLocalizations.of(context)
+                                        .invalid_email;
+                                  } else {
+                                    return null;
+                                  }
+                                }),
+                                decoration: const InputDecoration(
+                                  label: Text('Email'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          rowMethod(_textField('phoneNumber',
+                              AppLocalizations.of(context).telphone)),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          rowMethod(
+                            Expanded(
+                              child: FormBuilderTextField(
+                                name: 'password',
+                                obscureText: true,
+                                validator: ((value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppLocalizations.of(context).mvalue;
+                                  } else if (value.length < 8 ||
+                                      !value.contains(RegExp(r'[A-Z]')) ||
+                                      !value.contains(RegExp(r'[a-z]')) ||
+                                      !value.contains(RegExp(r'[0-9]'))) {
+                                    return AppLocalizations.of(context)
+                                        .reg_password;
+                                  } else {
+                                    return null;
+                                  }
+                                }),
+                                decoration: InputDecoration(
+                                  label:
+                                      Text(AppLocalizations.of(context).password),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          rowMethod(
+                            Expanded(
+                                child: FormBuilderDateTimePicker(
+                              name: 'birthDate',
+                              validator: (value) {
+                                if (value == null) {
+                                  return AppLocalizations.of(context).mfield;
+                                } else {
+                                  return null;
                                 }
                               },
-                              child: Text(AppLocalizations.of(context).sign_up))
+                              decoration: InputDecoration(
+                                  label: Text(
+                                      AppLocalizations.of(context).birth_date)),
+                            )),
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          rowMethod(
+                            Expanded(
+                                child: FormBuilderDropdown<String>(
+                              name: 'genderId',
+                              validator: (value) {
+                                if (value == null) {
+                                  return AppLocalizations.of(context).mfield;
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context).gender,
+                                suffix: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    _formKey
+                                        .currentState!
+                                        .fields[
+                                            'genderId'] //brisnje selekcije iz forme
+                                        ?.reset();
+                                  },
+                                ),
+                              ),
+                              items: genderResult?.items
+                                      .map((g) => DropdownMenuItem(
+                                            alignment: AlignmentDirectional.center,
+                                            value: g.id.toString(),
+                                            child: Text(g.value ?? ''),
+                                          ))
+                                      .toList() ??
+                                  [],
+                            )),
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          rowMethod(Expanded(
+                              child: FormBuilderDropdown<String>(
+                            name: 'countryId',
+                            validator: (value) {
+                              if (value == null) {
+                                return AppLocalizations.of(context).mfield;
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context).country,
+                              suffix: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  _formKey
+                                      .currentState!
+                                      .fields[
+                                          'countryId'] //brisnje selekcije iz forme
+                                      ?.reset();
+                                },
+                              ),
+                            ),
+                            items: countryResult?.items
+                                    .map((g) => DropdownMenuItem(
+                                          alignment: AlignmentDirectional.center,
+                                          value: g.id.toString(),
+                                          child: Text(g.name ?? ''),
+                                        ))
+                                    .toList() ??
+                                [],
+                          ))),
+                          const SizedBox(
+                            height: 60,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    try {
+                                      _formKey.currentState?.save();
+                                      if (_formKey.currentState!.validate()) {
+                                        Map<String, dynamic> request =
+                                            Map.of(_formKey.currentState!.value);
+                  
+                                        request['birthDate'] = DateEncode(_formKey
+                                            .currentState?.value['birthDate']);
+                  
+                                        request['isActive'] = true;
+                  
+                                        await _signProvider.signUp(request);
+                  
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    AppLocalizations.of(context)
+                                                        .su_sign_up)));
+                  
+                                        Navigator.pop(context);
+                                      } else {}
+                                    } catch (e) {
+                                      alertBox(
+                                          context,
+                                          AppLocalizations.of(context).error,
+                                          e.toString());
+                                    }
+                                  },
+                                  child: Text(AppLocalizations.of(context).sign_up))
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          )
                         ],
                       ),
-                      const SizedBox(
-                        height: 40,
-                      )
-                    ],
+                    ),
                   ),
                 ),
               ),
