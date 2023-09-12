@@ -1,11 +1,13 @@
 import 'package:admin_ebiblioteka/detail_pages/book_details.dart';
 import 'package:admin_ebiblioteka/models/search_result.dart';
 import 'package:admin_ebiblioteka/providers/book_provider.dart';
+import 'package:admin_ebiblioteka/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../models/book.dart';
+import '../providers/recommend_result_provider.dart';
 import '../utils/util_widgets.dart';
 import '../widgets/master_screen.dart';
 
@@ -20,6 +22,8 @@ class BooksPage extends StatefulWidget {
 
 class _BooksPageState extends State<BooksPage> {
   late BookProvider _bookProvider = BookProvider();
+  late RecommendResultProvider _recommendResultProvider =
+      RecommendResultProvider();
   SearchResult<Book>? result;
   bool isLoading = true;
 
@@ -28,6 +32,7 @@ class _BooksPageState extends State<BooksPage> {
   void initState() {
     super.initState();
     _bookProvider = context.read<BookProvider>();
+    _recommendResultProvider = context.read<RecommendResultProvider>();
 
     initTable();
   }
@@ -57,9 +62,11 @@ class _BooksPageState extends State<BooksPage> {
           isLoading
               ? const SpinKitRing(color: Colors.brown)
               : _buildDataTable(),
-          isLoading == false && result != null && result!.pageCount > 1 ?  const SizedBox(
-          height: 20,
-        ) : Container(),
+          isLoading == false && result != null && result!.pageCount > 1
+              ? const SizedBox(
+                  height: 20,
+                )
+              : Container(),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (isLoading == false && result != null && result!.pageCount > 1)
               for (int i = 0; i < result!.pageCount; i++)
@@ -77,7 +84,8 @@ class _BooksPageState extends State<BooksPage> {
                           });
                         }
                       } on Exception catch (e) {
-                        alertBox(context, 'Greška', e.toString());
+                        alertBox(context, AppLocalizations.of(context).error,
+                            e.toString());
                       }
                     },
                     child: CircleAvatar(
@@ -153,6 +161,64 @@ class _BooksPageState extends State<BooksPage> {
             width: 15,
           ),
           ElevatedButton(
+              style: buttonStyleSecondaryDelete,
+              onPressed: () async {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                          title: Text(
+                              AppLocalizations.of(context).recommend_del_title),
+                          content: Text(
+                              AppLocalizations.of(context).recommend_del_mes),
+                          actions: [
+                            TextButton(
+                                onPressed: (() {
+                                  Navigator.pop(context);
+                                }),
+                                child:
+                                    Text(AppLocalizations.of(context).cancel)),
+                            TextButton(
+                                onPressed: () async {
+                                  try {
+                                    await _recommendResultProvider.deleteData();
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                AppLocalizations.of(context)
+                                                    .recommend_su_del)));
+                                    Navigator.pop(context);
+                                  } catch (e) {
+                                    alertBoxMoveBack(
+                                        context,
+                                        AppLocalizations.of(context).error,
+                                        e.toString());
+                                  }
+                                },
+                                child: const Text('Ok')),
+                          ],
+                        ));
+              },
+              child: Text(AppLocalizations.of(context).recommend_del_lbl)),
+          const SizedBox(
+            width: 15,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                try {
+                  var data = await _recommendResultProvider.trainData();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(AppLocalizations.of(context).su_trained)));
+                } on Exception catch (e) {
+                  alertBox(context, AppLocalizations.of(context).error,
+                      "Try deleting recommendation first\n${e.toString()}");
+                }
+              },
+              child: Text(AppLocalizations.of(context).train_recommend)),
+          const SizedBox(
+            width: 15,
+          ),
+          ElevatedButton(
               onPressed: () async {
                 try {
                   var data = await _bookProvider
@@ -170,7 +236,7 @@ class _BooksPageState extends State<BooksPage> {
               },
               child: Text(AppLocalizations.of(context).search)),
           const SizedBox(
-            width: 15,
+            width: 20,
           ),
           ElevatedButton(
               onPressed: () async {

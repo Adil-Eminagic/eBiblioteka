@@ -74,12 +74,7 @@ namespace eBiblioteka.Application
             return Mapper.Map<AuthorDto>(author);
         }
 
-        public async override Task RemoveByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            await CurrentRepository.RemoveByIdAsync(id, false, cancellationToken);
-
-            await UnitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        
 
     }
 }

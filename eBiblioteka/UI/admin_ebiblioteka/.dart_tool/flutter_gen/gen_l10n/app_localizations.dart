@@ -1258,6 +1258,24 @@ abstract class AppLocalizations {
   /// **'Recommednation is successfully deleted'**
   String get recommend_su_del;
 
+  /// No description provided for @recommend_del_mes.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete recommendation?'**
+  String get recommend_del_mes;
+
+  /// No description provided for @recommend_del_lbl.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete recommendation'**
+  String get recommend_del_lbl;
+
+  /// No description provided for @recommend_del_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting recommendation'**
+  String get recommend_del_title;
+
   /// No description provided for @notif_id.
   ///
   /// In en, this message translates to:

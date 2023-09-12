@@ -53,6 +53,50 @@ namespace eBiblioteka.Api.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("TrainModelAsync")]
+        public virtual async Task<IActionResult> TrainModel(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var dto = await _recommendResultsService.TrainBooksModelAsync(cancellationToken);
+                return Ok(dto);
+            }
+            catch (ValidationException e)
+            {
+                Logger.LogError(e, "Problem when updating resource");
+                return ValidationResult(e.Errors);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Problem when posting resource");
+                return BadRequest(e.Message + " " + e?.InnerException);
+
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("ClearRecommendation")]
+        public virtual async Task<IActionResult> ClearRecommendation(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await _recommendResultsService.DeleteAllRecommendation();
+                return Ok();
+            }
+            catch (ValidationException e)
+            {
+                Logger.LogError(e, "Problem");
+                return ValidationResult(e.Errors);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error");
+                return BadRequest(e.Message + " " + e?.InnerException);
+
+            }
+        }
+
 
         protected IActionResult ValidationResult(List<ValidationError> errors)
         {

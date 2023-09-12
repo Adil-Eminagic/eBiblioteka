@@ -2,6 +2,7 @@ import 'package:admin_ebiblioteka/providers/answer_provider.dart';
 import 'package:admin_ebiblioteka/providers/language_provider.dart';
 import 'package:admin_ebiblioteka/providers/question_provider.dart';
 import 'package:admin_ebiblioteka/providers/quiz_provider.dart';
+import 'package:admin_ebiblioteka/providers/recommend_result_provider.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/l10n.dart';
@@ -50,7 +51,8 @@ void main() {
       ChangeNotifierProvider(create: ((context) => BookFileProvider())),
       ChangeNotifierProvider(create: ((context) => LanguageProvider())),
       ChangeNotifierProvider(create: ((context) => NotificationProvider())),
-      ChangeNotifierProvider(create: ((context) => UserQuizProvider()))
+      ChangeNotifierProvider(create: ((context) => UserQuizProvider())),
+      ChangeNotifierProvider(create: ((context) => RecommendResultProvider()))
     ],
     child: const MyApp(),
   ));

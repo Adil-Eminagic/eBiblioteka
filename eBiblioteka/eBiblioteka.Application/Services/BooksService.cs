@@ -122,6 +122,8 @@ namespace eBiblioteka.Application
             return Mapper.Map<BookDto>(book);
         }
 
+       
+
         public async Task<bool> DoesExist(int bookId, CancellationToken cancellationToken)
         {
             var book = await CurrentRepository.GetByIdAsync(bookId, cancellationToken);

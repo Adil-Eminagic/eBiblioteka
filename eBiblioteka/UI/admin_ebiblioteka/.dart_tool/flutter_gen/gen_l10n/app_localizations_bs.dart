@@ -590,6 +590,15 @@ class AppLocalizationsBs extends AppLocalizations {
   String get recommend_su_del => 'Preporuka je uspješno obrisana';
 
   @override
+  String get recommend_del_mes => 'Da li želite obrisati preporuku?';
+
+  @override
+  String get recommend_del_lbl => 'Obriši preporuku';
+
+  @override
+  String get recommend_del_title => 'Brisanje preporuke';
+
+  @override
   String get notif_id => 'Obavijest Id: ';
 
   @override

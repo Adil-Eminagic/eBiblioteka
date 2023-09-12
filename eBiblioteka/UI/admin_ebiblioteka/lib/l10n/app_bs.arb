@@ -193,12 +193,16 @@
     "book_del_lbl":"Obriši knjigu",
     "book_su_del":"Uspješno brisanje knjige",
     "recommend_su_del":"Preporuka je uspješno obrisana",
+    "recommend_del_mes":"Da li želite obrisati preporuku?",
+    "recommend_del_lbl":"Obriši preporuku",
+    "recommend_del_title":"Brisanje preporuke",
     "notif_id":"Obavijest Id: ",
     "dec_account":"Ne možete se prijaviti jer je vaš profil deaktiviran",
     "invalid_points":"Broj bodova mora biti između 1 i 10",
     "birth_date":"Datum rođenja",
     "no_book_genres":"Nema dodanih žanrova za ovu knjigu",
     "no_quotes":"Nema dodanih citata za ovu knjigu"
+    
 
     
 

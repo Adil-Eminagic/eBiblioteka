@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -24,7 +23,6 @@ class ReadingHistoryPage extends StatefulWidget {
 class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
   late UserBookProvider _userBookProvider = UserBookProvider();
 
-  final TextEditingController _valueController = TextEditingController();
   bool isLoading = true;
   SearchResult<UserBook>? resultHistory;
 

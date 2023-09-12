@@ -590,6 +590,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recommend_su_del => 'Recommednation is successfully deleted';
 
   @override
+  String get recommend_del_mes => 'Do you want to delete recommendation?';
+
+  @override
+  String get recommend_del_lbl => 'Delete recommendation';
+
+  @override
+  String get recommend_del_title => 'Deleting recommendation';
+
+  @override
   String get notif_id => 'Notification Id: ';
 
   @override

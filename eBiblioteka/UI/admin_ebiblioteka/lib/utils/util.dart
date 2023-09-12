@@ -32,6 +32,9 @@ Image imageFromBase64String(String base64Image) {
 ButtonStyle buttonStyleSecondary = ElevatedButton.styleFrom(
     primary: Colors.brown[100], onPrimary: Colors.black);
 
+ButtonStyle buttonStyleSecondaryDelete = ElevatedButton.styleFrom(
+    primary: Colors.brown[100], onPrimary: Colors.red);
+
 
 // in genre detail, you cann't have ecpanded with child coulum niside column, bacause
 // expanded and listview need to know exact height and widht

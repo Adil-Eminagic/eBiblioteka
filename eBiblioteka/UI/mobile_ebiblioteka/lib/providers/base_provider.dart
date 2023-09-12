@@ -107,11 +107,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     Response response = await get(uri, headers: headers);
     if (isValidResponse(response)) {
-//       if(response.body!=""){
-// var data = jsonDecode(response.body);
 
-//       return fromJson(data);
-//       }
       var data = jsonDecode(response.body);
 
       return fromJson(data);
