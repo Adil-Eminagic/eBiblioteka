@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mobile_ebiblioteka/providers/notification_provider.dart';
+import 'package:mobile_ebiblioteka/providers/tod210923_provider.dart';
 import 'package:mobile_ebiblioteka/providers/userquiz_provider.dart';
 
 import 'pages/login_page.dart';
@@ -58,7 +59,8 @@ void main()  {
       ChangeNotifierProvider(create: ((context) => UserBookProvider())),
       ChangeNotifierProvider(create: ((context) => LanguageProvider())),
       ChangeNotifierProvider(create: ((context) => NotificationProvider())),
-      ChangeNotifierProvider(create: ((context) => UserQuizProvider()))
+      ChangeNotifierProvider(create: ((context) => UserQuizProvider())),
+      ChangeNotifierProvider(create: ((context) => ToDo210923Provider()))
     ],
     child: const MyApp(),
   ));
