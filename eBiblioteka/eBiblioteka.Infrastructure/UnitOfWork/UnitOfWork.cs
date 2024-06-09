@@ -27,7 +27,6 @@ namespace eBiblioteka.Infrastructure
         public readonly IBookFilesRepository BookFilesRepository;
         public readonly IRecommendResultsRepository RecommendResultsRepository;
         public readonly IUserQuizsRepository UserQuizsRepository;
-        public readonly IToDo210923sRepository ToDo210923sRepository;
 
 
         public UnitOfWork(
@@ -50,8 +49,7 @@ namespace eBiblioteka.Infrastructure
             INotificationsRepository notificationsRepository,
             IBookFilesRepository bookFilesRepository,
             IRecommendResultsRepository recommendResultsRepository,
-            IUserQuizsRepository userQuizsRepository,
-            IToDo210923sRepository toDo210923sRepository)
+            IUserQuizsRepository userQuizsRepository)
         {
             _databaseContext = databaseContext;
 
@@ -74,7 +72,6 @@ namespace eBiblioteka.Infrastructure
             BookFilesRepository = bookFilesRepository;
             RecommendResultsRepository = recommendResultsRepository;
             UserQuizsRepository = userQuizsRepository;
-            ToDo210923sRepository = toDo210923sRepository;
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)

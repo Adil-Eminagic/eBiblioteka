@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_ebiblioteka/pages/frmToDo210923.dart';
 import 'package:mobile_ebiblioteka/pages/profil_setting.dart';
 import 'package:mobile_ebiblioteka/pages/quiz_page.dart';
 import 'package:mobile_ebiblioteka/pages/readning_history.dart';
@@ -154,11 +153,10 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               const HomePage(), Icons.home),
           drawerItem(context, AppLocalizations.of(context).reading_hist,
               const ReadingHistoryPage(), Icons.history),
+
           drawerItem(context, AppLocalizations.of(context).quizes,
               const QuizzesListPage(), Icons.quiz),
 
-          drawerItem(context, "To Do stavke",
-              const FrmToDo210923(), Icons.quiz),
           drawerItem(
               context,
               AppLocalizations.of(context).profile_settings,
@@ -203,6 +201,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       ));
             },
           ),
+          
         ]),
       ),
       body: widget.child!,
