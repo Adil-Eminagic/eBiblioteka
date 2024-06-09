@@ -1544,6 +1544,96 @@ namespace eBiblioteka.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("eBiblioteka.Core.ToDo210923", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActivityDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ActivityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FinshingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StatusCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ToDo210923s");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActivityDescription = "Potrebno je upaltiti članarinu za 20 dana",
+                            ActivityName = "Placanje clanarine",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            FinshingDate = new DateTime(2023, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            StatusCode = "U toku",
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ActivityDescription = "Potrebno je izvrsiti aktivnost 2",
+                            ActivityName = "Aktivnost 2",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            FinshingDate = new DateTime(2023, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            StatusCode = "Relaizovana",
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ActivityDescription = "Potrebno je izvrsiti aktivnost 3",
+                            ActivityName = "Aktivnost 3",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            FinshingDate = new DateTime(2023, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            StatusCode = "U toku",
+                            UserId = 4
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ActivityDescription = "Potrebno je itvršiti aktivnost 4",
+                            ActivityName = "Aktivnost 4",
+                            CreatedAt = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            FinshingDate = new DateTime(2023, 11, 1, 0, 0, 0, 0, DateTimeKind.Local),
+                            IsDeleted = false,
+                            StatusCode = "Relaizovana",
+                            UserId = 4
+                        });
+                });
+
             modelBuilder.Entity("eBiblioteka.Core.User", b =>
                 {
                     b.Property<int>("Id")
@@ -2177,6 +2267,17 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("eBiblioteka.Core.ToDo210923", b =>
+                {
+                    b.HasOne("eBiblioteka.Core.User", "User")
+                        .WithMany("ToDo210923s")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("eBiblioteka.Core.User", b =>
                 {
                     b.HasOne("eBiblioteka.Core.Country", "Country")
@@ -2323,6 +2424,8 @@ namespace eBiblioteka.Infrastructure.Migrations
                     b.Navigation("Quizzes");
 
                     b.Navigation("RateBook");
+
+                    b.Navigation("ToDo210923s");
                 });
 #pragma warning restore 612, 618
         }

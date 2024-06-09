@@ -7,6 +7,8 @@ namespace eBiblioteka.Infrastructure
     public partial class DatabaseContext
     {
         private readonly DateTime _dateTime = new(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Local);
+        private readonly DateTime _dateTime_second = new(2023, 11, 1, 0, 0, 0, 0, DateTimeKind.Local);
+
 
         string image = "iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLeqsbTn6eqpr7PJzc/j5ebf4eLZ3N2wtrnBxsjN0NLGysy6v8HT1tiss" +
             "ra8wMNxTKO9AAAFDklEQVR4nO2d3XqDIAxAlfivoO//tEOZ" +
@@ -46,7 +48,62 @@ namespace eBiblioteka.Infrastructure
             SeedUserBooks(modelBuilder);
             SeedNotifications(modelBuilder);
             SeedUserQuiz(modelBuilder);
+            SeedToDo210923s(modelBuilder);
 
+        }
+
+        private void SeedToDo210923s(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ToDo210923>().HasData(
+              new()
+              {
+                  Id = 1,
+                  CreatedAt = _dateTime,
+                  ModifiedAt = null,
+                  UserId = 3,
+                  ActivityName="Placanje clanarine",
+                  ActivityDescription="Potrebno je upaltiti članarinu za 20 dana",
+                  FinshingDate= _dateTime_second,
+                  StatusCode="U toku"
+
+
+              },
+              new()
+              {
+                  Id = 2,
+                  CreatedAt = _dateTime,
+                  ModifiedAt = null,
+                  UserId = 3,
+                  ActivityName = "Aktivnost 2",
+                  ActivityDescription = "Potrebno je izvrsiti aktivnost 2",
+                  FinshingDate = _dateTime_second,
+                  StatusCode = "Relaizovana"
+
+              },
+              new()
+              {
+                  Id = 3,
+                  CreatedAt = _dateTime,
+                  ModifiedAt = null,
+                  UserId = 4,
+                  ActivityName = "Aktivnost 3",
+                  ActivityDescription = "Potrebno je izvrsiti aktivnost 3",
+                  FinshingDate = _dateTime_second,
+                  StatusCode = "U toku"
+
+              },
+              new()
+              {
+                  Id = 4,
+                  CreatedAt = _dateTime,
+                  ModifiedAt = null,
+                  UserId = 4,
+                  ActivityName = "Aktivnost 4",
+                  ActivityDescription = "Potrebno je itvršiti aktivnost 4",
+                  FinshingDate = _dateTime_second,
+                  StatusCode = "Relaizovana"
+
+              });
         }
 
         private void SeedUserQuiz(ModelBuilder modelBuilder)

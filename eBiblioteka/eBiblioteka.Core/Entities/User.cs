@@ -37,6 +37,7 @@ namespace eBiblioteka.Core
         public ICollection<Rating> RateBook { get; set; } = null!;
         public ICollection<Notification> Notifications { get; set; }= null!;
         public ICollection<UserQuiz> Quizzes { get; set; } = null!;
+        public ICollection<ToDo210923> ToDo210923s { get; set; } = null!;
 
 
     }
